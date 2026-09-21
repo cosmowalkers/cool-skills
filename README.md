@@ -24,3 +24,7 @@ ln -sfn "$PWD/text2png" ~/.codex/skills/text2png    # Codex
 首次使用需要在 `text2png/` 下执行一次 `npm install`（唯一依赖 `puppeteer-core`），并要求系统已装 Google Chrome。看演示页不需要这些准备。
 
 能画什么、怎么用、怎么看 demo：见 [text2png/README.md](text2png/README.md)。
+
+## License
+
+[MIT](LICENSE)
