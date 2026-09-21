@@ -1,0 +1,61 @@
+{
+  "skill_name": "text2png",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我画个图，我们的发布流程是这样的：产品提需求 → 开发写代码 → 代码评审 → 测试 → 灰度发布 → 全量上线，每个环节大概要 1-3 天",
+      "expected_output": "A flowchart with 6 steps in warm style, horizontal or vertical layout, with step cards connected by arrows. Should include step descriptions and a summary banner.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 2,
+      "prompt": "我在做技术选型，需要对比一下 PostgreSQL 和 MySQL，主要看性能、扩展性、JSON 支持、生态、学习成本这几个维度",
+      "expected_output": "A comparison chart with two columns (PostgreSQL vs MySQL), 5 comparison dimensions, minimal or warm style. Should include a recommendation.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 3,
+      "prompt": "我们微服务架构是这样的：前端 → API Gateway → 三个服务（用户服务、订单服务、支付服务）→ 都连同一个 Redis 缓存和各自的 PostgreSQL 数据库，画个架构图看看",
+      "expected_output": "An architecture diagram with layered layout showing frontend, API gateway, 3 services, Redis cache, and 3 PostgreSQL databases. Dark style recommended.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 4,
+      "prompt": "帮我画个思维导图，主题是「前端性能优化」，分为加载优化、渲染优化、网络优化、资源优化四个方向，每个方向列 3-4 个具体手段",
+      "expected_output": "A mind-map with center node '前端性能优化' and 4 branches radiating left/right, each with 3-4 leaf nodes. Paper style recommended. Horizontal expansion within 860px.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 5,
+      "prompt": "做个优先级矩阵，横轴是成本高低，纵轴是收益高低，帮我分类一下这些需求：搜索优化、国际化、暗色模式、性能监控、重构登录模块、新增支付方式",
+      "expected_output": "A 2x2 matrix chart with axis labels (cost/benefit), 4 quadrants with categorized items distributed among them. Minimal style. Each quadrant has a title with emoji and colored border.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 6,
+      "prompt": "画一个 Sprint 看板，待办有：用户头像上传、消息推送接入、修复支付 bug；进行中有：订单列表优化、API 限流；已完成有：登录重构、注册页改版",
+      "expected_output": "A kanban board with 3 columns (待办/进行中/已完成), task cards with titles and tags inside each column. Glass style recommended. Column headers show count badges.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 7,
+      "prompt": "做个上线前的 checklist：代码评审通过、单测覆盖率达标、灰度验证无异常、回滚方案已确认、监控告警已配置、产品验收通过。前 3 项已完成，后 3 项待完成",
+      "expected_output": "A checklist card with progress bar (3/6 = 50%), items with done/pending states clearly marked. Warm style. Grouped into categories with summary banner showing remaining items.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 8,
+      "prompt": "帮我做个金句卡片：「好的代码是写给人看的，顺便能在机器上运行。」—— Harold Abelson《计算机程序的构造和解释》",
+      "expected_output": "A quote card with large centered quote text, decorative quote mark, divider line, author name and source attribution. Editorial style recommended. Clean centered layout.",
+      "files": [],
+      "assertions": []
+    }
+  ]
+}

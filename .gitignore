@@ -1,0 +1,13 @@
+# 依赖：首次使用后在 text2png/ 里跑一次 npm install
+node_modules/
+__pycache__/
+*.log
+
+# 生成产物：可由 text2png/tools/build-gallery.py 重建
+# （text2png/demo 下的 index.html + img/*.webp 是随 skill 分发的轻量演示，不忽略）
+**/artifacts/
+**/demo/html/
+**/demo/**/*.png
+
+# macOS
+.DS_Store
