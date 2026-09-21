@@ -1,0 +1,98 @@
+{
+  "skill_name": "image-optimize",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我们商品列表页那个 banner 图是 2848×1600 的 jpg，页面上只显示 240×108 CSS 像素，低端机滑动很卡。帮我按实际显示尺寸压一下，别压糊了。图在 src/assets/img/hero.jpg",
+      "expected_output": "先确认显示尺寸与 DPR（240×108 @DPR2 → 屏上 480×216），按屏上像素的 2~3 倍导出（默认 supersample 2 → 960 宽），转 WebP；用 verify 给出边缘能量变化与结论，并说明解码内存从多少降到多少。",
+      "files": [],
+      "assertions": [
+        "推导了显示尺寸 × DPR → 导出宽度（480 → 960）",
+        "导出目录独立于源目录，源文件未被修改",
+        "给出 verify 的清晰度结论与体积 / 解码内存收益"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "这批 png 想转成 webp，尺寸先别动，也别裁，只要格式换掉。",
+      "expected_output": "用 --format webp --no-crop --no-resize --quality 90 只转格式；说明同尺寸只换容器不会降解码内存、只影响下载体积；若素材是纯色 / 线条 / 截图类，提醒转 JPEG 反而会变大。",
+      "files": [],
+      "assertions": [
+        "使用 --no-crop --no-resize（不改尺寸、不裁剪）",
+        "说明解码内存不变，只有下载体积收益"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "上一版图片压完被测试同学说发糊了，帮我看看是尺寸给小了还是质量太低了。",
+      "expected_output": "用 verify 对比原图渲染与候选渲染，给出逐图边缘能量变化、整批均值、像素差与结论（<−3.5% 偏糊 / −2.5%~−3.5% 临界）；给出升档重试的具体命令（--supersample 3 或 --quality 95），并说明源图越清晰该指标越吃亏。",
+      "files": [],
+      "assertions": [
+        "运行 verify 并给出整批平均边缘能量变化",
+        "给出提高 supersample 或 quality 的具体重试命令",
+        "结论建立在清晰度指标上，而不是只看文件变小"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "src/assets/img 下面还有两个子目录，一起压一下；压完直接帮我把 src 里的图替换掉再跑 build。",
+      "expected_output": "导出到源目录之外的独立目录（例如 /tmp/img-out），目录结构会被复刻；提醒默认转 WebP 后扩展名会变（hero.png → hero.webp），组件里的 import / 引用要同步改；替换前备份原图、替换后重建产物。脚本本身会拒绝把产物写回源目录。",
+      "files": [],
+      "assertions": [
+        "输出目录在源目录之外，没有原地覆盖源图",
+        "提醒 WebP 扩展名变化会影响 import / 引用",
+        "替换后有重建产物（npm run build）的步骤"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "我们图现在已经是 webp 了，还能再小一点吗？",
+      "expected_output": "说明再转一次 WebP 没有收益；变小只能靠降像素（--box/--dpr 或 --no-crop --max-width）或降质量（--quality）；提醒有损源再编码会产生代际损失，且降尺寸才是省解码内存的手段。",
+      "files": [],
+      "assertions": [
+        "指出转格式已无收益，改为降尺寸或降质量",
+        "提到有损源再编码的代际损失"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "低端安卓机上列表页滑动很卡，我怀疑是图片解码内存吃太多，怎么确认、怎么改？",
+      "expected_output": "解释解码内存 = 像素数 × 4 字节，与文件体积无关；用 analyze 给出每张图的像素尺寸、解码内存与相对屏上像素的过采样倍数；按显示尺寸降像素（而不是只压质量）。",
+      "files": [],
+      "assertions": [
+        "把卡顿归因到像素数 / 解码内存，而不是下载体积",
+        "用 analyze 给出每张图的解码内存与建议动作"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "客户那边只要 jpg，我们素材是透明 png，转出来背景全黑了，怎么办？",
+      "expected_output": "说明 JPEG 不支持 alpha，脚本会按 --flatten-color 合成底色（默认黑，需要浅色就显式传，例如 white 或品牌色）；并建议透明素材留在 WebP / PNG，只在确需 JPEG 时才合成。",
+      "files": [],
+      "assertions": [
+        "解释 JPEG 没有 alpha 通道",
+        "给出 --flatten-color 的显式用法"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "这批图要归档，想要无损压缩，AVIF 和 WebP 都能无损吧？",
+      "expected_output": "说明真无损只有 WebP / PNG：webp --lossless 逐像素一致但体积通常是 q95 的 4~5 倍；Pillow 的 AVIF 编码器没有 lossless 开关，传了会被静默降级成 q75，脚本会直接拒绝并提示改用 webp 或外部 avifenc；有损源再无损编码不会更清晰。",
+      "files": [],
+      "assertions": [
+        "区分真无损（webp / png）与 AVIF 在 Pillow 下的假无损",
+        "提醒有损源再无损编码不会变清晰"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "压完直接把 /tmp/img-out 里的图覆盖回 src/assets/img 就行，源图不用备份。",
+      "expected_output": "不认同直接覆盖：先目视确认候选（主体没被裁、无可见伪影），把原图备份到临时目录并在回复里说明备份路径，确认后再替换，最后重建产物。同时说明脚本本身不会替你动源文件，--out 指向源目录会被直接拒绝。",
+      "files": [],
+      "assertions": [
+        "没有直接把产物覆盖到源目录",
+        "给出备份原图 + 替换 + 重建产物的流程"
+      ]
+    }
+  ]
+}
