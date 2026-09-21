@@ -576,9 +576,11 @@ class TestDocs(unittest.TestCase):
     def test_不再宣传avif无损(self) -> None:
         # 允许的写法是“明说 AVIF 不行 / 只能靠外部 avifenc / 真无损仅 webp+png”；
         # 命中即视为“还在宣传 AVIF 无损”。
-        allowed = ('不支持', '无法', '拒绝', 'avifenc', '假无损', '仅 WebP')
+        allowed = ('不支持', '无法', '不能', '拒绝', 'avifenc', '假无损', '仅 WebP')
         for name in ('SKILL.md', 'README.md'):
             for lineno, line in enumerate(self._text(name).splitlines(), 1):
+                if line.strip().rstrip('*').strip().endswith(('？', '?')):
+                    continue  # 疑问句是在提问，不是在宣传
                 if 'avif' in line.lower() and ('无损' in line or 'lossless' in line.lower()):
                     self.assertTrue(
                         any(word in line for word in allowed),
