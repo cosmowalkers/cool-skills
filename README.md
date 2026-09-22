@@ -41,9 +41,9 @@ done
 
 能做什么、怎么用、常见问题：见 [image-tools/README.md](image-tools/README.md)。
 
-## 工具
+## 本地开发辅助
 
-- [`tools/forward-test`](tools/forward-test/README.md)：skill 前向测试工装——同一个任务分别交给"带 skill"和"不带 skill"的独立 agent 跑，机械打分并出对比报告。改 description、改规则、发版前用它。
+`tools/` 下放着与 skill 内容无关的本地工具（介绍图生成、skill 前向测试），已在 `.gitignore` 中排除，不随仓库分发。
 
 ## License
 

@@ -8,6 +8,7 @@ __pycache__/
 **/artifacts/
 **/demo/html/
 **/demo/**/*.png
+/tools/
 
 # macOS
 .DS_Store
