@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""网页图片优化：按显示尺寸导出 + 清晰度验证（依赖 Pillow）。
+"""图片工具箱：按显示尺寸导出 + 清晰度验证（依赖 Pillow）。
 
 用法示例：
   # 1) 体检：相对显示框过采样多少、解码占多少内存
@@ -52,7 +52,8 @@ except ModuleNotFoundError as exc:  # 依赖缺失时给可直接照做的安装
         '  python3 -m pip install --break-system-packages Pillow   # 系统 Python 拒绝安装时用\n'
         '  brew install python3 && python3 -m pip install Pillow   # 想用 Homebrew Python\n'
         '装完执行 `python3 optimize_images.py doctor` 自检；AVIF 需要 Pillow ≥ 11 且编译了 libavif。\n'
-        '不想装 Python 依赖时的替代路线见 skill 目录下的 README.md（Node sharp / cwebp / OSS 实时转换）。\n'
+        '不想装 Python 依赖时的替代路线（cwebp / avifenc / ImageMagick / sharp / CDN 实时转换）'
+        '见 skill 目录下 README.md 的对应小节。\n'
     )
     raise SystemExit(EXIT_DEP) from exc
 
@@ -89,6 +90,22 @@ def parse_box(value: str) -> tuple[int, int]:
             '否则裁剪后会只剩几像素高的细条'
         )
     return box
+
+
+DEFAULT_BOX = (240, 108)
+
+
+def resolve_box(args: argparse.Namespace) -> tuple[int, int]:
+    """--box 未显式给出时退回占位尺寸，但要提醒：默认值不是量出来的显示尺寸。"""
+    if args.box is not None:
+        return args.box
+    print(
+        f'注意：--box 未指定，正按默认 {DEFAULT_BOX[0]}x{DEFAULT_BOX[1]} 计算。'
+        '默认值只是占位，不是量出来的显示尺寸——先按工作流第 1 步量出真实尺寸（或让用户明确给出），'
+        '再拿结果去出图。',
+        file=sys.stderr,
+    )
+    return DEFAULT_BOX
 
 
 def positive_float(value: str) -> float:
@@ -340,8 +357,9 @@ def cmd_analyze(args: argparse.Namespace) -> int:
     if not images:
         print('没有找到图片', file=sys.stderr)
         return EXIT_USAGE
-    device = (round(args.box[0] * args.dpr), round(args.box[1] * args.dpr))
-    print(f'显示框 {args.box[0]}x{args.box[1]} CSS px，DPR {args.dpr} → 屏上像素 {device[0]}x{device[1]}'
+    box = resolve_box(args)
+    device = (round(box[0] * args.dpr), round(box[1] * args.dpr))
+    print(f'显示框 {box[0]}x{box[1]} CSS px，DPR {args.dpr} → 屏上像素 {device[0]}x{device[1]}'
           f'（推荐导出宽度 {device[0] * 2}~{device[0] * 3}）')
     print(f'{"文件":<40}{"格式":<7}{"尺寸":<12}{"体积":>10}{"解码内存":>10}{"倍率(宽)":>10}  建议')
     total_bytes = total_px = 0
@@ -407,8 +425,9 @@ def cmd_export(args: argparse.Namespace) -> int:
             break
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    ratio = args.box[0] / args.box[1]
-    cap_w = 0 if args.no_resize else (args.max_width or round(args.box[0] * args.dpr * args.supersample))
+    box = resolve_box(args)
+    ratio = box[0] / box[1]
+    cap_w = 0 if args.no_resize else (args.max_width or round(box[0] * args.dpr * args.supersample))
     steps = []
     if not args.no_crop:
         steps.append(f'裁剪到 {ratio:.3f}:1')
@@ -426,6 +445,9 @@ def cmd_export(args: argparse.Namespace) -> int:
     print(f'{"文件":<40}{"原尺寸":<12}{"新尺寸":<12}{"格式":<10}{"原体积":>10}{"新体积":>10}{"解码内存":>18}')
     before_bytes = after_bytes = before_px = after_px = 0
     flattened = 0
+    grew: list[str] = []
+    undersized: list[str] = []
+    same_format_lossy = 0
     transposed = 0
     for src, dst, fmt in plans:
         im, meta, was_transposed = load_for_edit(src)
@@ -442,6 +464,12 @@ def cmd_export(args: argparse.Namespace) -> int:
         dst.parent.mkdir(parents=True, exist_ok=True)
         save_variant(work, dst, fmt, args, meta)
         dst_bytes = dst.stat().st_size
+        if dst_bytes > src_bytes:
+            grew.append(display_name(src))
+        if cap_w and src_size[0] < cap_w:
+            undersized.append(display_name(src))
+        if not args.lossless and fmt == source_format(src) and fmt in ('webp', 'jpeg', 'avif'):
+            same_format_lossy += 1
         before_bytes += src_bytes
         after_bytes += dst_bytes
         before_px += src_size[0] * src_size[1]
@@ -454,6 +482,34 @@ def cmd_export(args: argparse.Namespace) -> int:
     saved = (1 - after_bytes / before_bytes) * 100 if before_bytes else 0
     print(f'{"合计":<40}{"":<12}{"":<12}{"":<10}{kb(before_bytes):>10}{kb(after_bytes):>10}')
     print(f'体积下降 {saved:.0f}%；解码内存 {decoded_mb(before_px)} → {decoded_mb(after_px)}')
+    if undersized:
+        shown = '、'.join(undersized[:3]) + (' 等' if len(undersized) > 3 else '')
+        print(f'注意：{len(undersized)} 张图源分辨率不足（{shown}）：宽度小于目标 {cap_w}px，'
+              '脚本不会放大，输出会停在源图分辨率。这类图压缩救不了，只能换更大的素材。',
+              file=sys.stderr)
+    if same_format_lossy and saved < 15:
+        print(f'注意：{same_format_lossy} 张图的源格式就是 {args.format}，本次属于有损重编码：'
+              f'整批只省了 {saved:.0f}%，却要多掉一次画质。建议保留原图，或改用 --lossless 再评估。',
+              file=sys.stderr)
+    if grew:
+        shown = '、'.join(grew[:3]) + (' 等' if len(grew) > 3 else '')
+        print(f'注意：{len(grew)} 张图压缩后反而变大（{shown}）。这些文件应保留原图，不要替换。',
+              file=sys.stderr)
+    if saved < 0:
+        print(
+            f'警告：产物总体积比源文件大 {abs(saved):.0f}%，这批图不该按当前参数处理，请如实告诉用户而不是交付。\n'
+            '  常见原因：源图已经是 WebP（重复编码会变大）、纯色 / 线条 / 截图类转成了有损格式、'
+            '或"保持原格式"只做裁剪。\n'
+            '  建议：换参数（去掉 --format keep、只降尺寸不裁剪、改用 --lossless），'
+            '或直接保留原图并把原因说明白。',
+            file=sys.stderr,
+        )
+    elif saved < 5:
+        print(
+            f'注意：体积只降了 {saved:.0f}%，收益很小。若源图已是 WebP、像素数又已经贴着显示尺寸，'
+            '继续压没有意义——告诉用户现状，不要为了交差而替换。',
+            file=sys.stderr,
+        )
     if transposed:
         print(f'注意：{transposed} 张带 EXIF 方向标记，已按浏览器显示方向转正后再裁剪（产物不再带方向标记）')
     if flattened:
@@ -527,14 +583,23 @@ def cmd_verify(args: argparse.Namespace) -> int:
         print('注意：以下候选没有对应参考（可能是上一次导出的陈旧产物或手工放进去的文件），未参与统计：'
               + '、'.join(unpaired_cands), file=sys.stderr)
 
-    device = (round(args.box[0] * args.dpr), round(args.box[1] * args.dpr))
+    box = resolve_box(args)
+    device = (round(box[0] * args.dpr), round(box[1] * args.dpr))
     print(f'渲染尺寸 {device[0]}x{device[1]}（= 显示框 × DPR）；边缘能量越接近参考越清晰')
     print(f'{"文件":<34}{"参考边缘":>9}{"候选边缘":>9}{"变化":>8}{"像素差":>8}{"候选体积":>12}')
     deltas: list[float] = []
+    total_ref_bytes = total_cand_bytes = 0
+    total_ref_px = total_cand_px = 0
     for ref_path, cand_path in pairs:
         with Image.open(ref_path) as r, Image.open(cand_path) as c:
             ref_render = render_like_browser(r, device)
             cand_render = render_like_browser(c, device)
+            ref_px = r.size[0] * r.size[1]
+            cand_px = c.size[0] * c.size[1]
+        total_ref_bytes += ref_path.stat().st_size
+        total_cand_bytes += cand_path.stat().st_size
+        total_ref_px += ref_px
+        total_cand_px += cand_px
         e_ref = edge_energy(ref_render)
         e_cand = edge_energy(cand_render)
         delta = (e_cand - e_ref) / e_ref * 100 if e_ref else 0.0
@@ -548,7 +613,10 @@ def cmd_verify(args: argparse.Namespace) -> int:
         print(f'{label:<34}{e_ref:>9.2f}{e_cand:>9.2f}{delta:>7.1f}%{diff:>8.2f}'
               f'{kb(cand_path.stat().st_size):>12}{flag}')
     mean_delta = sum(deltas) / len(deltas)
+    saved = (1 - total_cand_bytes / total_ref_bytes) * 100 if total_ref_bytes else 0.0
     print()
+    print(f'体积合计：参考 {kb(total_ref_bytes)} → 候选 {kb(total_cand_bytes)}（下降 {saved:.0f}%）；'
+          f'解码内存合计：{decoded_mb(total_ref_px)} → {decoded_mb(total_cand_px)}')
     print(f'整批平均边缘能量变化：{mean_delta:+.1f}%（逐图噪声约 ±1.5%，结论看均值）')
     print('说明：该指标是与“源图单步降采样”的理想结果比，偏保守；均值达标但个别图偏软时，')
     print('      再用真实浏览器截图目视比对一次即可放心。')
@@ -562,13 +630,13 @@ def cmd_verify(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description='网页图片优化：按显示尺寸导出并验证清晰度')
+    parser = argparse.ArgumentParser(description='图片工具箱：按显示尺寸导出并验证清晰度')
     sub = parser.add_subparsers(dest='command', required=True)
 
     def add_common(p: argparse.ArgumentParser) -> None:
         p.add_argument('paths', nargs='+', help='图片文件或目录（目录递归，保留子目录结构）')
-        p.add_argument('--box', type=parse_box, default=parse_box('240x108'),
-                       help='显示尺寸（CSS px），例如 240x108')
+        p.add_argument('--box', type=parse_box, default=None,
+                       help='显示尺寸（CSS px），例如 240x108；不指定会按 240x108 占位并提示')
         p.add_argument('--dpr', type=positive_float, default=2, help='目标设备像素比，默认 2')
 
     p_doctor = sub.add_parser('doctor', help='检查运行环境与依赖（缺依赖时先跑这个）')
@@ -601,7 +669,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_verify = sub.add_parser('verify', help='对比候选与参考的清晰度')
     p_verify.add_argument('reference', help='参考：原图文件或目录')
     p_verify.add_argument('candidate', help='候选：导出目录')
-    p_verify.add_argument('--box', type=parse_box, default=parse_box('240x108'))
+    p_verify.add_argument('--box', type=parse_box, default=None)
     p_verify.add_argument('--dpr', type=positive_float, default=2)
     p_verify.set_defaults(func=cmd_verify)
 

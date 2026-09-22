@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""image-optimize 的回归 + 可用性用例（只依赖 python3 + Pillow，不联网）。
+"""image-tools 的回归 + 可用性用例（只依赖 python3 + Pillow，不联网）。
 
 跑法：
   python3 scripts/tests/test_optimize_images.py -v            # 全部（约 20~40 秒）
@@ -97,7 +97,7 @@ def build_fixtures(root: Path) -> None:
 
     icc = ImageCms.ImageCmsProfile(ImageCms.createProfile('sRGB')).tobytes()
     exif = Image.Exif()
-    exif[0x010F] = 'image-optimize-tests'  # Make
+    exif[0x010F] = 'image-tools-tests'  # Make
     exif[0x0112] = 1                           # Orientation
 
     _texture((1200, 675)).save(assets / 'hero.jpg', quality=92, exif=exif, icc_profile=icc)
@@ -374,7 +374,7 @@ class TestExportBasics(CliTest):
     def test_保留exif元数据(self) -> None:
         self.export(ASSETS / 'hero.jpg', '--format', 'jpeg', '--no-crop', '--no-resize')
         with Image.open(self.out_dir / 'hero.jpg') as dst:
-            self.assertEqual('image-optimize-tests', dst.getexif().get(0x010F))
+            self.assertEqual('image-tools-tests', dst.getexif().get(0x010F))
 
     def test_带EXIF方向的图先转正再导出(self) -> None:
         out, _ = self.export(TMP_ROOT / 'rotated.jpg', '--no-crop', '--no-resize')
@@ -570,6 +570,9 @@ class TestCliUsability(CliTest):
 # 文档与实现一致（发给别人用之前别让文档漂移）
 # --------------------------------------------------------------------------- #
 class TestDocs(unittest.TestCase):
+    # 随 skill 分发、且面向使用者的文档都要一起守规矩
+    DOC_FILES = ('SKILL.md', 'README.md', 'references/measured-data.md', 'references/method.md')
+
     def _text(self, name: str) -> str:
         return (SKILL_ROOT / name).read_text(encoding='utf-8')
 
@@ -577,7 +580,7 @@ class TestDocs(unittest.TestCase):
         # 允许的写法是“明说 AVIF 不行 / 只能靠外部 avifenc / 真无损仅 webp+png”；
         # 命中即视为“还在宣传 AVIF 无损”。
         allowed = ('不支持', '无法', '不能', '拒绝', 'avifenc', '假无损', '仅 WebP')
-        for name in ('SKILL.md', 'README.md'):
+        for name in self.DOC_FILES:
             for lineno, line in enumerate(self._text(name).splitlines(), 1):
                 if line.strip().rstrip('*').strip().endswith(('？', '?')):
                     continue  # 疑问句是在提问，不是在宣传
@@ -588,7 +591,7 @@ class TestDocs(unittest.TestCase):
                     )
 
     def test_脚本路径按可复用写法给出(self) -> None:
-        for name in ('SKILL.md', 'README.md'):
+        for name in self.DOC_FILES:
             self.assertNotIn('python3 scripts/optimize_images.py', self._text(name),
                              f'{name} 里的脚本路径是相对路径，换到宿主项目就会指错文件')
 
@@ -600,7 +603,7 @@ class TestDocs(unittest.TestCase):
         ascii_tokens = ('sugon', 'zentao', 'su-common', 'aui-common', 'console-ui',
                         'admin-ui', 'seller-ui', '@common', 'mall')
         cjk_tokens = ('曙光', '中科', '禅道', '公司', '部门', '内部系统', '本项目', '我们项目')
-        for name in ('SKILL.md', 'README.md', 'evals/evals.json'):
+        for name in self.DOC_FILES + ('evals/evals.json',):
             text = self._text(name)
             lowered = text.lower()
             for token in ascii_tokens:
@@ -610,6 +613,41 @@ class TestDocs(unittest.TestCase):
                 )
             for token in cjk_tokens:
                 self.assertNotIn(token, text, f'{name} 里出现了业务/内部标识：{token}')
+
+
+class Test尺寸护栏(CliTest):
+    """--box 是量出来的尺寸，不是可以随手默认的参数。"""
+
+    def test_未指定box时提示默认值只是占位(self) -> None:
+        _out, err = self.ok('analyze', ASSETS / 'hero.jpg')
+        self.assertIn('--box 未指定', err)
+        self.assertIn('240x108', err)
+
+    def test_导出时未指定box也会提示(self) -> None:
+        _out, err = self.export(ASSETS / 'hero.jpg')
+        self.assertIn('--box 未指定', err)
+
+    def test_显式给出box时不提示(self) -> None:
+        _out, err = self.ok('analyze', ASSETS / 'hero.jpg', '--box', DEVICE_BOX)
+        self.assertNotIn('--box 未指定', err)
+
+
+class Test不该压的图(CliTest):
+    """压缩无收益或有害时，要报警而不是默默交付。"""
+
+    def test_压完变大时给出警告(self) -> None:
+        """照片转 PNG 体积必然暴涨，此时必须提示"不要替换"。"""
+        _out, err = self.ok('export', ASSETS / 'hero.jpg', '--out', self.out_dir,
+                            '--format', 'png', '--no-crop', '--no-resize')
+        self.assertIn('反而变大', err)
+        self.assertIn('比源文件大', err)
+        self.assertIn('不要替换', err)
+
+    def test_源图分辨率不足时提示换素材(self) -> None:
+        _out, err = self.ok('export', ASSETS / 'icon.png', '--out', self.out_dir,
+                            '--box', '240x108', '--dpr', 2, '--supersample', 2)
+        self.assertIn('源分辨率不足', err)
+        self.assertIn('换更大的素材', err)
 
 
 if __name__ == '__main__':
