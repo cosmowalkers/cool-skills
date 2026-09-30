@@ -1,0 +1,4 @@
+interface:
+  display_name: "提交规范"
+  short_description: "中文 commit message 规范与提交拆分方案"
+  default_prompt: "用 $commit-message 把这次改动按规范拆分提交，message 带齐目的、影响范围、改动范围和测试建议。"

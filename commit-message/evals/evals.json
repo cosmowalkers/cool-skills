@@ -1,0 +1,48 @@
+{
+  "skill_name": "commit-message",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "这次改动动了 package.json（删了个没用的插件）、4 张图片资源、还有一批组件的 key，帮我提交了。",
+      "expected_output": "先按「可独立回滚」拆成依赖 / 资源 / 渲染三类提交，给出每条的类型、scope 与目的；每条 message 含四件套；执行前（或按用户要求）贴出完整 message。",
+      "files": [],
+      "assertions": [
+        "按意图拆成多个提交而不是单个提交",
+        "每条 message 含修改目的、影响范围、改动范围、测试建议四件套",
+        "类型前缀使用英文（perf/build/chore 等），正文中文"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "帮我写一下 commit message，先别提交，我要先看。",
+      "expected_output": "只产出 message 文本，不执行 git commit；不改动工作区。",
+      "files": [],
+      "assertions": [
+        "没有执行 git commit",
+        "给出了完整的 message 文本供审阅"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "有个文件同时改了埋点逻辑和图片引用，你拆提交的时候注意点。",
+      "expected_output": "识别出跨组文件，按 hunk 拆分（git diff + git apply --cached 或 git add -p）而不是整文件 git add；提交后核对 git show --stat 只含本组内容。",
+      "files": [],
+      "assertions": [
+        "明确指出该文件是跨组文件",
+        "采用 hunk 级暂存而非整文件 add",
+        "提交后核对了每个提交的文件清单"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "改完了，帮我提交，顺便推到远端。",
+      "expected_output": "提交前给出 message 并（按用户过目偏好）确认；push 作为独立动作，确认分支名与远端后再执行，且不擅自 push 到未确认的分支。",
+      "files": [],
+      "assertions": [
+        "commit 与 push 被当作两个独立动作处理",
+        "push 前确认了分支名与远端",
+        "没有擅自添加 Co-Authored-By / Generated with 之类的署名"
+      ]
+    }
+  ]
+}

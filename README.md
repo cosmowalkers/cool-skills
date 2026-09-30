@@ -6,6 +6,7 @@ Agent 技能集合（Claude Code / Codex 通用）。每个目录是一个独立
 | --- | --- |
 | [text2png](text2png/README.md) | 把一段文字变成有设计感的图表 PNG：15 种图表形式 × 9 种视觉主题 = 135 种组合，附全矩阵演示页 |
 | [image-tools](image-tools/README.md) | 图片工具箱（已落地网页图片优化）：压尺寸、转 WebP/AVIF、按显示比例裁剪，并用清晰度 + 解码内存指标验证"没压糊"；自带 62 个用例 |
+| [commit-message](commit-message/README.md) | 提交规范：commit message 固定带修改目的 / 影响范围 / 改动范围 / 测试建议，并按"可独立回滚"把混合改动拆成多条提交 |
 
 ## 安装
 
@@ -14,7 +15,7 @@ skill 本体就是目录，软链到 Agent 的 skills 目录即可，改完立�
 ```bash
 git clone git@github.com:cosmowalkers/cool-skills.git
 cd cool-skills
-for s in text2png image-tools; do
+for s in text2png image-tools commit-message; do
   ln -sfn "$PWD/$s" ~/.claude/skills/"$s"   # Claude Code
   ln -sfn "$PWD/$s" ~/.codex/skills/"$s"    # Codex
 done
@@ -40,6 +41,17 @@ done
 缺依赖时脚本会打印安装命令），仓库自带 59 个回归与可用性用例。
 
 能做什么、怎么用、常见问题：见 [image-tools/README.md](image-tools/README.md)。
+
+## commit-message
+
+提交规范和拆分方案。装完后一句话说需求即可，例如「把这次改动按规范拆一下提交了」。
+
+产出的 message 固定包含四件套：修改目的、影响范围、改动范围、测试建议，配合 `perf` / `feat` / `fix` 类型前缀。
+默认不提交、不 push——只有你明确说「提交」它才动 git，push 要单独再说一次。
+
+它还会把混在一起的改动按「能否独立回滚」拆成多条提交；同一文件跨多类改动时按 hunk 拆，不会整文件带过去。
+
+能做什么、怎么用：见 [commit-message/README.md](commit-message/README.md)。
 
 ## 本地开发辅助
 
