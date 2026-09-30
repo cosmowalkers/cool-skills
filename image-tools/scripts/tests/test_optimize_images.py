@@ -139,7 +139,7 @@ def _snapshot_fixtures() -> dict[str, str]:
 
 def setUpModule() -> None:
     if not features.check('webp'):
-        raise unittest.SkipTest('当前 Pillow 没有 WebP 支持，默认工作流（PNG/JPEG → WebP）无法验证')
+        raise unittest.SkipTest('当前 Pillow 没有 WebP 支持，转 WebP 相关的用例无法验证')
     build_fixtures(TMP_ROOT)
     FIXTURE_SNAPSHOT.update(_snapshot_fixtures())
     print(f'\n夹具目录：{TMP_ROOT}')
@@ -274,38 +274,50 @@ class TestAnalyze(CliTest):
 # export —— 功能
 # --------------------------------------------------------------------------- #
 class TestExportBasics(CliTest):
-    def test_默认组合_裁剪加缩尺寸加转webp(self) -> None:
-        self.export(ASSETS / 'hero.jpg', '--box', DEVICE_BOX)
-        dst = self.out_dir / 'hero.webp'
+    def test_默认组合_裁剪加缩尺寸且保持源格式(self) -> None:
+        """默认只压尺寸、不换容器：扩展名一变引用就得跟着改，不能替使用者做主。"""
+        out, _ = self.export(ASSETS / 'hero.jpg', '--box', DEVICE_BOX)
+        dst = self.out_dir / 'hero.jpg'
         self.assertTrue(dst.exists())
+        self.assertFalse((self.out_dir / 'hero.webp').exists(), '默认不该转成 WebP')
+        self.assertIn('保持源格式', out)
         with Image.open(dst) as im:
-            self.assertEqual('WEBP', im.format)
+            self.assertEqual('JPEG', im.format)
             self.assertEqual((960, 432), im.size)  # 480 x supersample 2
+
+    def test_显式指定webp才转格式(self) -> None:
+        """转格式是显式动作：只有 --format webp 才会换容器与扩展名。"""
+        out, _ = self.export(ASSETS / 'hero.jpg', '--format', 'webp', '--box', DEVICE_BOX)
+        self.assertFalse((self.out_dir / 'hero.jpg').exists())
+        with Image.open(self.out_dir / 'hero.webp') as im:
+            self.assertEqual('WEBP', im.format)
+        self.assertIn('会转格式', out)
+        self.assertIn('hero.jpg→hero.webp', out)
 
     def test_默认按显示框比例裁剪(self) -> None:
         self.export(ASSETS / 'hero.jpg', '--box', DEVICE_BOX)
-        with Image.open(self.out_dir / 'hero.webp') as im:
+        with Image.open(self.out_dir / 'hero.jpg') as im:
             self.assertAlmostEqual(240 / 108, im.size[0] / im.size[1], places=2)
 
     def test_比目标窄的源图不会被放大(self) -> None:
         self.export(ASSETS / 'icon.png', '--box', DEVICE_BOX)
-        with Image.open(self.out_dir / 'icon.webp') as im:
+        with Image.open(self.out_dir / 'icon.png') as im:
             self.assertEqual((400, 180), im.size)  # 400x400 裁到 2.222:1，不放大
 
     def test_只转格式时尺寸不变(self) -> None:
-        self.export(ASSETS / 'hero.jpg', '--no-crop', '--no-resize')
+        self.export(ASSETS / 'hero.jpg', '--format', 'webp', '--no-crop', '--no-resize')
         with Image.open(self.out_dir / 'hero.webp') as im:
             self.assertEqual((1200, 675), im.size)
             self.assertEqual('WEBP', im.format)
 
     def test_只压尺寸时不裁剪(self) -> None:
         self.export(ASSETS / 'hero.jpg', '--no-crop', '--max-width', '600')
-        with Image.open(self.out_dir / 'hero.webp') as im:
+        with Image.open(self.out_dir / 'hero.jpg') as im:
             self.assertEqual((600, 338), im.size)  # 比例保持，round(675*600/1200)
 
     def test_只裁剪时分辨率不变(self) -> None:
         self.export(ASSETS / 'hero.jpg', '--no-resize', '--box', DEVICE_BOX)
-        with Image.open(self.out_dir / 'hero.webp') as im:
+        with Image.open(self.out_dir / 'hero.jpg') as im:
             self.assertEqual((1200, 540), im.size)
 
     def test_format_keep保留源扩展名与格式(self) -> None:
@@ -332,7 +344,7 @@ class TestExportBasics(CliTest):
             self.assertEqual('AVIF', im.format)
 
     def test_无损webp逐像素一致(self) -> None:
-        self.export(ASSETS / 'logo.png', '--lossless', '--no-crop', '--no-resize')
+        self.export(ASSETS / 'logo.png', '--format', 'webp', '--lossless', '--no-crop', '--no-resize')
         with Image.open(ASSETS / 'logo.png') as src, Image.open(self.out_dir / 'logo.webp') as dst:
             self.assertEqual('WEBP', dst.format)
             self.assertEqual(0, _max_channel_diff(src, dst), '--lossless 必须是真正的无损')
@@ -341,8 +353,8 @@ class TestExportBasics(CliTest):
         for quality in ('30', '90'):
             self.export(ASSETS / 'hero.jpg', '--quality', quality,
                         '--no-crop', '--no-resize', out_dir=self.out_dir / f'q{quality}')
-        small = (self.out_dir / 'q30' / 'hero.webp').stat().st_size
-        big = (self.out_dir / 'q90' / 'hero.webp').stat().st_size
+        small = (self.out_dir / 'q30' / 'hero.jpg').stat().st_size
+        big = (self.out_dir / 'q90' / 'hero.jpg').stat().st_size
         self.assertLess(small, big)
 
     def test_透明图转jpeg会合成底色并提示(self) -> None:
@@ -354,7 +366,7 @@ class TestExportBasics(CliTest):
     def test_输出目录会被自动创建(self) -> None:
         deep = self.tmp / 'deep' / 'deeper'
         self.export(ASSETS / 'icon.png', out_dir=deep)
-        self.assertTrue((deep / 'icon.webp').exists())
+        self.assertTrue((deep / 'icon.png').exists())
 
     def test_打印体积与解码内存收益(self) -> None:
         out, _ = self.export(ASSETS / 'hero.jpg', '--box', DEVICE_BOX)
@@ -363,12 +375,12 @@ class TestExportBasics(CliTest):
 
     def test_子目录结构被复刻(self) -> None:
         self.export(ASSETS / 'nested')
-        self.assertTrue((self.out_dir / 'a' / 'tile.webp').exists())
-        self.assertTrue((self.out_dir / 'b' / 'tile.webp').exists())
+        self.assertTrue((self.out_dir / 'a' / 'tile.png').exists())
+        self.assertTrue((self.out_dir / 'b' / 'tile.png').exists())
 
     def test_保留icc色彩描述(self) -> None:
         self.export(ASSETS / 'hero.jpg', '--no-crop', '--no-resize')
-        with Image.open(ASSETS / 'hero.jpg') as src, Image.open(self.out_dir / 'hero.webp') as dst:
+        with Image.open(ASSETS / 'hero.jpg') as src, Image.open(self.out_dir / 'hero.jpg') as dst:
             self.assertTrue(src.info.get('icc_profile'), '夹具本身要带 ICC')
             self.assertEqual(src.info['icc_profile'], dst.info.get('icc_profile'),
                              '丢 ICC 会让 Display-P3 素材在浏览器里偏色')
@@ -380,14 +392,14 @@ class TestExportBasics(CliTest):
 
     def test_带EXIF方向的图先转正再导出(self) -> None:
         out, _ = self.export(TMP_ROOT / 'rotated.jpg', '--no-crop', '--no-resize')
-        with Image.open(self.out_dir / 'rotated.webp') as dst:
+        with Image.open(self.out_dir / 'rotated.jpg') as dst:
             self.assertEqual((1600, 900), dst.size, '方向 6 的 900x1600 素材要按显示方向转正')
             self.assertIsNone(dst.getexif().get(0x0112), '转正后不能再留方向标记')
         self.assertIn('EXIF 方向', out)
 
     def test_带EXIF方向的图按转正后的比例裁剪(self) -> None:
         self.export(TMP_ROOT / 'rotated.jpg', '--box', DEVICE_BOX)
-        with Image.open(self.out_dir / 'rotated.webp') as dst:
+        with Image.open(self.out_dir / 'rotated.jpg') as dst:
             self.assertEqual((960, 432), dst.size)  # 未转正会得到 900x405
 
 
@@ -398,7 +410,7 @@ class TestExportSafety(CliTest):
     def test_拒绝把产物写回源目录(self) -> None:
         for name, extra in (
             ('hero.jpg', ['--format', 'keep', '--no-crop', '--no-resize']),
-            ('already.webp', []),  # 默认 webp + 已 webp 源：以前会原地重编码
+            ('already.webp', []),  # 默认 keep + 已 webp 源：以前会原地重编码
         ):
             with self.subTest(name=name):
                 src = ASSETS / name
@@ -422,20 +434,22 @@ class TestExportSafety(CliTest):
         self.assertEqual(before, _digest(ASSETS / 'hero.jpg'), '源文件内容必须一字不改')
 
     def test_同名冲突整体中止且不留半个批次(self) -> None:
-        _out, err = self.fails('export', TMP_ROOT / 'clash', '--out', self.out_dir)
+        # 转格式才会把 a/same.png 与 a/same.jpg 撞到同一个目标文件上
+        _out, err = self.fails('export', TMP_ROOT / 'clash', '--out', self.out_dir,
+                               '--format', 'webp')
         self.assertIn('同一个文件', err)
         self.assertFalse(self.out_dir.exists(), '预检失败时不该创建输出目录')
 
     def test_不同子目录的同名图各自保留(self) -> None:
         self.export(ASSETS / 'nested')
-        a, b = self.out_dir / 'a' / 'tile.webp', self.out_dir / 'b' / 'tile.webp'
+        a, b = self.out_dir / 'a' / 'tile.png', self.out_dir / 'b' / 'tile.png'
         self.assertTrue(a.exists() and b.exists(), '同名不同目录必须各自输出')
         with Image.open(a) as ia, Image.open(b) as ib:
             self.assertGreater(_max_channel_diff(ia, ib), 50, '两张图的像素不该互相覆盖')
 
     def test_一次传多个目录时用目录名做前缀(self) -> None:
         self.export(ASSETS / 'nested' / 'a', ASSETS / 'nested' / 'b')
-        a, b = self.out_dir / 'a' / 'tile.webp', self.out_dir / 'b' / 'tile.webp'
+        a, b = self.out_dir / 'a' / 'tile.png', self.out_dir / 'b' / 'tile.png'
         self.assertTrue(a.exists() and b.exists(), '两个目录目标不该因为同名而互相撞')
         with Image.open(a) as ia, Image.open(b) as ib:
             self.assertGreater(_max_channel_diff(ia, ib), 50)
@@ -483,7 +497,7 @@ class TestExportSafety(CliTest):
 # --------------------------------------------------------------------------- #
 class TestVerify(CliTest):
     def test_跨扩展名按相对路径配对(self) -> None:
-        self.export(ASSETS / 'hero.jpg', '--box', DEVICE_BOX)
+        self.export(ASSETS / 'hero.jpg', '--format', 'webp', '--box', DEVICE_BOX)
         out, err = self.ok('verify', ASSETS / 'hero.jpg', self.out_dir, '--box', DEVICE_BOX)
         self.assertIn('hero.jpg→hero.webp', out)
         self.assertIn('结论', out)
@@ -493,7 +507,7 @@ class TestVerify(CliTest):
         self.export(ASSETS / 'nested', '--box', DEVICE_BOX)
         out, err = self.ok('verify', ASSETS / 'nested', self.out_dir, '--box', DEVICE_BOX)
         self.assertNotIn('没有对应', err)
-        rows = [line for line in out.splitlines() if line.startswith('tile.png→tile.webp')]
+        rows = [line for line in out.splitlines() if line.startswith('tile.png')]
         self.assertEqual(2, len(rows), f'两张同名图都要参与比对：\n{out}')
         self.assertLess(max(_columns(line)[3] for line in rows), 50,
                         '配错对（棋盘 vs 纯灰）会得到上百的像素差')
@@ -528,13 +542,14 @@ class TestVerify(CliTest):
         self.assertIn('候选偏糊', out)
 
     def test_无损候选判定为基本一致(self) -> None:
-        self.export(ASSETS / 'hero.jpg', '--lossless', '--no-crop', '--no-resize')
+        self.export(ASSETS / 'hero.jpg', '--format', 'webp', '--lossless', '--no-crop', '--no-resize')
         out, _ = self.ok('verify', ASSETS / 'hero.jpg', self.out_dir, '--box', DEVICE_BOX)
         self.assertEqual(0.0, _columns(_row(out, 'hero.jpg→hero.webp'))[3])
         self.assertIn('基本一致', out)
 
     def test_带EXIF方向的图不会被误判(self) -> None:
-        self.export(TMP_ROOT / 'rotated.jpg', '--lossless', '--no-crop', '--max-width', '600')
+        self.export(TMP_ROOT / 'rotated.jpg', '--format', 'webp', '--lossless',
+                    '--no-crop', '--max-width', '600')
         out, _ = self.ok('verify', TMP_ROOT / 'rotated.jpg', self.out_dir, '--box', DEVICE_BOX)
         self.assertLess(_columns(_row(out, 'rotated.jpg→rotated.webp'))[3], 5.0,
                         '源图有 EXIF 方向时必须按浏览器显示方向比对，否则会算出巨大差异')
@@ -584,6 +599,17 @@ class TestDocs(unittest.TestCase):
 
     def _text(self, name: str) -> str:
         return (SKILL_ROOT / name).read_text(encoding='utf-8')
+
+    def test_默认输出格式是保持源格式(self) -> None:
+        """默认不转格式既是对外承诺，也是脚本行为，两边不能漂移。"""
+        args = O.build_parser().parse_args(['export', 'in.jpg', '--out', 'out'])
+        self.assertEqual('keep', args.format, '默认输出格式必须是 keep（保持源格式）')
+        for name in self.DOC_FILES + ('evals/evals.json',):
+            text = self._text(name)
+            for stale in ('默认 webp', '默认转 WebP', '默认输出 WebP', '默认输出是 WebP'):
+                self.assertNotIn(stale, text, f'{name} 还把 WebP 当默认输出：{stale}')
+        self.assertIn('默认 keep', self._text('SKILL.md'))
+        self.assertIn('默认保持原格式', self._text('README.md'))
 
     def test_不再宣传avif无损(self) -> None:
         # 允许的写法是“明说 AVIF 不行 / 只能靠外部 avifenc / 真无损仅 webp+png”；
@@ -685,7 +711,7 @@ class Test清晰度强校验(CliTest):
         self.assertIn('仍失真', out)
         self.assertIn('q95', out)
         self.assertIn('通过', out)
-        with Image.open(self.out_dir / 'hero.webp') as im:
+        with Image.open(self.out_dir / 'hero.jpg') as im:
             self.assertEqual((480, 216), im.size,
                              '提质量就能救回时不该顺手把尺寸也提上去（体积代价更大）')
         self.assertNotIn('没通过', err)
@@ -702,7 +728,7 @@ class Test清晰度强校验(CliTest):
         self.assertIn('压缩不成功的原因', err)
         self.assertIn('--max-width', err)
         self.assertIn('保留原图', err)
-        self.assertTrue((self.out_dir / 'hero.webp').exists(), '产物照常生成，只是结论为保留原图')
+        self.assertTrue((self.out_dir / 'hero.jpg').exists(), '产物照常生成，只是结论为保留原图')
 
     def test_源图分辨率不足时原因指向换素材(self) -> None:
         # 源图本身就比屏上像素还小，再往下压只能更糟：原因要指向"换素材"
@@ -785,7 +811,7 @@ class Test清晰度强校验(CliTest):
         _out, err = self.fails('export', ASSETS / 'hero.jpg', '--out', self.out_dir,
                                '--box', DEVICE_BOX, '--report-json', self.tmp, code=2)
         self.assertIn('--report-json', err)
-        self.assertFalse((self.tmp / 'hero.webp').exists(), '参数错误时不该先建目录、先出图')
+        self.assertFalse((self.tmp / 'hero.jpg').exists(), '参数错误时不该先建目录、先出图')
 
 
 class Test跨平台(unittest.TestCase):

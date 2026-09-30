@@ -5,19 +5,19 @@
   # 1) 体检：相对显示框过采样多少、解码占多少内存
   python3 optimize_images.py analyze assets/img --box 240x108 --dpr 2
 
-  # 2) 导出（默认组合：裁剪到显示比例 + 缩到合理尺寸 + 转 WebP）
+  # 2) 导出（默认组合：裁剪到显示比例 + 缩到合理尺寸 + 保持源格式，不改扩展名）
   python3 optimize_images.py export assets/img --out /tmp/img-out \\
       --box 240x108 --dpr 2 --supersample 2 --quality 90
 
-  # 2a) 只转格式：不动尺寸、不裁剪（PNG/JPG → WebP）
+  # 2a) 转格式：只有用户明确要求转 WebP / AVIF 时才加 --format，否则一律保持源格式
   python3 optimize_images.py export photo.png --out /tmp/out \\
       --format webp --no-crop --no-resize --quality 90
 
-  # 2b) 只压缩：保持原格式，只缩尺寸（或只调质量）
-  python3 optimize_images.py export assets/img --out /tmp/out --format keep --no-crop --max-width 960
+  # 2b) 只缩尺寸：保持原格式（默认就是），不裁剪
+  python3 optimize_images.py export assets/img --out /tmp/out --no-crop --max-width 960
 
   # 2c) 只裁剪：保持原格式与分辨率，只按显示比例裁掉多余部分
-  python3 optimize_images.py export assets/img --out /tmp/out --format keep --no-resize --box 240x108
+  python3 optimize_images.py export assets/img --out /tmp/out --no-resize --box 240x108
 
   # 3) 验证：候选文件与“原图在浏览器里的渲染效果”对比
   python3 optimize_images.py verify assets/img /tmp/img-out --box 240x108 --dpr 2
@@ -601,7 +601,7 @@ def cmd_analyze(args: argparse.Namespace) -> int:
         total_bytes += size
         total_px += px
         fmt = source_format(src)
-        convert = '' if fmt == 'webp' else f'{fmt}→WebP（默认），'
+        convert = '' if fmt == 'webp' else f'{fmt}（默认保持），'
         ratio = shown[0] / device[0]
         if ratio >= 4:
             advice = '过采样严重，可降到 2~3 倍'
@@ -643,7 +643,8 @@ def cmd_export(args: argparse.Namespace) -> int:
         for line in blocked:
             print(f'  - {line}', file=sys.stderr)
         print(f'处理：把 --out 指到源目录之外的独立目录（例如 {temp_example_dir()}）；'
-              '源图同名冲突时可用 --format keep 保留各自扩展名，或把它们分开导出。', file=sys.stderr)
+              f'同名不同扩展名的源图（a/same.png + a/same.jpg）在转格式时会撞成同一个目标文件，'
+              '可用 --format keep 保留各自扩展名，或把它们分开导出。', file=sys.stderr)
         return EXIT_USAGE
     for raw in args.paths:
         p = Path(raw)
@@ -661,20 +662,27 @@ def cmd_export(args: argparse.Namespace) -> int:
     ratio = box[0] / box[1]
     device = (round(box[0] * args.dpr), round(box[1] * args.dpr))
     cap_w = cap_width_for(box, args, args.supersample)
+    # 输出格式逐图解析：默认 keep 时各源文件按自己的格式落盘，这里按实际结果报出来。
+    resolved = sorted({fmt for _src, _dst, fmt in plans})
     steps = []
     if not args.no_crop:
         steps.append(f'裁剪到 {ratio:.3f}:1')
     if cap_w:
         steps.append(f'宽度上限 {cap_w}px')
-    if args.format == 'png':
-        quality_text = '无损（PNG 固定无损，--quality 不生效）'
-    elif args.lossless:
+    if args.lossless:
         quality_text = '无损（Pillow 只支持 webp / png 无损；jpeg 会忽略）'
+    elif resolved == ['png']:
+        quality_text = '无损（PNG 固定无损，--quality 不生效）'
     else:
         quality_text = f'q{args.quality}'
-    print('处理：' + ('、'.join(steps) or '仅重新编码') + f'；输出 {args.format} {quality_text}')
-    if args.format == 'keep':
-        print('提示：默认输出是 WebP（PNG/JPEG/AVIF 一律转）；--format keep 只在明确要求保留原格式时使用')
+    out_text = f'保持源格式（{"、".join(resolved)}）' if args.format == 'keep' else args.format
+    print('处理：' + ('、'.join(steps) or '仅重新编码') + f'；输出 {out_text} {quality_text}')
+    converted = [(src, dst) for src, dst, fmt in plans if fmt != source_format(src)]
+    if converted:
+        shown = '、'.join(f'{src.name}→{dst.name}' for src, dst in converted[:3])
+        more = ' 等' if len(converted) > 3 else ''
+        print(f'注意：{len(converted)} 张图会转格式（{shown}{more}）：扩展名跟着变，'
+              '组件里的 import / 引用要一起改；默认是保持源格式，转格式都来自显式指定的 --format')
     print(f'清晰度强校验：候选与源图都按浏览器渲染到屏上尺寸比边缘能量，单图下降超过 '
           f'{abs(FIDELITY_DROP_LIMIT):.1f}% 判失真，最多再换 {FIDELITY_MAX_RETRIES} 个方案'
           f'（先提 --quality 到 {FIDELITY_QUALITY_CEILING}，再提 --supersample 到 '
@@ -685,6 +693,7 @@ def cmd_export(args: argparse.Namespace) -> int:
     grew: list[str] = []
     undersized: list[str] = []
     same_format_lossy = 0
+    same_format_fmts: set[str] = set()
     transposed = 0
     retried: list[tuple[Path, Path, str, list[dict[str, object]]]] = []
     failed: list[tuple[Path, Path, str, list[str], list[dict[str, object]]]] = []
@@ -725,6 +734,7 @@ def cmd_export(args: argparse.Namespace) -> int:
             undersized.append(display_name(src))
         if same_format_this:
             same_format_lossy += 1
+            same_format_fmts.add(fmt)
         records.append({
             'src': str(src.resolve()),
             'dst': str(dst),
@@ -859,8 +869,9 @@ def cmd_export(args: argparse.Namespace) -> int:
               '脚本不会放大，输出会停在源图分辨率。这类图压缩救不了，只能换更大的素材。',
               file=sys.stderr)
     if same_format_lossy and saved < 15:
-        print(f'注意：{same_format_lossy} 张图的源格式就是 {args.format}，本次属于有损重编码：'
-              f'整批只省了 {saved:.0f}%，却要多掉一次画质。建议保留原图，或改用 --lossless 再评估。',
+        fmts = '、'.join(sorted(same_format_fmts))
+        print(f'注意：{same_format_lossy} 张图的输出格式与源格式相同（{fmts}），属于有损重编码、会有代际损失：'
+              f'整批只省了 {saved:.0f}%，为这点体积多掉一次画质不划算，建议保留原图。',
               file=sys.stderr)
     if grew:
         shown = '、'.join(grew[:3]) + (' 等' if len(grew) > 3 else '')
@@ -871,7 +882,7 @@ def cmd_export(args: argparse.Namespace) -> int:
             f'警告：产物总体积比源文件大 {abs(saved):.0f}%，这批图不该按当前参数处理，请如实告诉用户而不是交付。\n'
             '  常见原因：源图已经是 WebP（重复编码会变大）、纯色 / 线条 / 截图类转成了有损格式、'
             '或"保持原格式"只做裁剪。\n'
-            '  建议：换参数（去掉 --format keep、只降尺寸不裁剪、改用 --lossless），'
+            '  建议：换参数（转成 WebP、只降尺寸不裁剪、改用 --lossless），'
             '或直接保留原图并把原因说明白。',
             file=sys.stderr,
         )
@@ -885,9 +896,9 @@ def cmd_export(args: argparse.Namespace) -> int:
         print(f'注意：{transposed} 张带 EXIF 方向标记，已按浏览器显示方向转正后再裁剪（产物不再带方向标记）')
     if flattened:
         print(f'注意：{flattened} 张带透明通道，转 JPEG 已按 --flatten-color（{args.flatten_color}）合成底色')
-    if args.format == 'jpeg' and args.lossless:
-        print('注意：JPEG 不支持无损，--lossless 已忽略（用 --format webp 才能无损；'
-              'Pillow 的 AVIF 也不支持无损）')
+    if 'jpeg' in resolved and args.lossless:
+        print('注意：JPEG 不支持无损，--lossless 对 .jpg 源的产物已忽略'
+              '（用 --format webp 才能无损；Pillow 的 AVIF 也不支持无损）')
     if failed or mean_drop < FIDELITY_BATCH_LIMIT:
         print(f'退出码 {EXIT_FIDELITY}：清晰度强校验没通过——这不是命令失败，产物已在 {out_dir} 里生成，'
               '只是结论为"保留原图"（报告里标 ✗ 的那几张）；别靠猜参数反复重跑，把原因说明白即可。',
@@ -1044,8 +1055,9 @@ def build_parser() -> argparse.ArgumentParser:
                           help='无损输出：只有 webp 有效（png 本身无损；avif 会被 Pillow 静默降级，故直接拒绝）')
     p_export.add_argument('--no-crop', action='store_true', help='不裁剪到显示比例，只缩放')
     p_export.add_argument('--no-resize', action='store_true', help='不改尺寸（只裁剪和/或转格式）')
-    p_export.add_argument('--format', choices=['webp', 'avif', 'jpeg', 'png', 'keep'], default='webp',
-                          help='输出格式，默认 webp；keep 表示保持源格式（只压缩/只裁剪时用）')
+    p_export.add_argument('--format', choices=['webp', 'avif', 'jpeg', 'png', 'keep'], default='keep',
+                          help='输出格式：keep（默认）保持源格式，只压尺寸/质量、不改扩展名；'
+                               'webp / avif / jpeg / png 是显式转格式（只在用户明确要求时才用）')
     p_export.add_argument('--flatten-color', type=flatten_color_arg, default='#000000',
                           help='透明图转 JPEG 时合成的底色，默认黑色')
     p_export.add_argument('--report-json', default=None, metavar='PATH',

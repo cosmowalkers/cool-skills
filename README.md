@@ -5,7 +5,7 @@ Agent 技能集合（Claude Code / Codex 通用）。每个目录是一个独立
 | Skill | 说明 |
 | --- | --- |
 | [text2png](text2png/README.md) | 把一段文字变成有设计感的图表 PNG：15 种图表形式 × 9 种视觉主题 = 135 种组合，附全矩阵演示页 |
-| [image-tools](image-tools/README.md) | 图片工具箱（已落地网页图片优化）：压尺寸、转 WebP/AVIF、按显示比例裁剪，并用清晰度 + 解码内存指标验证"没压糊"；自带 85 个用例 |
+| [image-tools](image-tools/README.md) | 图片工具箱（已落地网页图片优化）：压尺寸、按需转 WebP/AVIF（默认保持原格式）、按显示比例裁剪，并用清晰度 + 解码内存指标验证"没压糊"；自带 87 个用例 |
 | [commit-message](commit-message/README.md) | 提交规范：commit message 固定带修改目的 / 影响范围 / 改动范围 / 测试建议，并按"可独立回滚"把混合改动拆成多条提交 |
 
 ## 安装
@@ -47,11 +47,11 @@ foreach ($s in 'text2png','image-tools','commit-message') {
 定位是图片工具箱，第一条落地的流水线是网页图片优化；旋转、水印、目标体积等在 Roadmap 里。
 
 装完后用一句话说需求即可，例如「商品列表页那个 banner 太大，帮我按实际显示尺寸压一下」。
-它会量出图片在页面上的实际显示尺寸，据此重新出图、转 WebP/AVIF，并对比原图的渲染效果确认压完没变糊；
-也能只转格式、只压尺寸或只裁剪。
+它会量出图片在页面上的实际显示尺寸，据此重新出图，并对比原图的渲染效果确认压完没变糊；
+默认保持原格式（只压尺寸、不动扩展名），明确说「转成 webp」才转格式；也能只转格式、只压尺寸或只裁剪。
 
 产物默认导出到独立目录，不会覆盖源文件；同名冲突会在写入前整批中止。依赖 python3 与 Pillow（不需要 npm，
-缺依赖时脚本会打印安装命令），仓库自带 85 个回归与可用性用例，macOS / Linux / Windows 通用。
+缺依赖时脚本会打印安装命令），仓库自带 87 个回归与可用性用例，macOS / Linux / Windows 通用。
 
 能做什么、怎么用、常见问题：见 [image-tools/README.md](image-tools/README.md)。
 
