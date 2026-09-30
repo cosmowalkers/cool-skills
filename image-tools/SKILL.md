@@ -64,7 +64,7 @@ SKILL_DIR="${CODEX_HOME:-$HOME/.codex}/skills/image-tools"
 S="$SKILL_DIR/scripts/optimize_images.py"
 D="$SKILL_DIR/scripts"
 python3 "$S" doctor
-python3 "$D/tests/test_optimize_images.py" -v
+python3 "$D/tests/test_optimize_images.py" -v   # 用例随源码仓库分发，Hub 安装版没有 tests/
 ```
 
 Windows（PowerShell，解释器用 `py -3` 代替 `python3`）：
@@ -73,7 +73,7 @@ Windows（PowerShell，解释器用 `py -3` 代替 `python3`）：
 $S = "$env:USERPROFILE\.codex\skills\image-tools\scripts\optimize_images.py"
 $D = "$env:USERPROFILE\.codex\skills\image-tools\scripts"
 py -3 $S doctor
-py -3 "$D\tests\test_optimize_images.py" -v
+py -3 "$D\tests\test_optimize_images.py" -v   # 用例随源码仓库分发，Hub 安装版没有 tests/
 ```
 
 跨平台注意三点：
@@ -83,7 +83,8 @@ py -3 "$D\tests\test_optimize_images.py" -v
 - **控制台编码**：报告里有 `✗` `→` 这类符号，脚本启动时会把自己切成 UTF-8 输出，
   老式 cmd（cp936）、重定向到文件都不会因为编码崩掉。
 - **依赖**：缺 Pillow 时脚本会直接打印对应平台的安装命令（Windows 是 `py -3 -m pip install Pillow`）。
-  改过脚本、或换到别人机器上，先跑一遍自带用例（只依赖 python3 + Pillow，不联网、不动仓库素材）。
+  改过脚本、或换到别人机器上，跑一遍自带用例最稳（只依赖 python3 + Pillow，不联网、不动仓库素材）；
+  用例在源码仓库里，Hub 安装版不含 `tests/`，那种情况下跑一次 `doctor` 再做一次真实导出即可自检。
 
 给人类看的安装说明、配方与 FAQ 见同目录 [README.md](README.md)。
 
@@ -207,7 +208,8 @@ python3 "$S" verify <原目录> /tmp/img-out --box 240x108 --dpr 2
 四个子命令，参数见上文。
 输入支持 webp/jpg/png/avif（其余扩展名会被静默跳过）；输出由 `--format` 决定（webp 默认）。
 
-回归与可用性用例在 `scripts/tests/test_optimize_images.py`（85 条，只依赖 python3 + Pillow，不联网、不动仓库素材）：
+回归与可用性用例在 `scripts/tests/test_optimize_images.py`（85 条，只依赖 python3 + Pillow，不联网、不动仓库素材），
+随源码仓库分发——Hub 安装版不含 `tests/` 与 `evals/`：
 覆盖正常路径、原地覆盖拦截、重名冲突整体中止、无损 WebP 逐像素校验、EXIF 方向转正与 ICC/EXIF 保留、
 清晰度强校验的重试阶梯（最多 2 个方案）、报告标注与退出码 4、`--report-json` 的结构与失败原因、
 verify 的配对与发糊识别、参数校验与中文报错、跨平台（非 UTF-8 控制台、路径归一化）、
