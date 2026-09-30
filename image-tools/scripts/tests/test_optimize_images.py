@@ -11,9 +11,11 @@
   * 设 WI_KEEP_FIXTURES=1 可保留临时目录，便于手工查看产物。
 """
 
+import argparse
 import contextlib
 import hashlib
 import io
+import json
 import os
 import re
 import shutil
@@ -318,14 +320,14 @@ class TestExportBasics(CliTest):
             with self.subTest(fmt=fmt):
                 out_dir = self.out_dir / fmt
                 self.export(ASSETS / 'hero.jpg', '--format', fmt,
-                            '--no-crop', '--max-width', '320', out_dir=out_dir)
+                            '--no-crop', '--box', DEVICE_BOX, out_dir=out_dir)
                 with Image.open(out_dir / f'hero{ext}') as im:
                     self.assertEqual(expected, im.format)
 
     @unittest.skipUnless(features.check('avif'), '当前 Pillow 没有 AVIF 支持')
     def test_输出avif格式正确(self) -> None:
         self.export(ASSETS / 'hero.jpg', '--format', 'avif', '--quality', '60',
-                    '--no-crop', '--max-width', '320')
+                    '--no-crop', '--box', DEVICE_BOX)
         with Image.open(self.out_dir / 'hero.avif') as im:
             self.assertEqual('AVIF', im.format)
 
@@ -447,7 +449,7 @@ class TestExportSafety(CliTest):
     @unittest.skipUnless(features.check('avif'), '当前 Pillow 没有 AVIF 支持')
     def test_avif有损输出仍然可用(self) -> None:
         self.export(ASSETS / 'hero.jpg', '--format', 'avif', '--quality', '70',
-                    '--no-crop', '--max-width', '320')
+                    '--no-crop', '--box', DEVICE_BOX)
         self.assertTrue((self.out_dir / 'hero.avif').exists())
 
     def test_参数越界都给中文错误且不建目录(self) -> None:
@@ -598,6 +600,13 @@ class TestDocs(unittest.TestCase):
     def test_文档提到这套用例(self) -> None:
         self.assertIn('test_optimize_images.py', self._text('SKILL.md'))
 
+    def test_文档写明强校验与阈值(self) -> None:
+        """阈值是脚本里的常量，文档必须跟着它走（改了常量忘了改文档，这条会红）。"""
+        limit = f'{abs(O.FIDELITY_DROP_LIMIT):.1f}%'
+        for name in self.DOC_FILES:
+            self.assertIn('强校验', self._text(name), f'{name} 没写清晰度强校验')
+        self.assertIn(limit, self._text('SKILL.md'))
+        self.assertIn(limit, self._text('references/measured-data.md'))
     def test_文档里没有业务或内部标识(self) -> None:
         """这是通用功能 skill：对外分发前不得出现公司 / 项目 / 内部系统标识。"""
         ascii_tokens = ('sugon', 'zentao', 'su-common', 'aui-common', 'console-ui',
@@ -650,5 +659,130 @@ class Test不该压的图(CliTest):
         self.assertIn('换更大的素材', err)
 
 
+class Test清晰度强校验(CliTest):
+    """导出后逐图比对候选与源图；失真就升档重压，救不回来必须给原因而不是默默交付。"""
+    def test_失真时自动升档重压并救回(self) -> None:
+        # ss1 + q60 会把这张高频素材压到 −8% 上下：先提质量、再提尺寸，提质量就该救回来
+        out, err = self.export(ASSETS / 'hero.jpg', '--box', DEVICE_BOX,
+                               '--supersample', '1', '--quality', '60')
+        self.assertIn('仍失真', out)
+        self.assertIn('q95', out)
+        self.assertIn('通过', out)
+        with Image.open(self.out_dir / 'hero.webp') as im:
+            self.assertEqual((480, 216), im.size,
+                             '提质量就能救回时不该顺手把尺寸也提上去（体积代价更大）')
+        self.assertNotIn('没通过', err)
+    def test_首轮通过时不重压(self) -> None:
+        out, _ = self.export(ASSETS / 'hero.jpg', '--box', DEVICE_BOX)
+        self.assertIn('首轮即通过', out)
+    def test_救不回来时给原因并以退出码4结束(self) -> None:
+        # 尺寸被 --max-width 钉在屏上像素之下：浏览器必然放大，提质量也救不回来
+        _out, err = self.fails('export', ASSETS / 'hero.jpg', '--out', self.out_dir,
+                               '--box', DEVICE_BOX, '--max-width', '240',
+                               '--quality', '60', code=4)
+        self.assertIn('压缩不成功的原因', err)
+        self.assertIn('--max-width', err)
+        self.assertIn('保留原图', err)
+        self.assertTrue((self.out_dir / 'hero.webp').exists(), '产物照常生成，只是结论为保留原图')
+    def test_源图分辨率不足时原因指向换素材(self) -> None:
+        # 源图本身就比屏上像素还小，再往下压只能更糟：原因要指向"换素材"
+        tiny = self.tmp / 'tiny.jpg'
+        _texture((200, 200)).save(tiny, quality=90)
+        _out, err = self.fails('export', tiny, '--out', self.out_dir,
+                               '--box', DEVICE_BOX, '--dpr', 2, '--max-width', '120', code=4)
+        self.assertIn('源图像素不足', err)
+        self.assertIn('换更大的素材', err)
+    def test_纯色图不会被误判(self) -> None:
+        # 纯色素材的边缘能量接近 0，除零或噪声都不该报失真
+        out, err = self.export(ASSETS / 'icon.png', '--box', DEVICE_BOX)
+        self.assertIn('首轮即通过', out)
+        self.assertNotIn('没通过', err)
+    def test_无损输出也走强校验(self) -> None:
+        out, _ = self.export(ASSETS / 'hero.jpg', '--format', 'png', '--box', DEVICE_BOX)
+        self.assertIn('首轮即通过', out)
+        with Image.open(self.out_dir / 'hero.png') as im:
+            self.assertEqual((960, 432), im.size)
+    def test_导出帮助写明强校验与退出码(self) -> None:
+        out, _ = self.ok('export', '-h')
+        self.assertIn('强校验', out)
+        self.assertIn(f'退出码 {O.EXIT_FIDELITY}', out)
+    def test_没通过时在报告里标出该图(self) -> None:
+        # 报告要能一眼看出是哪几张没过，而不是只丢一句"有图没过"
+        out, err = self.fails('export', ASSETS / 'hero.jpg', '--out', self.out_dir,
+                              '--box', DEVICE_BOX, '--max-width', '240',
+                              '--quality', '60', code=4)
+        self.assertIn('✗', out)
+        self.assertIn('建议保留原图', out)
+        self.assertIn('已换过', out)
+        self.assertIn('结论：', out)
+        self.assertIn('0 张可替换', out)
+        self.assertIn('压缩不成功的原因', err)
+    def test_report_json给出可判定的结论与档位链(self) -> None:
+        path = self.tmp / 'report.json'
+        out, _err = self.export(ASSETS / 'hero.jpg', '--box', DEVICE_BOX, '--supersample', '1',
+                                '--quality', '60', '--report-json', path)
+        self.assertIn('报告：', out)
+        data = json.loads(path.read_text(encoding='utf-8'))
+        self.assertEqual(1, data['version'])
+        self.assertEqual('replace', data['fidelity']['action'])
+        self.assertTrue(data['fidelity']['passed'])
+        self.assertEqual(O.FIDELITY_MAX_RETRIES, data['fidelity']['max_retries'])
+        self.assertEqual(O.FIDELITY_DROP_LIMIT, data['fidelity']['drop_limit'])
+        self.assertEqual(1, data['summary']['replaceable'])
+        image = data['images'][0]
+        self.assertEqual(str(self.out_dir.resolve()), data['out_dir'],
+                         'JSON 里的路径要统一成解析后的形态')
+        self.assertEqual(data['out_dir'], os.path.dirname(image['dst']),
+                         'out_dir 与逐图 dst 必须能直接对上')
+        self.assertEqual(str((ASSETS / 'hero.jpg').resolve()), image['src'])
+        self.assertEqual(2, len(image['attempts']), 'JSON 里要能看到完整的档位链')
+        self.assertEqual(1, image['retries'])
+        self.assertTrue(image['passed'])
+        self.assertEqual([], image['reasons'])
+        self.assertEqual([480, 216], image['out_size'])
+    def test_report_json在没通过时也写出原因(self) -> None:
+        path = self.tmp / 'keep.json'
+        _out, _err = self.fails('export', ASSETS / 'hero.jpg', '--out', self.out_dir,
+                                '--box', DEVICE_BOX, '--max-width', '240', '--quality', '60',
+                                '--report-json', path, code=4)
+        data = json.loads(path.read_text(encoding='utf-8'))
+        self.assertEqual('keep_original', data['fidelity']['action'])
+        self.assertFalse(data['fidelity']['passed'])
+        self.assertEqual(0, data['summary']['replaceable'])
+        self.assertEqual(1, data['summary']['keep_original'])
+        image = data['images'][0]
+        self.assertFalse(image['passed'])
+        self.assertTrue(image['reasons'], '没通过的图必须在 JSON 里带原因')
+        self.assertIn('--max-width', '；'.join(image['reasons']))
+    def test_report_json指向目录时给中文用法错误(self) -> None:
+        _out, err = self.fails('export', ASSETS / 'hero.jpg', '--out', self.out_dir,
+                               '--box', DEVICE_BOX, '--report-json', self.tmp, code=2)
+        self.assertIn('--report-json', err)
+        self.assertFalse((self.tmp / 'hero.webp').exists(), '参数错误时不该先建目录、先出图')
+class Test重试阶梯(unittest.TestCase):
+    """校验不过最多再换 FIDELITY_MAX_RETRIES 个方案：先提质量、再提尺寸，换完就收手。"""
+    def _args(self, **overrides: object) -> argparse.Namespace:
+        base = {'no_resize': False, 'max_width': None, 'lossless': False}
+        base.update(overrides)
+        return argparse.Namespace(**base)
+    def test_先提质量再提尺寸然后收手(self) -> None:
+        args = self._args()
+        self.assertEqual((1, O.FIDELITY_QUALITY_CEILING),
+                         O.next_escalation(1, 60, 'webp', args, 0))
+        self.assertEqual((O.FIDELITY_SUPERSAMPLE_CEILING, O.FIDELITY_QUALITY_CEILING),
+                         O.next_escalation(1, O.FIDELITY_QUALITY_CEILING, 'webp', args, 1))
+        self.assertIsNone(
+            O.next_escalation(O.FIDELITY_SUPERSAMPLE_CEILING, O.FIDELITY_QUALITY_CEILING,
+                              'webp', args, 2),
+            '换满 2 个方案后必须收手，不能无限重压下去')
+    def test_尺寸被钉住时只换质量这一档(self) -> None:
+        args = self._args(max_width=240)
+        self.assertEqual((2, O.FIDELITY_QUALITY_CEILING),
+                         O.next_escalation(2, 60, 'webp', args, 0))
+        self.assertIsNone(O.next_escalation(2, O.FIDELITY_QUALITY_CEILING, 'webp', args, 1))
+    def test_无损输出只能提尺寸(self) -> None:
+        args = self._args()
+        self.assertEqual((O.FIDELITY_SUPERSAMPLE_CEILING, 90),
+                         O.next_escalation(2, 90, 'png', args, 0))
 if __name__ == '__main__':
     unittest.main(verbosity=2)

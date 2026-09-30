@@ -5,7 +5,7 @@ Agent 技能集合（Claude Code / Codex 通用）。每个目录是一个独立
 | Skill | 说明 |
 | --- | --- |
 | [text2png](text2png/README.md) | 把一段文字变成有设计感的图表 PNG：15 种图表形式 × 9 种视觉主题 = 135 种组合，附全矩阵演示页 |
-| [image-tools](image-tools/README.md) | 图片工具箱（已落地网页图片优化）：压尺寸、转 WebP/AVIF、按显示比例裁剪，并用清晰度 + 解码内存指标验证"没压糊"；自带 62 个用例 |
+| [image-tools](image-tools/README.md) | 图片工具箱（已落地网页图片优化）：压尺寸、转 WebP/AVIF、按显示比例裁剪，并用清晰度 + 解码内存指标验证"没压糊"；自带 85 个用例 |
 | [commit-message](commit-message/README.md) | 提交规范：commit message 固定带修改目的 / 影响范围 / 改动范围 / 测试建议，并按"可独立回滚"把混合改动拆成多条提交 |
 
 ## 安装

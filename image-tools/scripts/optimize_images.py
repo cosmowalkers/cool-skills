@@ -27,11 +27,17 @@
   * 目录输入会在输出目录里复刻子目录结构；重名冲突在写入前整体拒绝，不会写出半个批次。
   * EXIF 方向先转正再裁剪导出，ICC / EXIF 元数据随产物保留。
   * Pillow 的 AVIF 编码器不支持无损：--format avif --lossless 会报错，而不是静默降级成有损。
+  * 清晰度强校验：export 逐图比对候选与源图的渲染效果，下降超过 4% 判失真，最多再换 2 个方案
+    （先提质量、再提尺寸）；仍失真时在报告里用 ✗ 标出该图，打印原因并以退出码 4 结束
+    （产物照常生成，但结论是保留原图）。
+  * export 可加 --report-json 落一份机器可读的结论（每张图的档位链、掉多少、pass/keep、原因），
+    CI 用退出码判、读原因用这个文件，不必解析控制台文本；里面的路径统一是解析后的绝对路径。
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import platform
 import shutil
 import sys
@@ -40,6 +46,13 @@ from pathlib import Path
 EXIT_OK = 0
 EXIT_USAGE = 2          # 用法 / 输入 / 安全护栏问题
 EXIT_DEP = 3            # 依赖缺失
+EXIT_FIDELITY = 4       # 有图没过清晰度强校验（产物已生成，但结论是保留原图）
+# 清晰度强校验：export 内置，判据与 verify 同源（都把候选与源图渲染到屏上尺寸再比边缘能量）。
+FIDELITY_DROP_LIMIT = -4.0         # 单图下降超过它就判失真，自动升档重压
+FIDELITY_BATCH_LIMIT = -3.5        # 整批均值线，与 verify 的“偏糊”判定同口径
+FIDELITY_QUALITY_CEILING = 95      # 重压阶梯第一级：先提质量（代价比提尺寸小）
+FIDELITY_SUPERSAMPLE_CEILING = 3   # 阶梯第二级：尺寸最多提到 3 倍
+FIDELITY_MAX_RETRIES = 2           # 首轮没过后最多再换 2 个方案；换完仍失真就在报告里标出来
 
 try:
     import PIL
@@ -187,6 +200,9 @@ def display_name(p: Path) -> str:
     return text if len(text) <= 42 else text[:19] + '…' + text[-22:]
 
 
+def attempt_label(src: Path, dst: Path) -> str:
+    """产物名与源名不同（转格式）时写成 hero.jpg→hero.webp，便于对上 verify 的表。"""
+    return dst.name if src.name == dst.name else f'{src.name}→{dst.name}'
 def decoded_mb(pixels: int) -> str:
     return f'{pixels * 4 / 1024 / 1024:.1f} MB'
 
@@ -283,15 +299,23 @@ def load_for_edit(src: Path) -> tuple[Image.Image, dict[str, object], bool]:
 
 
 def save_variant(
-    im: Image.Image, dst: Path, fmt: str, args: argparse.Namespace, meta: dict[str, object]
+    im: Image.Image,
+    dst: Path,
+    fmt: str,
+    args: argparse.Namespace,
+    meta: dict[str, object],
+    quality: int | None = None,
 ) -> None:
-    """按目标格式落盘；JPEG 不支持 alpha，会合成 --flatten-color 底色；ICC/EXIF 随产物保留。"""
+    """按目标格式落盘；JPEG 不支持 alpha，会合成 --flatten-color 底色；ICC/EXIF 随产物保留。
+    quality 用于清晰度强校验的升档重压（先提质量、再提尺寸），不传就用 --quality。
+    """
+    quality = args.quality if quality is None else quality
     if fmt == 'webp':
         kwargs: dict[str, object] = {'method': 6, **meta}
         if args.lossless:
             kwargs['lossless'] = True
         else:
-            kwargs['quality'] = args.quality
+            kwargs['quality'] = quality
         im.save(dst, 'WEBP', **kwargs)
     elif fmt == 'avif':
         if not features.check('avif'):
@@ -301,14 +325,14 @@ def save_variant(
             )
         if args.lossless:
             raise SystemExit(AVIF_LOSSLESS_HINT)
-        im.save(dst, 'AVIF', quality=args.quality, **meta)
+        im.save(dst, 'AVIF', quality=quality, **meta)
     elif fmt == 'jpeg':
         if im.mode == 'RGBA':
             bg = Image.new('RGB', im.size, args.flatten_color)
             bg.paste(im, mask=im.split()[-1])
             im = bg
         im.convert('RGB').save(
-            dst, 'JPEG', quality=args.quality, optimize=True, progressive=True, **meta
+            dst, 'JPEG', quality=quality, optimize=True, progressive=True, **meta
         )
     elif fmt == 'png':
         im.save(dst, 'PNG', optimize=True, compress_level=9, **meta)
@@ -352,6 +376,142 @@ def plan_outputs(
     return plans, blocked
 
 
+# --------------------------------------------------------------------------- #
+# 清晰度强校验：导出后逐图比对，失真就升档重压，到顶仍失真就说明原因
+# --------------------------------------------------------------------------- #
+def cap_width_for(box: tuple[int, int], args: argparse.Namespace, supersample: float) -> int:
+    """这一档的宽度上限（0 表示不缩放）。"""
+    if args.no_resize:
+        return 0
+    return args.max_width or round(box[0] * args.dpr * supersample)
+def bake_variant(
+    im: Image.Image,
+    dst: Path,
+    fmt: str,
+    args: argparse.Namespace,
+    meta: dict[str, object],
+    ratio: float,
+    cap_w: int,
+    quality: int,
+) -> tuple[int, int]:
+    """按一套参数出图：裁剪 → 缩到宽度上限（不放大）→ 落盘，返回输出尺寸。"""
+    work = im if args.no_crop else crop_to_ratio(im, ratio)
+    if cap_w and work.width > cap_w:
+        work = work.resize((cap_w, max(1, round(work.height * cap_w / work.width))), Image.LANCZOS)
+    save_variant(work, dst, fmt, args, meta, quality=quality)
+    return work.size
+def compare_render(ref: Path, cand: Path, device: tuple[int, int]) -> tuple[float, float, float]:
+    """把两张图各自按“浏览器会怎么渲染”重采样到屏上尺寸。
+    返回 (参考边缘能量, 候选边缘能量, 平均像素差)。export 的强校验与 verify 用的是同一段逻辑，
+    两边的数字才是同一口径。
+    """
+    with Image.open(ref) as r, Image.open(cand) as c:
+        ref_render = render_like_browser(r, device)
+        cand_render = render_like_browser(c, device)
+    return (edge_energy(ref_render), edge_energy(cand_render),
+            mean_abs_diff(ref_render, cand_render))
+def drop_pct(e_ref: float, e_cand: float) -> float:
+    """边缘能量变化百分比；源图没有边缘（纯色）时按 0 处理，否则会除零。"""
+    return (e_cand - e_ref) / e_ref * 100 if e_ref else 0.0
+def fidelity_drop(ref: Path, cand: Path, device: tuple[int, int]) -> float:
+    e_ref, e_cand, _diff = compare_render(ref, cand, device)
+    return drop_pct(e_ref, e_cand)
+def next_escalation(
+    supersample: float, quality: int, fmt: str, args: argparse.Namespace, tried: int
+) -> tuple[float, int] | None:
+    """失真后的下一个替代方案：先提质量（体积代价小），质量到顶再提尺寸；没得换就返回 None。
+    tried 是已经换过的方案数，最多换 FIDELITY_MAX_RETRIES 个。上限是 supersample 3 + q95
+    —— 这也是 SKILL.md 里“被反馈发糊”时的推荐档位。
+    """
+    if tried >= FIDELITY_MAX_RETRIES:
+        return None
+    lossy = fmt == 'jpeg' or (fmt in ('webp', 'avif') and not args.lossless)
+    if lossy and quality < FIDELITY_QUALITY_CEILING:
+        return supersample, FIDELITY_QUALITY_CEILING
+    # --no-resize / --max-width 已经把尺寸钉住了，提 supersample 不会有任何效果
+    if not args.no_resize and not args.max_width and supersample < FIDELITY_SUPERSAMPLE_CEILING:
+        return FIDELITY_SUPERSAMPLE_CEILING, quality
+    return None
+def export_with_fidelity(
+    im: Image.Image,
+    src: Path,
+    dst: Path,
+    fmt: str,
+    args: argparse.Namespace,
+    meta: dict[str, object],
+    ratio: float,
+    box: tuple[int, int],
+    device: tuple[int, int],
+) -> list[dict[str, object]]:
+    """导出单张图并做清晰度强校验：失真就换方案重压（最多 FIDELITY_MAX_RETRIES 次），
+    返回每次尝试的记录，最后一条即交付的产物。
+    """
+    attempts: list[dict[str, object]] = []
+    supersample, quality = args.supersample, args.quality
+    while True:
+        cap_w = cap_width_for(box, args, supersample)
+        size = bake_variant(im, dst, fmt, args, meta, ratio, cap_w, quality)
+        attempts.append({
+            'supersample': supersample,
+            'quality': quality,
+            'cap_w': cap_w,
+            'size': size,
+            'bytes': dst.stat().st_size,
+            'drop': fidelity_drop(src, dst, device),
+        })
+        if attempts[-1]['drop'] >= FIDELITY_DROP_LIMIT:
+            break
+        nxt = next_escalation(supersample, quality, fmt, args, len(attempts) - 1)
+        if nxt is None:
+            break
+        supersample, quality = nxt
+    return attempts
+def describe_attempt(attempt: dict[str, object], fmt: str, args: argparse.Namespace) -> str:
+    """把一次尝试写成 "ss1/q95 960px 宽 -0.3%（通过）" 这样的一行。"""
+    lossless = fmt == 'png' or args.lossless
+    quality = '无损' if lossless else f'q{attempt["quality"]}'
+    state = '通过' if attempt['drop'] >= FIDELITY_DROP_LIMIT else '仍失真'
+    size = attempt['size']
+    return (f'ss{attempt["supersample"]:g}/{quality} {size[0]}px 宽 '
+            f'{attempt["drop"]:+.1f}%（{state}）')
+def fidelity_diagnosis(
+    src_size: tuple[int, int],
+    attempts: list[dict[str, object]],
+    fmt: str,
+    args: argparse.Namespace,
+    device: tuple[int, int],
+) -> list[str]:
+    """没通过强校验时，用已有证据说清“为什么压不成功”，而不是只丢一个百分数。"""
+    first, final = attempts[0], attempts[-1]
+    cap_w = first['cap_w']
+    reasons: list[str] = []
+    if len(attempts) > 1:
+        reasons.append(f'已换过 {len(attempts) - 1} 个方案（先提质量、再提尺寸）仍不达标')
+    if cap_w and src_size[0] < cap_w:
+        reasons.append(f'源图比目标还窄（源宽 {src_size[0]}px < 目标 {cap_w}px），脚本不放大，'
+                       '这一档拿不回清晰度')
+    if src_size[0] < device[0]:
+        reasons.append(f'源图像素不足：源宽 {src_size[0]}px < 屏上像素宽 {device[0]}px，'
+                       f'浏览器要放大 {device[0] / src_size[0]:.1f} 倍，该换更大的素材')
+    if fmt == 'png' or args.lossless:
+        reasons.append(f'{fmt.upper()} 是无损输出，质量档不适用，只能靠提尺寸')
+    if args.no_resize or args.max_width:
+        limit = '--no-resize' if args.no_resize else f'--max-width {args.max_width}'
+        reasons.append(f'尺寸被 {limit} 钉住，没法用提尺寸换清晰度，只能提质量')
+    if final['supersample'] >= FIDELITY_SUPERSAMPLE_CEILING:
+        reasons.append(f'已到最稳妥档（supersample {FIDELITY_SUPERSAMPLE_CEILING} + '
+                       f'q{FIDELITY_QUALITY_CEILING}）仍下降 {abs(final["drop"]):.1f}%')
+    elif len(attempts) == 1:
+        reasons.append(f'没有可再升的档位（当前 supersample {final["supersample"]:g} '
+                       f'+ q{final["quality"]}）')
+    if len(attempts) > 1 and final['drop'] <= first['drop']:
+        reasons.append(f'升档没有改善（{first["drop"]:+.1f}% → {final["drop"]:+.1f}%），'
+                       '说明掉的不是这一个变量，别继续调参数了')
+    return reasons
+def write_json_report(path: Path, payload: dict[str, object]) -> None:
+    """落一份机器可读的导出结论：CI 读退出码判生死，读这个文件拿原因和逐图结果。"""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 def cmd_analyze(args: argparse.Namespace) -> int:
     images = collect_images(args.paths)
     if not images:
@@ -403,6 +563,10 @@ def cmd_export(args: argparse.Namespace) -> int:
     if args.format == 'avif' and args.lossless:
         print(AVIF_LOSSLESS_HINT, file=sys.stderr)
         return EXIT_USAGE
+    report_path = Path(args.report_json) if args.report_json else None
+    if report_path is not None and report_path.is_dir():
+        print(f'--report-json 要的是文件路径，这个位置是目录：{report_path}', file=sys.stderr)
+        return EXIT_USAGE
 
     out_dir = Path(args.out)
     plans, blocked = plan_outputs(images, out_dir, args)
@@ -427,7 +591,8 @@ def cmd_export(args: argparse.Namespace) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     box = resolve_box(args)
     ratio = box[0] / box[1]
-    cap_w = 0 if args.no_resize else (args.max_width or round(box[0] * args.dpr * args.supersample))
+    device = (round(box[0] * args.dpr), round(box[1] * args.dpr))
+    cap_w = cap_width_for(box, args, args.supersample)
     steps = []
     if not args.no_crop:
         steps.append(f'裁剪到 {ratio:.3f}:1')
@@ -442,6 +607,10 @@ def cmd_export(args: argparse.Namespace) -> int:
     print('处理：' + ('、'.join(steps) or '仅重新编码') + f'；输出 {args.format} {quality_text}')
     if args.format == 'keep':
         print('提示：默认输出是 WebP（PNG/JPEG/AVIF 一律转）；--format keep 只在明确要求保留原格式时使用')
+    print(f'清晰度强校验：候选与源图都按浏览器渲染到屏上尺寸比边缘能量，单图下降超过 '
+          f'{abs(FIDELITY_DROP_LIMIT):.1f}% 判失真，最多再换 {FIDELITY_MAX_RETRIES} 个方案'
+          f'（先提 --quality 到 {FIDELITY_QUALITY_CEILING}，再提 --supersample 到 '
+          f'{FIDELITY_SUPERSAMPLE_CEILING}）；换完仍不达标的会在下面的报告里标 ✗')
     print(f'{"文件":<40}{"原尺寸":<12}{"新尺寸":<12}{"格式":<10}{"原体积":>10}{"新体积":>10}{"解码内存":>18}')
     before_bytes = after_bytes = before_px = after_px = 0
     flattened = 0
@@ -449,39 +618,172 @@ def cmd_export(args: argparse.Namespace) -> int:
     undersized: list[str] = []
     same_format_lossy = 0
     transposed = 0
+    retried: list[tuple[Path, Path, str, list[dict[str, object]]]] = []
+    failed: list[tuple[Path, Path, str, list[str], list[dict[str, object]]]] = []
+    records: list[dict[str, object]] = []
+    clean_drops: list[float] = []
+    all_drops: list[float] = []
     for src, dst, fmt in plans:
         im, meta, was_transposed = load_for_edit(src)
         if was_transposed:
             transposed += 1
         src_size = im.size  # 已按 EXIF 方向转正
         src_bytes = src.stat().st_size
-        work = im if args.no_crop else crop_to_ratio(im, ratio)
-        if cap_w and work.width > cap_w:
-            target = (cap_w, max(1, round(work.height * cap_w / work.width)))
-            work = work.resize(target, Image.LANCZOS)
-        if fmt == 'jpeg' and work.mode == 'RGBA':
+        if fmt == 'jpeg' and im.mode == 'RGBA':
             flattened += 1
         dst.parent.mkdir(parents=True, exist_ok=True)
-        save_variant(work, dst, fmt, args, meta)
-        dst_bytes = dst.stat().st_size
+        attempts = export_with_fidelity(im, src, dst, fmt, args, meta, ratio, box, device)
+        final = attempts[-1]
+        dst_bytes = final['bytes']
+        drop = final['drop']
+        all_drops.append(drop)
+        if len(attempts) > 1:
+            retried.append((src, dst, fmt, attempts))
+        else:
+            clean_drops.append(drop)
+        reasons = (fidelity_diagnosis(src_size, attempts, fmt, args, device)
+                   if drop < FIDELITY_DROP_LIMIT else [])
+        if reasons:
+            failed.append((src, dst, fmt, reasons, attempts))
+        out_w, out_h = final['size']
+        out_px = out_w * out_h
+        grew_this = dst_bytes > src_bytes
+        undersized_this = bool(final['cap_w']) and src_size[0] < final['cap_w']
+        same_format_this = (not args.lossless and fmt == source_format(src)
+                            and fmt in ('webp', 'jpeg', 'avif'))
         if dst_bytes > src_bytes:
             grew.append(display_name(src))
-        if cap_w and src_size[0] < cap_w:
+        if undersized_this:
             undersized.append(display_name(src))
-        if not args.lossless and fmt == source_format(src) and fmt in ('webp', 'jpeg', 'avif'):
+        if same_format_this:
             same_format_lossy += 1
+        records.append({
+            'src': str(src.resolve()),
+            'dst': str(dst),
+            'label': attempt_label(src, dst),
+            'src_format': source_format(src),
+            'out_format': fmt,
+            'src_size': [src_size[0], src_size[1]],
+            'out_size': [out_w, out_h],
+            'src_bytes': src_bytes,
+            'out_bytes': dst_bytes,
+            'src_px': src_size[0] * src_size[1],
+            'out_px': out_px,
+            'drop': round(drop, 2),
+            'passed': not reasons,
+            'retries': len(attempts) - 1,
+            'reasons': reasons,
+            'grew': grew_this,
+            'undersized': undersized_this,
+            'same_format_lossy': same_format_this,
+            'attempts': [
+                {
+                    'supersample': a['supersample'],
+                    'quality': a['quality'],
+                    'cap_w': a['cap_w'],
+                    'size': [a['size'][0], a['size'][1]],
+                    'bytes': a['bytes'],
+                    'drop': round(a['drop'], 2),
+                }
+                for a in attempts
+            ],
+        })
         before_bytes += src_bytes
         after_bytes += dst_bytes
         before_px += src_size[0] * src_size[1]
-        after_px += work.size[0] * work.size[1]
+        after_px += out_px
         print(f'{display_name(src):<40}{f"{src_size[0]}x{src_size[1]}":<12}'
-              f'{f"{work.size[0]}x{work.size[1]}":<12}'
+              f'{f"{out_w}x{out_h}":<12}'
               f'{source_format(src) + "→" + fmt:<10}'
               f'{kb(src_bytes):>10}{kb(dst_bytes):>10}'
-              f'{decoded_mb(src_size[0] * src_size[1]) + " → " + decoded_mb(work.size[0] * work.size[1]):>18}')
+              f'{decoded_mb(src_size[0] * src_size[1]) + " → " + decoded_mb(out_px):>18}')
     saved = (1 - after_bytes / before_bytes) * 100 if before_bytes else 0
     print(f'{"合计":<40}{"":<12}{"":<12}{"":<10}{kb(before_bytes):>10}{kb(after_bytes):>10}')
     print(f'体积下降 {saved:.0f}%；解码内存 {decoded_mb(before_px)} → {decoded_mb(after_px)}')
+    mean_drop = sum(all_drops) / len(all_drops) if all_drops else 0.0
+    print()
+    print(f'清晰度强校验（单图失真线 {abs(FIDELITY_DROP_LIMIT):.1f}%，整批均值线 '
+          f'{abs(FIDELITY_BATCH_LIMIT):.1f}%，与 verify 同一口径；单图没过会依次换方案，'
+          f'最多 {FIDELITY_MAX_RETRIES} 次）')
+    for src, dst, fmt, attempts in retried:
+        chain = ' → '.join(describe_attempt(a, fmt, args) for a in attempts)
+        print(f'  {attempt_label(src, dst)}：{chain}')
+    if clean_drops:
+        print(f'  其余 {len(clean_drops)} 张首轮即通过（最大下降 {max(clean_drops):+.1f}%）')
+    for src, dst, fmt, _reasons, attempts in failed:
+        print(f'  ✗ {attempt_label(src, dst)}：{describe_attempt(attempts[-1], fmt, args)}'
+              f'｜已换过 {len(attempts) - 1} 个方案仍不达标，建议保留原图')
+    print(f'  整批平均边缘能量变化：{mean_drop:+.1f}%')
+    if failed:
+        print(f'  结论：{len(plans) - len(failed)} 张可替换；{len(failed)} 张建议保留原图（上面标 ✗ 的），'
+              '原因见下方说明')
+    elif mean_drop < FIDELITY_BATCH_LIMIT:
+        print(f'  结论：单图都在失真线以内，但整批均值 {mean_drop:+.1f}% 落进偏糊区间，建议整体保留原图')
+    else:
+        print(f'  结论：{len(plans)} 张都在失真线以内，可进入交付前的目视确认')
+    if report_path is not None:
+        keep = bool(failed) or mean_drop < FIDELITY_BATCH_LIMIT
+        payload: dict[str, object] = {
+            'version': 1,
+            'command': 'export',
+            # 免得下游拿到 out_dir 与 images[].dst 两种写法对不上。
+            'out_dir': str(out_dir.resolve()),
+            'target': {
+                'box': [box[0], box[1]],
+                'dpr': args.dpr,
+                'device_px': [device[0], device[1]],
+                'crop_ratio': round(ratio, 4),
+                'format': args.format,
+                'quality': args.quality,
+                'lossless': bool(args.lossless),
+                'supersample': args.supersample,
+                'max_width': args.max_width or None,
+                'no_crop': bool(args.no_crop),
+                'no_resize': bool(args.no_resize),
+            },
+            'summary': {
+                'images': len(records),
+                'replaceable': len(records) - len(failed),
+                'keep_original': len(failed),
+                'src_bytes': before_bytes,
+                'out_bytes': after_bytes,
+                'saved_pct': round(saved, 1),
+                'src_px': before_px,
+                'out_px': after_px,
+                'grew': grew,
+                'undersized': undersized,
+                'same_format_lossy': same_format_lossy,
+                'transposed': transposed,
+                'flattened': flattened,
+            },
+            'fidelity': {
+                'drop_limit': FIDELITY_DROP_LIMIT,
+                'batch_limit': FIDELITY_BATCH_LIMIT,
+                'max_retries': FIDELITY_MAX_RETRIES,
+                'quality_ceiling': FIDELITY_QUALITY_CEILING,
+                'supersample_ceiling': FIDELITY_SUPERSAMPLE_CEILING,
+                'mean_drop': round(mean_drop, 2),
+                'passed': not keep,
+                'action': 'keep_original' if keep else 'replace',
+                'keep_original': [r['label'] for r in records if not r['passed']],
+            },
+            'images': records,
+        }
+        write_json_report(report_path, payload)
+        print(f'  报告：{report_path}（机器可读；CI 用退出码判、读这个文件拿原因，不用解析上面的文本）')
+    if failed:
+        print(f'清晰度强校验没通过：{len(failed)} 张。产物已生成，但这几张的结论是保留原图、不要替换。',
+              file=sys.stderr)
+        for src, dst, fmt, reasons, attempts in failed:
+            print(f'  - {attempt_label(src, dst)}：{describe_attempt(attempts[-1], fmt, args)}',
+                  file=sys.stderr)
+            print('      压缩不成功的原因：' + '；'.join(reasons), file=sys.stderr)
+        print('  处理：先别替换这几张；要更清晰只能把导出尺寸再往上抬、换更大的素材，'
+              '或用真实浏览器截图目视复核一次（这个指标对高细节素材偏保守）。', file=sys.stderr)
+    elif mean_drop < FIDELITY_BATCH_LIMIT:
+        print(f'清晰度强校验没通过：整批均值 {mean_drop:+.1f}% 落进 verify 的偏糊区间'
+              f'（低于 {FIDELITY_BATCH_LIMIT:.1f}%），各图都已升到上限，建议整体保留原图。',
+              file=sys.stderr)
     if undersized:
         shown = '、'.join(undersized[:3]) + (' 等' if len(undersized) > 3 else '')
         print(f'注意：{len(undersized)} 张图源分辨率不足（{shown}）：宽度小于目标 {cap_w}px，'
@@ -517,13 +819,20 @@ def cmd_export(args: argparse.Namespace) -> int:
     if args.format == 'jpeg' and args.lossless:
         print('注意：JPEG 不支持无损，--lossless 已忽略（用 --format webp 才能无损；'
               'Pillow 的 AVIF 也不支持无损）')
+    if failed or mean_drop < FIDELITY_BATCH_LIMIT:
+        print(f'退出码 {EXIT_FIDELITY}：清晰度强校验没通过——这不是命令失败，产物已在 {out_dir} 里生成，'
+              '只是结论为"保留原图"（报告里标 ✗ 的那几张）；别靠猜参数反复重跑，把原因说明白即可。',
+              file=sys.stderr)
+        print(f'输出目录：{out_dir}（子目录结构已复刻；替换前先备份原图，并重建产物）')
+        return EXIT_FIDELITY
     print(f'输出目录：{out_dir}（子目录结构已复刻；替换前先备份原图，并重建产物）')
     return EXIT_OK
 
 
 def cmd_doctor(args: argparse.Namespace) -> int:
     """检查运行环境：Pillow 与各格式编解码器是否可用。"""
-    print(f'Python {platform.python_version()} ({platform.machine()})')
+    print(f'系统 {platform.system()} {platform.release()}（{platform.machine()}）')
+    print(f'Python {platform.python_version()}')
     print(f'解释器 {sys.executable}')
     print(f'Pillow {PIL.__version__}')
     print('图像格式支持：')
@@ -592,24 +901,20 @@ def cmd_verify(args: argparse.Namespace) -> int:
     total_ref_px = total_cand_px = 0
     for ref_path, cand_path in pairs:
         with Image.open(ref_path) as r, Image.open(cand_path) as c:
-            ref_render = render_like_browser(r, device)
-            cand_render = render_like_browser(c, device)
             ref_px = r.size[0] * r.size[1]
             cand_px = c.size[0] * c.size[1]
+        e_ref, e_cand, diff = compare_render(ref_path, cand_path, device)
         total_ref_bytes += ref_path.stat().st_size
         total_cand_bytes += cand_path.stat().st_size
         total_ref_px += ref_px
         total_cand_px += cand_px
-        e_ref = edge_energy(ref_render)
-        e_cand = edge_energy(cand_render)
-        delta = (e_cand - e_ref) / e_ref * 100 if e_ref else 0.0
-        diff = mean_abs_diff(ref_render, cand_render)
+        delta = drop_pct(e_ref, e_cand)
         deltas.append(delta)
         if delta < -5:
             flag = '  ← 有发糊风险'
         else:
             flag = ''
-        label = cand_path.name if ref_path.name == cand_path.name else f'{ref_path.name}→{cand_path.name}'
+        label = attempt_label(ref_path, cand_path)
         print(f'{label:<34}{e_ref:>9.2f}{e_cand:>9.2f}{delta:>7.1f}%{diff:>8.2f}'
               f'{kb(cand_path.stat().st_size):>12}{flag}')
     mean_delta = sum(deltas) / len(deltas)
@@ -619,7 +924,8 @@ def cmd_verify(args: argparse.Namespace) -> int:
           f'解码内存合计：{decoded_mb(total_ref_px)} → {decoded_mb(total_cand_px)}')
     print(f'整批平均边缘能量变化：{mean_delta:+.1f}%（逐图噪声约 ±1.5%，结论看均值）')
     print('说明：该指标是与“源图单步降采样”的理想结果比，偏保守；均值达标但个别图偏软时，')
-    print('      再用真实浏览器截图目视比对一次即可放心。')
+    print('      再用真实浏览器截图目视比对一次即可放心。export 已内置同一套判据'
+          f'（逐图下降超过 {abs(FIDELITY_DROP_LIMIT):.1f}% 会当场升档重压），此处用于复核或比对已有产物。')
     if mean_delta < -3.5:
         print('结论：候选偏糊，回到 export 提高 --supersample 或 --quality 后重验。')
     elif mean_delta < -2.5:
@@ -646,7 +952,14 @@ def build_parser() -> argparse.ArgumentParser:
     add_common(p_analyze)
     p_analyze.set_defaults(func=cmd_analyze)
 
-    p_export = sub.add_parser('export', help='按显示尺寸导出候选')
+    p_export = sub.add_parser(
+        'export', help='按显示尺寸导出候选',
+        epilog=f'清晰度强校验：导出后逐图比对候选与源图的渲染效果，单图边缘能量下降超过 '
+               f'{abs(FIDELITY_DROP_LIMIT):.1f}% 判失真，最多再换 {FIDELITY_MAX_RETRIES} 个方案'
+               f'（--quality 提到 {FIDELITY_QUALITY_CEILING}，再提 --supersample 到 '
+               f'{FIDELITY_SUPERSAMPLE_CEILING}）；换完仍失真时在报告里标 ✗、打印原因并以退出码 '
+               f'{EXIT_FIDELITY} 结束（产物保留，结论是保留原图）。',
+    )
     add_common(p_export)
     p_export.add_argument('--out', required=True,
                           help='输出目录（必须独立于源目录；子目录结构会被复刻，绝不原地覆盖源图）')
@@ -664,6 +977,9 @@ def build_parser() -> argparse.ArgumentParser:
                           help='输出格式，默认 webp；keep 表示保持源格式（只压缩/只裁剪时用）')
     p_export.add_argument('--flatten-color', type=flatten_color_arg, default='#000000',
                           help='透明图转 JPEG 时合成的底色，默认黑色')
+    p_export.add_argument('--report-json', default=None, metavar='PATH',
+                          help='把导出结论写成机器可读的 JSON（逐图档位链 / 掉多少 / pass 或 keep / 原因），'
+                               '给 CI 读；目录不存在会自动创建')
     p_export.set_defaults(func=cmd_export)
 
     p_verify = sub.add_parser('verify', help='对比候选与参考的清晰度')
