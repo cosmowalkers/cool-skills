@@ -79,12 +79,26 @@
 
 只需要 python3 与 Pillow（唯一依赖）。执行 `python3 -m pip install --user Pillow` 即可；
 系统 Python 报 externally-managed 时，改用 `python3 -m pip install --break-system-packages Pillow`。
+Windows 上是 `py -3 -m pip install Pillow`（详见下面的 Windows 小节）。
 
 装完跟 AI 说一句「跑一下自检」就行，它会确认 WebP / AVIF / JPEG / PNG 四项支持情况。
 缺依赖时脚本会直接把上面的安装命令打出来；AVIF 需要 Pillow ≥ 11 且编译了 libavif，不满足时改用 WebP 即可。
 
+### Windows 上怎么用
+
+脚本本身跨平台，命令只有三处不同：
+
+| macOS / Linux（bash） | Windows（PowerShell） |
 | --- | --- |
+| `python3 "$S" export ...` | `py -3 $S export ...` |
+| `--out /tmp/img-out` | `--out $env:TEMP\img-out` |
 | `SKILL_DIR="${CODEX_HOME:-$HOME/.codex}/skills/image-tools"` | `$S = "$env:USERPROFILE\.codex\skills\image-tools\scripts\optimize_images.py"` |
+
+- 装依赖：`py -3 -m pip install Pillow`（`py -3` 换成 `python` 也行）。
+- 路径写反斜杠或正斜杠都可以（`C:\img\out` 与 `C:/img/out` 等价）；含空格的记得加引号，例如 `--out "C:\My Images\out"`。
+- 报告里有 `✗`、`→` 这些符号：脚本启动时会把自己切成 UTF-8 输出，老式 cmd（cp936）和重定向到文件都不会因为编码报错。
+- 用软链把 skill 挂进 `~/.codex/skills` 需要管理员权限或开发者模式；不想开就直接 `Copy-Item -Recurse` 拷目录。
+- `doctor` 里 `sips` 显示"未安装"是正常的——那是 macOS 自带工具，Windows 上用 `magick` 或 `cwebp` 替代。
 
 ### 不想装 Python 依赖时的替代路线
 
@@ -174,6 +188,8 @@ JPEG 不支持透明通道，默认用黑色合成。可以指定底色（比如
 - 目录扫描只认 webp / jpg / jpeg / png / avif；gif、svg、bmp、heic 等会被**静默跳过**，不报错也不提示，批量处理前先用 `analyze` 确认张数对得上。
 - 清晰度强校验只在 `export` 里生效，结论是文本 + 退出码（通过 0、判断该保留原图 4）；机器可读版本要
   显式加 `--report-json`，不加就只有文本。`verify` 本身不阻断，无论结论如何都以 0 退出，也没有 JSON。
+- Windows 兼容是按跨平台写法实现的（路径归一化、控制台 UTF-8、PowerShell 命令），但回归用例目前只在
+  macOS 上跑过；Windows 首次使用建议先 `py -3 $S doctor` 加跑一遍自带用例，确认环境没问题。
 
 ## 八、Roadmap：接下来会补什么
 

@@ -10,7 +10,7 @@ Agent 技能集合（Claude Code / Codex 通用）。每个目录是一个独立
 
 ## 安装
 
-skill 本体就是目录，软链到 Agent 的 skills 目录即可，改完立即生效：
+skill 本体就是目录，软链到 Agent 的 skills 目录即可，改完立即生效（macOS / Linux）：
 
 ```bash
 git clone git@github.com:cosmowalkers/cool-skills.git
@@ -20,6 +20,19 @@ for s in text2png image-tools commit-message; do
   ln -sfn "$PWD/$s" ~/.codex/skills/"$s"    # Codex
 done
 ```
+
+Windows（PowerShell）：建软链要管理员权限或开发者模式，直接复制更省事。
+
+```powershell
+git clone git@github.com:cosmowalkers/cool-skills.git
+cd cool-skills
+foreach ($s in 'text2png','image-tools','commit-message') {
+  Copy-Item -Recurse -Force ".\$s" "$env:USERPROFILE\.codex\skills\$s"    # Codex
+  Copy-Item -Recurse -Force ".\$s" "$env:USERPROFILE\.claude\skills\$s"   # Claude Code
+}
+```
+
+代价是"改完不即时生效"，仓库更新后重跑一遍这段即可。
 
 ## text2png
 
@@ -38,7 +51,7 @@ done
 也能只转格式、只压尺寸或只裁剪。
 
 产物默认导出到独立目录，不会覆盖源文件；同名冲突会在写入前整批中止。依赖 python3 与 Pillow（不需要 npm，
-缺依赖时脚本会打印安装命令），仓库自带 59 个回归与可用性用例。
+缺依赖时脚本会打印安装命令），仓库自带 85 个回归与可用性用例，macOS / Linux / Windows 通用。
 
 能做什么、怎么用、常见问题：见 [image-tools/README.md](image-tools/README.md)。
 

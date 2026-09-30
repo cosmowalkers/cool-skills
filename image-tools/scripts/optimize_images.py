@@ -22,8 +22,12 @@
   # 3) 验证：候选文件与“原图在浏览器里的渲染效果”对比
   python3 optimize_images.py verify assets/img /tmp/img-out --box 240x108 --dpr 2
 
+  Windows 上把 python3 换成 py -3，/tmp/out 换成 $env:TEMP\\out（cmd 里是 %TEMP%\\out），
+  路径反斜杠或正斜杠都行，含空格的加引号。
+
 安全与正确性约定（回归用例见 scripts/tests/test_optimize_images.py）：
   * 导出目录必须独立于源目录：目标路径与源文件重合时直接报错退出，绝不原地覆盖原图。
+    路径比较先归一化（resolve + normcase），Windows 的大小写不敏感不会让这条护栏失效。
   * 目录输入会在输出目录里复刻子目录结构；重名冲突在写入前整体拒绝，不会写出半个批次。
   * EXIF 方向先转正再裁剪导出，ICC / EXIF 元数据随产物保留。
   * Pillow 的 AVIF 编码器不支持无损：--format avif --lossless 会报错，而不是静默降级成有损。
@@ -32,21 +36,26 @@
     （产物照常生成，但结论是保留原图）。
   * export 可加 --report-json 落一份机器可读的结论（每张图的档位链、掉多少、pass/keep、原因），
     CI 用退出码判、读原因用这个文件，不必解析控制台文本；里面的路径统一是解析后的绝对路径。
+  * 跨平台：macOS / Linux / Windows 通用。启动时把控制台输出钉成 UTF-8，报告里的 ✗ / → 在
+    cp936 这类编码下也不会抛 UnicodeEncodeError。
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import platform
 import shutil
 import sys
+import tempfile
 from pathlib import Path
 
 EXIT_OK = 0
 EXIT_USAGE = 2          # 用法 / 输入 / 安全护栏问题
 EXIT_DEP = 3            # 依赖缺失
 EXIT_FIDELITY = 4       # 有图没过清晰度强校验（产物已生成，但结论是保留原图）
+
 # 清晰度强校验：export 内置，判据与 verify 同源（都把候选与源图渲染到屏上尺寸再比边缘能量）。
 FIDELITY_DROP_LIMIT = -4.0         # 单图下降超过它就判失真，自动升档重压
 FIDELITY_BATCH_LIMIT = -3.5        # 整批均值线，与 verify 的“偏糊”判定同口径
@@ -54,17 +63,52 @@ FIDELITY_QUALITY_CEILING = 95      # 重压阶梯第一级：先提质量（代�
 FIDELITY_SUPERSAMPLE_CEILING = 3   # 阶梯第二级：尺寸最多提到 3 倍
 FIDELITY_MAX_RETRIES = 2           # 首轮没过后最多再换 2 个方案；换完仍失真就在报告里标出来
 
+
+def force_utf8_output() -> None:
+    """把控制台输出钉成 UTF-8。
+
+    Windows 的控制台/重定向默认不是 UTF-8（cp936、cp1252 等），而报告里有 ✗ / ✓ / → 这些符号，
+    不换编码会直接抛 UnicodeEncodeError 崩在打印上。换成 UTF-8 + errors=replace 后，
+    最差也只是个别符号变成问号，不会中断整批导出。
+    """
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, 'reconfigure', None)   # StringIO 之类没有，跳过
+        if reconfigure is None:
+            continue
+        try:
+            reconfigure(encoding='utf-8', errors='replace')
+        except (ValueError, OSError, LookupError):
+            pass
+
+
+def path_key(p: Path) -> str:
+    """路径比较用的归一化键。
+
+    Windows 的盘符与路径不区分大小写，直接拿 Path 或字符串相等判断会漏掉"同一个文件"，
+    那正是"绝不原地覆盖源图"那条护栏依赖的判断，所以统一走 normcase + resolve。
+    """
+    return os.path.normcase(str(p.resolve()))
+
+
+def temp_example_dir() -> str:
+    """提示语里的示例输出目录：Windows 用 %TEMP%\\img-out，其余平台用 /tmp/img-out。"""
+    return r'%TEMP%\img-out' if os.name == 'nt' else '/tmp/img-out'
+
+
 try:
     import PIL
     from PIL import Image, ImageChops, ImageColor, ImageFilter, ImageOps, features
 except ModuleNotFoundError as exc:  # 依赖缺失时给可直接照做的安装指引
+    force_utf8_output()
     sys.stderr.write(
         f'缺少依赖 Pillow（错误：{exc}）。\n'
         'analyze / export / verify 都依赖 Pillow（python3 图像库），安装方式任选其一：\n'
         '  python3 -m pip install --user Pillow\n'
         '  python3 -m pip install --break-system-packages Pillow   # 系统 Python 拒绝安装时用\n'
         '  brew install python3 && python3 -m pip install Pillow   # 想用 Homebrew Python\n'
-        '装完执行 `python3 optimize_images.py doctor` 自检；AVIF 需要 Pillow ≥ 11 且编译了 libavif。\n'
+        '  py -3 -m pip install Pillow                            # Windows（或 python -m pip）\n'
+        '装完执行 `python3 optimize_images.py doctor`（Windows 用 `py -3 optimize_images.py doctor`）自检；'
+        'AVIF 需要 Pillow ≥ 11 且编译了 libavif。\n'
         '不想装 Python 依赖时的替代路线（cwebp / avifenc / ImageMagick / sharp / CDN 实时转换）'
         '见 skill 目录下 README.md 的对应小节。\n'
     )
@@ -203,17 +247,16 @@ def display_name(p: Path) -> str:
 def attempt_label(src: Path, dst: Path) -> str:
     """产物名与源名不同（转格式）时写成 hero.jpg→hero.webp，便于对上 verify 的表。"""
     return dst.name if src.name == dst.name else f'{src.name}→{dst.name}'
+
+
 def decoded_mb(pixels: int) -> str:
     return f'{pixels * 4 / 1024 / 1024:.1f} MB'
 
 
 def is_within(child: Path, parent: Path) -> bool:
-    """child 是否在 parent 目录之内（含相等）。"""
-    try:
-        child.resolve().relative_to(parent.resolve())
-    except ValueError:
-        return False
-    return True
+    """child 是否在 parent 目录之内（含相等）。走 path_key，Windows 上大小写不同也算同一个目录。"""
+    child_key, parent_key = path_key(child), path_key(parent)
+    return child_key == parent_key or child_key.startswith(parent_key + os.sep)
 
 
 def source_format(src: Path) -> str:
@@ -307,6 +350,7 @@ def save_variant(
     quality: int | None = None,
 ) -> None:
     """按目标格式落盘；JPEG 不支持 alpha，会合成 --flatten-color 底色；ICC/EXIF 随产物保留。
+
     quality 用于清晰度强校验的升档重压（先提质量、再提尺寸），不传就用 --quality。
     """
     quality = args.quality if quality is None else quality
@@ -351,12 +395,13 @@ def plan_outputs(
     """
     plans: list[tuple[Path, Path, str]] = []
     blocked: list[str] = []
-    taken: dict[Path, Path] = {}
+    taken: dict[str, Path] = {}
     for src, root in images:
         fmt = resolve_format(args.format, src)
         rel = src.relative_to(root)
         name = rel.name if fmt == source_format(src) else rel.stem + FORMAT_EXT[fmt]
         dst = (out_dir / rel.parent / name).resolve()
+        src_key, dst_key = path_key(src), path_key(dst)
         if fmt == 'avif' and args.lossless:
             blocked.append(
                 f'{src}：Pillow 的 AVIF 编码器不支持无损，需要真无损请改用 --format webp --lossless'
@@ -365,13 +410,13 @@ def plan_outputs(
         if fmt == 'avif' and not features.check('avif'):
             blocked.append(f'{src}：当前 Pillow 没有 AVIF 支持，改用 --format webp 或升级 Pillow')
             continue
-        if dst == src.resolve():
+        if dst_key == src_key:
             blocked.append(f'{src} 的导出目标与源文件重合：{dst}')
             continue
-        if dst in taken:
-            blocked.append(f'{taken[dst]} 与 {src} 会写成同一个文件：{dst}')
+        if dst_key in taken:
+            blocked.append(f'{taken[dst_key]} 与 {src} 会写成同一个文件：{dst}')
             continue
-        taken[dst] = src
+        taken[dst_key] = src
         plans.append((src, dst, fmt))
     return plans, blocked
 
@@ -384,6 +429,8 @@ def cap_width_for(box: tuple[int, int], args: argparse.Namespace, supersample: f
     if args.no_resize:
         return 0
     return args.max_width or round(box[0] * args.dpr * supersample)
+
+
 def bake_variant(
     im: Image.Image,
     dst: Path,
@@ -400,8 +447,11 @@ def bake_variant(
         work = work.resize((cap_w, max(1, round(work.height * cap_w / work.width))), Image.LANCZOS)
     save_variant(work, dst, fmt, args, meta, quality=quality)
     return work.size
+
+
 def compare_render(ref: Path, cand: Path, device: tuple[int, int]) -> tuple[float, float, float]:
     """把两张图各自按“浏览器会怎么渲染”重采样到屏上尺寸。
+
     返回 (参考边缘能量, 候选边缘能量, 平均像素差)。export 的强校验与 verify 用的是同一段逻辑，
     两边的数字才是同一口径。
     """
@@ -410,16 +460,23 @@ def compare_render(ref: Path, cand: Path, device: tuple[int, int]) -> tuple[floa
         cand_render = render_like_browser(c, device)
     return (edge_energy(ref_render), edge_energy(cand_render),
             mean_abs_diff(ref_render, cand_render))
+
+
 def drop_pct(e_ref: float, e_cand: float) -> float:
     """边缘能量变化百分比；源图没有边缘（纯色）时按 0 处理，否则会除零。"""
     return (e_cand - e_ref) / e_ref * 100 if e_ref else 0.0
+
+
 def fidelity_drop(ref: Path, cand: Path, device: tuple[int, int]) -> float:
     e_ref, e_cand, _diff = compare_render(ref, cand, device)
     return drop_pct(e_ref, e_cand)
+
+
 def next_escalation(
     supersample: float, quality: int, fmt: str, args: argparse.Namespace, tried: int
 ) -> tuple[float, int] | None:
     """失真后的下一个替代方案：先提质量（体积代价小），质量到顶再提尺寸；没得换就返回 None。
+
     tried 是已经换过的方案数，最多换 FIDELITY_MAX_RETRIES 个。上限是 supersample 3 + q95
     —— 这也是 SKILL.md 里“被反馈发糊”时的推荐档位。
     """
@@ -432,6 +489,8 @@ def next_escalation(
     if not args.no_resize and not args.max_width and supersample < FIDELITY_SUPERSAMPLE_CEILING:
         return FIDELITY_SUPERSAMPLE_CEILING, quality
     return None
+
+
 def export_with_fidelity(
     im: Image.Image,
     src: Path,
@@ -444,6 +503,7 @@ def export_with_fidelity(
     device: tuple[int, int],
 ) -> list[dict[str, object]]:
     """导出单张图并做清晰度强校验：失真就换方案重压（最多 FIDELITY_MAX_RETRIES 次），
+
     返回每次尝试的记录，最后一条即交付的产物。
     """
     attempts: list[dict[str, object]] = []
@@ -466,6 +526,8 @@ def export_with_fidelity(
             break
         supersample, quality = nxt
     return attempts
+
+
 def describe_attempt(attempt: dict[str, object], fmt: str, args: argparse.Namespace) -> str:
     """把一次尝试写成 "ss1/q95 960px 宽 -0.3%（通过）" 这样的一行。"""
     lossless = fmt == 'png' or args.lossless
@@ -474,6 +536,8 @@ def describe_attempt(attempt: dict[str, object], fmt: str, args: argparse.Namesp
     size = attempt['size']
     return (f'ss{attempt["supersample"]:g}/{quality} {size[0]}px 宽 '
             f'{attempt["drop"]:+.1f}%（{state}）')
+
+
 def fidelity_diagnosis(
     src_size: tuple[int, int],
     attempts: list[dict[str, object]],
@@ -508,10 +572,14 @@ def fidelity_diagnosis(
         reasons.append(f'升档没有改善（{first["drop"]:+.1f}% → {final["drop"]:+.1f}%），'
                        '说明掉的不是这一个变量，别继续调参数了')
     return reasons
+
+
 def write_json_report(path: Path, payload: dict[str, object]) -> None:
     """落一份机器可读的导出结论：CI 读退出码判生死，读这个文件拿原因和逐图结果。"""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+
 def cmd_analyze(args: argparse.Namespace) -> int:
     images = collect_images(args.paths)
     if not images:
@@ -574,7 +642,7 @@ def cmd_export(args: argparse.Namespace) -> int:
         print('导出已中止，源文件没有任何改动：', file=sys.stderr)
         for line in blocked:
             print(f'  - {line}', file=sys.stderr)
-        print('处理：把 --out 指到源目录之外的独立目录（例如 /tmp/img-out）；'
+        print(f'处理：把 --out 指到源目录之外的独立目录（例如 {temp_example_dir()}）；'
               '源图同名冲突时可用 --format keep 保留各自扩展名，或把它们分开导出。', file=sys.stderr)
         return EXIT_USAGE
     for raw in args.paths:
@@ -583,7 +651,7 @@ def cmd_export(args: argparse.Namespace) -> int:
         if is_within(out_dir, base):
             print(
                 f'警告：输出目录 {out_dir} 位于输入目录 {base} 之内，再次导出会把上一次的产物当成输入重新处理；'
-                '建议换成源目录之外的独立目录（例如 /tmp/img-out）。',
+                f'建议换成源目录之外的独立目录（例如 {temp_example_dir()}）。',
                 file=sys.stderr,
             )
             break
@@ -726,6 +794,7 @@ def cmd_export(args: argparse.Namespace) -> int:
         payload: dict[str, object] = {
             'version': 1,
             'command': 'export',
+            # 路径统一成解析后的规范形态（macOS 上 /tmp 会展开成 /private/tmp），
             # 免得下游拿到 out_dir 与 images[].dst 两种写法对不上。
             'out_dir': str(out_dir.resolve()),
             'target': {
@@ -851,13 +920,15 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         ('cwebp', 'libwebp 官方 CLI，批量转 WebP 更快'),
         ('avifenc', 'libavif 官方 CLI，能真正做无损 AVIF'),
         ('magick', 'ImageMagick，批量处理方便'),
-        ('ffmpeg', '注意：Mac 常见构建不含 libwebp 编码器'),
-        ('sips', 'macOS 自带，但不支持 WebP'),
+        ('ffmpeg', '注意：macOS 上的常见构建不含 libwebp 编码器'),
+        ('sips', 'macOS 自带，但不支持 WebP（Windows 上没有这个工具）'),
     ):
         path = shutil.which(tool)
         print(f'  {"✓" if path else "✗"} {tool:<9} {path or "未安装":<28} {note}')
     print()
     print('结论：上面四项格式都 ✓ 即可正常使用 analyze / export / verify；缺 Pillow 时按启动提示安装。')
+    print('提示：脚本本身跨平台（macOS / Linux / Windows 都行）；Windows 上用 py -3 代替 python3，')
+    print('      路径写反斜杠或正斜杠都可以，含空格的路径用引号包起来。')
     return EXIT_OK
 
 
@@ -993,6 +1064,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    force_utf8_output()
     parser = build_parser()
     args = parser.parse_args(argv)
     return args.func(args)

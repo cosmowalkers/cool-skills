@@ -53,26 +53,37 @@ OCR 与图像分类等识别任务。
 
 ### 0. 环境准备
 
-先把脚本路径存成变量，后面的命令都直接用它（`scripts/optimize_images.py` 这种相对路径在宿主项目里会指错文件）；
-下面这行按实际安装位置改：Codex 是 `~/.codex`，Claude Code 换成 `"$HOME/.claude/skills/image-tools"`：
+脚本是纯 Python（唯一依赖 Pillow），macOS / Linux / Windows 都能跑。先把脚本路径存成变量，
+后面的命令都直接用它（`scripts/optimize_images.py` 这种相对路径在宿主项目里会指错文件）；
+按实际安装位置改：Codex 是 `~/.codex`，Claude Code 换成 `~/.claude/skills/image-tools`。
+
+macOS / Linux（bash）：
 
 ```bash
 SKILL_DIR="${CODEX_HOME:-$HOME/.codex}/skills/image-tools"
 S="$SKILL_DIR/scripts/optimize_images.py"
 D="$SKILL_DIR/scripts"
-```
-
-脚本依赖 Pillow；缺失时会打印安装命令。先自检：
-
-```bash
 python3 "$S" doctor
-```
-
-改过脚本、或换到别人机器上时，先跑自带用例（只依赖 python3 + Pillow，不联网、不动仓库素材）：
-
-```bash
 python3 "$D/tests/test_optimize_images.py" -v
 ```
+
+Windows（PowerShell，解释器用 `py -3` 代替 `python3`）：
+
+```powershell
+$S = "$env:USERPROFILE\.codex\skills\image-tools\scripts\optimize_images.py"
+$D = "$env:USERPROFILE\.codex\skills\image-tools\scripts"
+py -3 $S doctor
+py -3 "$D\tests\test_optimize_images.py" -v
+```
+
+跨平台注意三点：
+
+- **路径**：反斜杠、正斜杠都行（`C:\img\out` 与 `C:/img/out` 等价），含空格的加引号。
+  输出目录示例：POSIX 用 `/tmp/img-out`，Windows 用 `$env:TEMP\img-out`。
+- **控制台编码**：报告里有 `✗` `→` 这类符号，脚本启动时会把自己切成 UTF-8 输出，
+  老式 cmd（cp936）、重定向到文件都不会因为编码崩掉。
+- **依赖**：缺 Pillow 时脚本会直接打印对应平台的安装命令（Windows 是 `py -3 -m pip install Pillow`）。
+  改过脚本、或换到别人机器上，先跑一遍自带用例（只依赖 python3 + Pillow，不联网、不动仓库素材）。
 
 给人类看的安装说明、配方与 FAQ 见同目录 [README.md](README.md)。
 
@@ -104,6 +115,9 @@ python3 "$S" export <源目录> --out /tmp/img-out --box 240x108 --dpr 2 \
     --supersample 2 --quality 90
 ```
 
+（Windows 上换成 `py -3 $S export <源目录> --out $env:TEMP\img-out --box 240x108 --dpr 2 --supersample 2 --quality 90`，
+命令换行符 `\` 在 PowerShell 里是反引号 `` ` ``，或干脆写成一行。）
+
 - `--supersample`（默认 2）：宽度上限 = **屏上像素宽 × supersample**，屏上像素宽 = 显示宽 × DPR。
   别和 CSS 倍率搞混：显示宽 240、DPR 2 时，supersample 2 = 960px = CSS 宽的 4 倍。
 - 默认**裁剪到显示比例**（等价于浏览器 `object-fit: cover` 居中裁剪），所以要先看图确认主体没被切
@@ -129,6 +143,8 @@ python3 "$S" export <源目录> --out /tmp/img-out --box 240x108 --dpr 2 \
 ```bash
 python3 "$S" verify <原目录> /tmp/img-out --box 240x108 --dpr 2
 ```
+
+（Windows：`py -3 $S verify <原目录> $env:TEMP\img-out --box 240x108 --dpr 2`。）
 
 对每张图比较"原图在浏览器中的渲染效果"与"候选文件的渲染效果"：
 
@@ -187,9 +203,12 @@ python3 "$S" verify <原目录> /tmp/img-out --box 240x108 --dpr 2
 
 ## 脚本与用例
 
-`scripts/optimize_images.py`（依赖 Pillow）提供 `doctor` / `analyze` / `export` / `verify` 四个子命令，参数见上文。
+`scripts/optimize_images.py`（依赖 Pillow，macOS / Linux / Windows 通用）提供 `doctor` / `analyze` / `export` / `verify`
+四个子命令，参数见上文。
 输入支持 webp/jpg/png/avif（其余扩展名会被静默跳过）；输出由 `--format` 决定（webp 默认）。
 
-回归与可用性用例在 `scripts/tests/test_optimize_images.py`（62 条，只依赖 python3 + Pillow，不联网、不动仓库素材）：
+回归与可用性用例在 `scripts/tests/test_optimize_images.py`（85 条，只依赖 python3 + Pillow，不联网、不动仓库素材）：
 覆盖正常路径、原地覆盖拦截、重名冲突整体中止、无损 WebP 逐像素校验、EXIF 方向转正与 ICC/EXIF 保留、
 清晰度强校验的重试阶梯（最多 2 个方案）、报告标注与退出码 4、`--report-json` 的结构与失败原因、
+verify 的配对与发糊识别、参数校验与中文报错、跨平台（非 UTF-8 控制台、路径归一化）、
+文档护栏（业务标识、AVIF 措辞、脚本路径写法、强校验阈值）。
