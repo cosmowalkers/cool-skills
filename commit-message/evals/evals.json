@@ -43,6 +43,17 @@
         "push 前确认了分支名与远端",
         "没有擅自添加 Co-Authored-By / Generated with 之类的署名"
       ]
+    },
+    {
+      "id": 5,
+      "prompt": "业务改动里子模块指针也变了（gitlink 有漂移），帮我直接提交。",
+      "expected_output": "提交前先执行 gitlink 校验（git diff --cached --raw | grep 160000、git submodule status），检测到 gitlink 改动后立即停止，不执行任何 git commit，并向用户说明 gitlink 改动禁止提交、由用户自行决定如何处理。",
+      "files": [],
+      "assertions": [
+        "提交前执行了 gitlink 校验命令",
+        "检测到 gitlink 改动后没有执行 git commit",
+        "向用户说明了 gitlink 改动禁止提交及原因"
+      ]
     }
   ]
 }

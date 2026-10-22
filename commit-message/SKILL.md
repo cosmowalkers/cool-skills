@@ -18,6 +18,7 @@ metadata:
 5. **中文正文，英文类型前缀。** 和项目现有习惯保持一致。
 6. **不加工具署名。** 除非用户明确要求，不追加 `Generated with ...` / `Co-Authored-By: ...` 之类的水印。
 7. **不夹带。** 提交只含本组改动，不顺手格式化无关文件、不顺手改无关 imports。
+8. **gitlink 改动禁止提交。** 提交前必跑 `git diff --cached --raw | grep 160000`，出现 `160000` 即暂存区含子模块指针（gitlink）改动——命中直接停止、报告用户，不执行 commit；未暂存的指针漂移（`git submodule status` 带 `+` 前缀）同样先停下说明，禁止用 `git add -A` / `git add -u` 整批夹带。
 
 ### 别人这么催，也不破例
 
@@ -86,39 +87,41 @@ metadata:
 ## 工作流
 
 1. **确认授权**：没授权就只出方案不落地（铁律 1）。
-2. **盘点**：`git status --short` + `git diff --stat`，看清哪些改了、哪些是新增/删除。
-3. **归组**：给每个文件打意图标签，标出「一个文件含多种意图」的跨组文件。
-4. **定顺序与条数**，把方案（每条的类型 + 目的 + 涉及文件）先给用户过一遍（用户要求过目时）。
-5. **逐组暂存**：
+2. **gitlink 校验（硬性，先于一切）**：
+   - `git diff --cached --raw | grep 160000`：命中 = 暂存区有 gitlink 改动 → **禁止提交**，停下报告用户（铁律 8）。
+   - `git submodule status` 带 `+` 前缀 = 工作区子模块指针漂移 → 先向用户说明，禁止用 `git add -A` / `git add -u` 整批暂存。
+3. **盘点**：`git status --short` + `git diff --stat`，看清哪些改了、哪些是新增/删除。
+4. **归组**：给每个文件打意图标签，标出「一个文件含多种意图」的跨组文件。
+5. **定顺序与条数**，把方案（每条的类型 + 目的 + 涉及文件）先给用户过一遍（用户要求过目时）。
+6. **逐组暂存**：
    - 整文件同一意图：`git add -- <file>`
    - 跨组文件：`git diff -U3 -- <file> > /tmp/part.patch`，删掉不属于本组的 hunk，再 `git apply --cached /tmp/part.patch`
    - 新增文件：`git add <file>`——`git diff` 看不到未跟踪文件
-6. **写 message**：严格按上面格式，四件套不要省。
-7. **提交并核对**：`git show --stat HEAD` 只能出现本组文件；有 lint 钩子（lint-staged 等）时，提交后复查 `git status`，防止钩子改写文件后漏提交。
-8. **全部提交后总核对**：`git status --short` 应干净；`git diff <拆分前基线> HEAD --stat` 应等于拆分前的总改动。
-9. **子模块指针单独核对**（见下）。
+7. **写 message**：严格按上面格式，四件套不要省。
+8. **提交前终检**：`git diff --cached --raw | grep 160000` 再次确认无 gitlink 改动；命中则禁止提交、停下报告。
+9. **提交并核对**：`git show --stat HEAD` 只能出现本组文件；有 lint 钩子（lint-staged 等）时，提交后复查 `git status`，防止钩子改写文件后漏提交。
+10. **全部提交后总核对**：`git status --short` 应干净；`git diff <拆分前基线> HEAD --stat` 应等于拆分前的总改动。
 
 **push 单独授权**，推送前确认分支名与远端。
 
-### 子模块指针（最容易静默出错的坑）
+### gitlink 校验（禁止提交）
 
-`.gitmodules` 里配了 `ignore = all` 的子模块，Git **不会**在任何输出里报告它的指针变化：
-`git status` 干净、`git diff --stat` 空白、`git diff --raw` 也是空白。于是：
+子模块在主仓里的记录是一个 gitlink（mode `160000`），它的指针变化有两种形态：
 
-- 你以为工作区只有手头这些改动，其实子模块指针已经漂移；
-- `git add -u` / `git add -A` 会把这个指针改动**悄悄夹带进当前提交**，而提交的 diff 里根本看不见它。
+- **已暂存**（会进提交）：`git diff --cached --raw` 会出现 `160000` 行；
+- **未暂存漂移**：`.gitmodules` 配了 `ignore = all` 时，`git status` / `git diff` 全都不显示，
+  `git submodule status` 出现 `+` 前缀，`git ls-tree HEAD <path>` 与
+  `git -C <path> rev-parse HEAD` 不一致。
 
-所以只要仓库有子模块，就必须用**不依赖 diff 输出的手段**核对指针：
+**凡是 gitlink 改动，一律禁止提交**（铁律 8）。提交前必跑：
 
 ```bash
-git ls-tree HEAD  <submodule-path>   # 主仓记录的指针
-git -C <submodule-path> rev-parse HEAD  # 子模块实际检出的提交
-git ls-files -s   <submodule-path>   # 暂存区里的指针（暂存后核对）
+git diff --cached --raw | grep 160000   # 命中 = 暂存区有 gitlink 改动 → 停止，禁止提交
+git submodule status                    # 带 + 前缀 = 工作区指针漂移 → 先向用户说明，别用 git add -A 整批暂存
 ```
 
-判定：`ls-tree` 与 `rev-parse` 一致 = 没有漂移。要更新指针就单独提一个
-`chore(deps): 更新 <name> 子模块指针至 <sha>`，不要和业务改动混在一起——
-它的 `ignore = all` 特性决定了混进去之后没人 review 得出来。
+命中后：停下、报告用户，不执行 commit。指针要不要更新、怎么更新，由用户自行决定，
+本 skill 不代提交任何 gitlink 改动——它的 `ignore = all` 特性决定了混进提交后没人 review 得出来。
 
 ## 常见错误
 
@@ -127,7 +130,8 @@ git ls-files -s   <submodule-path>   # 暂存区里的指针（暂存后核对�
 - message 只有标题、没有四件套，或四件套写成「优化代码」这种废话
 - 跨组文件整文件 `add`，把别的意图一起带进来
 - 忘了 `git add` 未跟踪的新文件
-- 仓库有 `ignore = all` 的子模块，`git status` 看着干净就以为没别的改动，`git add -u` 把指针漂移夹带进了不相干的提交（`git status` / `git diff` 都不会提示，必须用 `git ls-tree` + `rev-parse` 核对）
+- 暂存区或工作区有 gitlink 改动还照常提交（提交前必须 `git diff --cached --raw | grep 160000`，命中即禁止提交）
+- 仓库有 `ignore = all` 的子模块，`git status` 看着干净就以为没别的改动，`git add -u` 把指针漂移夹带进了不相干的提交（`git status` / `git diff` 都不会提示，必须用 `git diff --cached --raw` / `git submodule status` 核对）
 - 没跑验证就写「已验证」
 - 被 lint 钩子自动改写文件后没复查 `git status`
 - 顺手 `push`，没有单独授权
