@@ -1,6 +1,6 @@
 ---
 name: text2png
-description: 将文字描述转化为有设计感的 HTML 可视化图表并自动截图输出 PNG，支持 15 种图表类型（流程、时序、泳道、对比、时间线、架构、数据看板、甘特图、组织、漏斗、思维导图、矩阵、看板、清单、金句）和 9 种视觉风格。当用户想把任何结构化信息变成图表或可视化图片时使用，触发看语义意图而非关键词："画个图/做个图/出张图/可视化一下"或直接点名图表类型（流程图、时序图、泳道图、对比表、数据看板、思维导图等）均适用。注意：本技能只产出结构化图表/信息图，不处理照片、插画、艺术创作等创意位图。
+description: 将文字描述转化为有设计感的 HTML 可视化图表并自动截图输出 PNG，支持 15 种图表类型（流程、时序、泳道、对比、时间线、架构、数据看板、甘特图、组织、漏斗、思维导图、矩阵、看板、清单、金句）和 18 种视觉风格。当用户想把任何结构化信息变成图表或可视化图片时使用，触发看语义意图而非关键词："画个图/做个图/出张图/可视化一下"或直接点名图表类型（流程图、时序图、泳道图、对比表、数据看板、思维导图等）均适用。注意：本技能只产出结构化图表/信息图，不处理照片、插画、艺术创作等创意位图。
 ---
 
 # text2png — 文字描述 → HTML 图表 → PNG 截图
@@ -21,11 +21,11 @@ description: 将文字描述转化为有设计感的 HTML 可视化图表并自�
 
 | Option | Values |
 |--------|--------|
-| `--style` | warm (default), dark, minimal, editorial, neon, paper, glass, corporate, retro |
+| `--style` | warm (default), editorial, macaron, brutalist, ocean, paper, art-nouveau, swiss, psychedelic, flat, glass, cyberpunk, midnight, dracula, neo-chinese, terminal, cosmic, industrial |
 | `--chart` | auto (default), sequence, swimlane, flowchart, comparison, timeline, architecture, dashboard, gantt, org-chart, funnel, mind-map, matrix, kanban, checklist, quote-card |
 | `--output` | 输出目录路径（默认当前目录） |
 
-Style x Chart 可自由组合。风格只改配色/字体/质感，不改布局。
+Style × Chart 可自由组合。风格只改配色/字体/质感，不改布局。
 
 **脚本参数**（`scripts/screenshot.ts` 真正接受的参数，传其它参数会直接报错）：
 
@@ -63,16 +63,28 @@ If the user hasn't provided the following, **ask these two questions in one go**
 
 **Question 1 — Style** (skip if user already specified):
 ```
-风格偏好？
-1. warm — 暖色系，米白背景，彩色边框，适合报告/流程 (Recommended)
-2. dark — 深色科技感，适合架构/技术方案
-3. minimal — 极简黑白，适合向领导汇报
-4. editorial — 杂志排版风，大号衬线字体，适合内容展示
-5. neon — 赛博霓虹，适合技术分享/演讲配图
-6. paper — 手绘纸质感，适合教学/说明
-7. glass — 玻璃拟态，适合现代产品展示
-8. corporate — 商务正式，深蓝主色，适合客户方案/汇报
-9. retro — 复古像素，CRT 扫描线，适合技术社区/Side Project
+风格偏好？18 套可选：
+☀️ 亮色
+  warm — 暖橙报告（默认）
+  editorial — 杂志排版，冷白底 + 红黑高对比
+  macaron — 马卡龙甜品，圆润粉彩
+  brutalist — 新粗野主义，粗黑边框撞色
+  ocean — 海洋微风，淡蓝清爽
+  paper — 手绘涂鸦，歪斜卡片手写风
+  art-nouveau — 新艺术运动，鼠尾草绿曲线
+  swiss — 瑞士国际，极简格栅黑白
+  psychedelic — 迷幻风格，渐变彩虹
+  flat — 扁平设计，纯色块
+  glass — 玻璃拟态，亮色毛玻璃
+
+🌙 暗色
+  cyberpunk — 赛博朋克，霓虹扫描线
+  midnight — 午夜蓝调，蓝黑 + 金色
+  dracula — 德古拉暗紫，荧光粉绿
+  neo-chinese — 新中式，朱砂赤金黛蓝
+  terminal — 终端黑客，CRT 绿字
+  cosmic — 深空星云，太空紫蓝
+  industrial — 工业金属，铁灰 + 橙色警示
 （不确定的话我根据内容推荐）
 ```
 
@@ -117,8 +129,8 @@ Rules that keep this helpful instead of annoying:
 
 1. **On demand, not by default.** Don't launch a browser for every request — only when they ask, or when you're genuinely uncertain about the style.
 1. **用户说「查看/打开demo」时自动打开。** 这是显式请求，不等待二次确认——直接执行 `open` 命令，然后告诉用户 demo 已打开。
-2. **Always pair it with text.** Say in one line what you opened, and list the 9 styles with a 3-5 word trait each (e.g. `warm` 暖色报告 / `dark` 深色科技 / `editorial` 杂志排版). Remote shells and headless environments have no browser — the flow must still work.
-3. **Prefer 2-3 candidates over the full menu.** The 135-grid answers "what exists", not "what should I use". Recommend first, expand only if they want to browse.
+2. **Always pair it with text.** Say in one line what you opened, and list the 18 styles with a 3-5 word trait each (e.g. `warm` 暖色报告 / `dark` 深色科技 / `editorial` 杂志排版). Remote shells and headless environments have no browser — the flow must still work.
+3. **Prefer 2-3 candidates over the full menu.** The 270-grid answers "what exists", not "what should I use". Recommend first, expand only if they want to browse.
 4. **Anchor the style.** Once a style is chosen (by the user or by your recommendation), keep it for the rest of the session/document so a set of charts looks consistent — switch only when asked.
 5. **Never block on it.** If they don't care about style, pick the recommended one for that form (see the auto-selection matrix) and move on.
 
@@ -241,15 +253,24 @@ When unable to determine style, default to **warm**.
 
 | Style | Tone | Key Visual |
 |-------|------|------------|
-| **warm** | 暖色报告 | 米白底，暖色边框，虚线箭头 |
-| **dark** | 科技感 | 深色底，蓝绿发光，glow 效果 |
-| **minimal** | 极简正式 | 纯白底，黑白无色彩 |
-| **editorial** | 杂志排版 | 大号衬线字体，横线分割，category 标签 |
-| **neon** | 赛博朋克 | 深紫/黑底，霓虹描边，发光字 |
-| **paper** | 手绘纸质 | 米黄纸质感，铅笔线条风 |
-| **glass** | 玻璃拟态 | 毛玻璃卡片，渐变底，光晕 |
-| **corporate** | 商务正式 | 深蓝主色，极细边框，表头深色底 |
-| **retro** | 复古像素 | CRT 扫描线，像素字体，硬边角 |
+| **warm** | 暖橙报告 | 牛皮纸纹理，焦糖棕，手工感 |
+| **editorial** | 杂志排版 | 冷白底，红黑高对比，衬线体 |
+| **macaron** | 马卡龙甜品 | 粉彩圆润，圆角泡泡卡片 |
+| **brutalist** | 新粗野主义 | 粗黑边框，撞色阴影，不修边幅 |
+| **ocean** | 海洋微风 | 淡蓝渐变，珊瑚橘点缀 |
+| **paper** | 手绘涂鸦 | 冷蓝灰纸，歪斜卡片，手写字体 |
+| **art-nouveau** | 新艺术运动 | 鼠尾草绿，曲线边框，穆夏风 |
+| **swiss** | 瑞士国际 | 极简格栅，纯黑白，Helvetica 感 |
+| **psychedelic** | 迷幻风格 | 渐变彩虹标题，波状旋转背景 |
+| **flat** | 扁平设计 | 纯色块，无阴影，顶部色条 |
+| **glass** | 玻璃拟态 | 亮色底，毛玻璃卡片，backdrop-blur |
+| **cyberpunk** | 赛博朋克 | 深紫黑底，霓虹扫描线，青色 glow |
+| **midnight** | 午夜蓝调 | 蓝黑底，金色点缀，优雅暗色 |
+| **dracula** | 德古拉暗紫 | 暗紫底，荧光粉绿，Fira Code |
+| **neo-chinese** | 新中式 | 黛蓝底，朱砂红 + 赤金，国潮 |
+| **terminal** | 终端黑客 | 纯黑底，CRT 绿字，琥珀强调 |
+| **cosmic** | 深空星云 | 太空黑，星云紫蓝渐变 |
+| **industrial** | 工业金属 | 铁灰黑，橙色警示，钢板纹理 |
 
 **All styles share the same layout principle**: compact, symmetric, full. Style only controls visual appearance (colors, fonts, textures, effects).
 
