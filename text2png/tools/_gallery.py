@@ -69,7 +69,7 @@ def build(out_dir, embed=False, img_ext="png"):
   .sec {{ margin-bottom:28px; }}
   .sec h2 {{ font-size:15px; margin:0 0 10px; display:flex; align-items:center; gap:8px; }}
   .sec h2 code {{ font-size:12px; color:var(--muted); background:#f3f4f6; padding:1px 6px; border-radius:4px; }}
-  .grid {{ display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:14px; }}
+  .grid {{ display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:12px; align-items:start; }}
   .card {{ margin:0; background:#fff; border:1px solid var(--line); border-radius:10px; overflow:hidden; }}
   .card img {{ display:block; width:100%; height:auto; background:#fff; cursor:zoom-in; }}
   .card img:hover {{ outline:2px solid #2563eb; outline-offset:-2px; }}
@@ -92,7 +92,7 @@ def build(out_dir, embed=False, img_ext="png"):
   #lb-bar button {{ font:12.5px/1 inherit; padding:6px 10px; border:1px solid rgba(255,255,255,.24); border-radius:6px;
     background:rgba(255,255,255,.06); color:#e5e7eb; cursor:pointer; }}
   #lb-bar button:hover {{ background:rgba(255,255,255,.16); }}
-  #lb-stage {{ flex:1; overflow:auto; padding:16px; display:flex; align-items:flex-start; justify-content:center; }}
+  #lb-stage {{ flex:1; overflow:auto; padding:16px; display:flex; align-items:center; justify-content:center; }}
   #lb-img {{ display:block; background:#fff; box-shadow:0 12px 40px rgba(0,0,0,.5); }}
   #lb-img.fit {{ max-width:100%; max-height:calc(100vh - 96px); width:auto; height:auto; }}
   #lb-img.zoom {{ max-width:none; max-height:none; }}

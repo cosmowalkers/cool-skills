@@ -170,38 +170,46 @@ async function screenshot(args: CliArgs): Promise<void> {
   try {
     const page = await browser.newPage();
 
-    // Phase 1: 用高视口渲染，测量内容尺寸
-    await page.setViewport({ width: args.width, height: 4000, deviceScaleFactor: args.dpr });
-    // 用 domcontentloaded：外链字体/图片慢时不会像 networkidle0 那样拖到超时
+    // Phase 1: 用足够宽的初始视口渲染，保证 .wrap 的 margin:0 auto 从第一轮就居中
+    const generousW = Math.max(args.width, 1100);
+    await page.setViewport({ width: generousW, height: 4000, deviceScaleFactor: args.dpr });
     await page.goto(`file://${htmlPath}`, { waitUntil: "domcontentloaded" });
 
-    // 字体最多等 5s；远程字体不可达时直接继续（用回退字体渲染）
     await Promise.race([
       page.evaluate(() => document.fonts.ready),
       new Promise((r) => setTimeout(r, 5000)),
     ]);
     await waitForStableSize(page);
 
-    // 先铺背景色，它会参与测量结果
     await page.evaluate((bg: string) => {
       document.documentElement.style.backgroundColor = bg;
     }, args.bg);
 
-    // Phase 2: 测量 → 调视口 → 复测；尺寸变了就再来一轮（最多 3 轮）
-    let clip = { x: 0, y: 0, width: args.width, height: 400 };
+    // Phase 2: 测量 → 调视口高度 → 复测；最多 3 轮
+    let clip = { x: 0, y: 0, width: generousW, height: 400 };
     for (let pass = 0; pass < 3; pass++) {
       const box = await measureBox(page);
       clip = {
-        x: Math.max(0, box.x - pad),
-        y: Math.max(0, box.y - pad),
-        width: box.width + pad * 2,
-        height: box.height + pad * 2,
+        x: Math.round(Math.max(0, box.x - pad)),
+        y: Math.round(Math.max(0, box.y - pad)),
+        width: Math.round(box.width + pad * 2),
+        height: Math.round(box.height + pad * 2),
       };
       const viewportH = Math.ceil(clip.y + clip.height + 10);
-      await page.setViewport({ width: args.width, height: viewportH, deviceScaleFactor: args.dpr });
+      const viewportW = Math.max(generousW, Math.ceil(clip.x + clip.width + 10));
+      await page.setViewport({ width: viewportW, height: viewportH, deviceScaleFactor: args.dpr });
       await waitForStableSize(page, 1500);
       const after = await measureBox(page);
-      if (Math.abs(after.height - box.height) <= 1 && Math.abs(after.width - box.width) <= 1) break;
+      if (Math.abs(after.height - box.height) <= 1 && Math.abs(after.width - box.width) <= 1) {
+        // 用最终视口测量结果重新算 clip，修复 content 随 viewport 居中后偏移的问题
+        clip = {
+          x: Math.round(Math.max(0, after.x - pad)),
+          y: Math.round(Math.max(0, after.y - pad)),
+          width: Math.round(after.width + pad * 2),
+          height: Math.round(after.height + pad * 2),
+        };
+        break;
+      }
       if (pass === 2) console.error("[warn] 调整视口后内容尺寸仍变化，按最后一轮结果截图");
     }
 
@@ -217,7 +225,6 @@ async function screenshot(args: CliArgs): Promise<void> {
     await browser.close();
   }
 }
-
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
 

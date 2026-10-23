@@ -106,6 +106,8 @@ Split the two decisions — they have different owners:
 
 `demo/index.html` is the full 15 forms × 9 styles matrix (135 previews, filterable by form or style, click any image to zoom). Open it when the user asks what styles/forms exist, wants to pick a look, or when you're unsure about their taste:
 
+ **Auto-open rule:** When the user says anything like `查看demo`、`打开demo`、`看看demo`、`demo什么样`、`有什么风格`、`有哪些形式` — **directly execute** `open "${SKILL_DIR}/demo/index.html"` (or `xdg-open` on Linux) without asking for confirmation. This is the user's explicit intent; do not treat it as "uncertain about style" and second-guess.
+
 ```bash
 open "${SKILL_DIR}/demo/index.html"        # macOS
 xdg-open "${SKILL_DIR}/demo/index.html"    # Linux
@@ -114,6 +116,7 @@ xdg-open "${SKILL_DIR}/demo/index.html"    # Linux
 Rules that keep this helpful instead of annoying:
 
 1. **On demand, not by default.** Don't launch a browser for every request — only when they ask, or when you're genuinely uncertain about the style.
+1. **用户说「查看/打开demo」时自动打开。** 这是显式请求，不等待二次确认——直接执行 `open` 命令，然后告诉用户 demo 已打开。
 2. **Always pair it with text.** Say in one line what you opened, and list the 9 styles with a 3-5 word trait each (e.g. `warm` 暖色报告 / `dark` 深色科技 / `editorial` 杂志排版). Remote shells and headless environments have no browser — the flow must still work.
 3. **Prefer 2-3 candidates over the full menu.** The 135-grid answers "what exists", not "what should I use". Recommend first, expand only if they want to browse.
 4. **Anchor the style.** Once a style is chosen (by the user or by your recommendation), keep it for the rest of the session/document so a set of charts looks consistent — switch only when asked.

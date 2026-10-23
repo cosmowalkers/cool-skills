@@ -31,7 +31,7 @@ def _shot(job):
     return chart_id, style_id, ok, (r.stderr or "").strip()[-120:]
 
 
-def shoot(charts, styles, out_dir, dpr=2, fmt="png", padding=28, workers=4):
+def shoot(charts, styles, out_dir, dpr=2, fmt="png", padding=32, workers=4):
     out_dir.mkdir(parents=True, exist_ok=True)
     jobs = [(c, s, out_dir, dpr, fmt, padding) for c in charts for s in styles]
     fails = []

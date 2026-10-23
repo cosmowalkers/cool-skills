@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<title>text2png：15 形式 × 9 主题 = 135</title>
+<title>text2png：15 形式 × 9 主题 = 270</title>
 <style>
   :root { --line:#e5e7eb; --muted:#6b7280; }
   * { box-sizing:border-box; }
@@ -18,7 +18,7 @@
   .sec { margin-bottom:28px; }
   .sec h2 { font-size:15px; margin:0 0 10px; display:flex; align-items:center; gap:8px; }
   .sec h2 code { font-size:12px; color:var(--muted); background:#f3f4f6; padding:1px 6px; border-radius:4px; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:14px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:12px; align-items:start; }
   .card { margin:0; background:#fff; border:1px solid var(--line); border-radius:10px; overflow:hidden; }
   .card img { display:block; width:100%; height:auto; background:#fff; cursor:zoom-in; }
   .card img:hover { outline:2px solid #2563eb; outline-offset:-2px; }
@@ -41,7 +41,7 @@
   #lb-bar button { font:12.5px/1 inherit; padding:6px 10px; border:1px solid rgba(255,255,255,.24); border-radius:6px;
     background:rgba(255,255,255,.06); color:#e5e7eb; cursor:pointer; }
   #lb-bar button:hover { background:rgba(255,255,255,.16); }
-  #lb-stage { flex:1; overflow:auto; padding:16px; display:flex; align-items:flex-start; justify-content:center; }
+  #lb-stage { flex:1; overflow:auto; padding:16px; display:flex; align-items:center; justify-content:center; }
   #lb-img { display:block; background:#fff; box-shadow:0 12px 40px rgba(0,0,0,.5); }
   #lb-img.fit { max-width:100%; max-height:calc(100vh - 96px); width:auto; height:auto; }
   #lb-img.zoom { max-width:none; max-height:none; }
@@ -49,14 +49,14 @@
 </head>
 <body>
 <header>
-  <h1>text2png 全矩阵：15 种形式 × 9 种主题 = 135 张</h1>
+  <h1>text2png 全矩阵：15 种形式 × 18 种主题 = 270 张</h1>
   <p>选择器用法：挑中喜欢的组合 → 点「复制 prompt」→ 把内容替换进占位符，整行发给我即可。点图片可放大（适应 / 1:1 / 200% / 300%，←→ 翻页），上方按钮按形式或主题过滤。形式决定布局，主题决定配色、字体与质感。</p>
   <div class="bar">
     <button data-filter-all class="on">全部</button>
     <div class="sep"></div>
     <button data-filter-chart="sequence">时序图</button><button data-filter-chart="swimlane">泳道图</button><button data-filter-chart="flowchart">流程图</button><button data-filter-chart="comparison">对比表</button><button data-filter-chart="timeline">时间线</button><button data-filter-chart="architecture">架构拓扑</button><button data-filter-chart="dashboard">数据看板</button><button data-filter-chart="gantt">甘特图</button><button data-filter-chart="org-chart">组织架构</button><button data-filter-chart="funnel">漏斗图</button><button data-filter-chart="mind-map">思维导图</button><button data-filter-chart="matrix">矩阵图</button><button data-filter-chart="kanban">看板</button><button data-filter-chart="checklist">清单卡</button><button data-filter-chart="quote-card">金句卡</button>
     <div class="sep"></div>
-    <button data-filter-style="warm">warm</button><button data-filter-style="dark">dark</button><button data-filter-style="editorial">editorial</button><button data-filter-style="neon">neon</button><button data-filter-style="paper">paper</button><button data-filter-style="glass">glass</button><button data-filter-style="corporate">corporate</button><button data-filter-style="minimal">minimal</button><button data-filter-style="retro">retro</button>
+    <button data-filter-style="warm">warm</button><button data-filter-style="editorial">editorial</button><button data-filter-style="macaron">macaron</button><button data-filter-style="brutalist">brutalist</button><button data-filter-style="ocean">ocean</button><button data-filter-style="paper">paper</button><button data-filter-style="art-nouveau">art-nouveau</button><button data-filter-style="swiss">swiss</button><button data-filter-style="psychedelic">psychedelic</button><button data-filter-style="cyberpunk">cyberpunk</button><button data-filter-style="midnight">midnight</button><button data-filter-style="dracula">dracula</button><button data-filter-style="neo-chinese">neo-chinese</button><button data-filter-style="terminal">terminal</button><button data-filter-style="cosmic">cosmic</button><button data-filter-style="industrial">industrial</button><button data-filter-style="flat">flat</button><button data-filter-style="glass">glass</button>
   </div>
 </header>
 <main>
@@ -64,49 +64,94 @@
     <h2>时序图<code>sequence</code></h2>
     <div class="grid">
       <figure class="card" data-chart="sequence" data-style="warm">
-        <img loading="lazy" src="img/sequence__warm.webp?v=1789967522" alt="时序图 × warm" title="点击放大预览">
-        <figcaption><b>时序图</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成时序图（sequence），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="sequence" data-style="dark">
-        <img loading="lazy" src="img/sequence__dark.webp?v=1789967521" alt="时序图 × dark" title="点击放大预览">
-        <figcaption><b>时序图</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成时序图（sequence），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+        <img loading="lazy" src="img/sequence__warm.webp?v=1792748295" alt="时序图 × warm" title="点击放大预览">
+        <figcaption><b>时序图</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="sequence" data-style="editorial">
-        <img loading="lazy" src="img/sequence__editorial.webp?v=1789967521" alt="时序图 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/sequence__editorial.webp?v=1792748296" alt="时序图 × editorial" title="点击放大预览">
         <figcaption><b>时序图</b><span>editorial · 杂志排版</span>
           <button class="copy" data-prompt="画成时序图（sequence），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="sequence" data-style="neon">
-        <img loading="lazy" src="img/sequence__neon.webp?v=1789967521" alt="时序图 × neon" title="点击放大预览">
-        <figcaption><b>时序图</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成时序图（sequence），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      <figure class="card" data-chart="sequence" data-style="macaron">
+        <img loading="lazy" src="img/sequence__macaron.webp?v=1792748296" alt="时序图 × macaron" title="点击放大预览">
+        <figcaption><b>时序图</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="sequence" data-style="brutalist">
+        <img loading="lazy" src="img/sequence__brutalist.webp?v=1792748295" alt="时序图 × brutalist" title="点击放大预览">
+        <figcaption><b>时序图</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="sequence" data-style="ocean">
+        <img loading="lazy" src="img/sequence__ocean.webp?v=1792748301" alt="时序图 × ocean" title="点击放大预览">
+        <figcaption><b>时序图</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="sequence" data-style="paper">
-        <img loading="lazy" src="img/sequence__paper.webp?v=1789967528" alt="时序图 × paper" title="点击放大预览">
-        <figcaption><b>时序图</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成时序图（sequence），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+        <img loading="lazy" src="img/sequence__paper.webp?v=1792748301" alt="时序图 × paper" title="点击放大预览">
+        <figcaption><b>时序图</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="sequence" data-style="art-nouveau">
+        <img loading="lazy" src="img/sequence__art-nouveau.webp?v=1792748302" alt="时序图 × art-nouveau" title="点击放大预览">
+        <figcaption><b>时序图</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="sequence" data-style="swiss">
+        <img loading="lazy" src="img/sequence__swiss.webp?v=1792748301" alt="时序图 × swiss" title="点击放大预览">
+        <figcaption><b>时序图</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="sequence" data-style="psychedelic">
+        <img loading="lazy" src="img/sequence__psychedelic.webp?v=1792748308" alt="时序图 × psychedelic" title="点击放大预览">
+        <figcaption><b>时序图</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="sequence" data-style="cyberpunk">
+        <img loading="lazy" src="img/sequence__cyberpunk.webp?v=1792748312" alt="时序图 × cyberpunk" title="点击放大预览">
+        <figcaption><b>时序图</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>31 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="sequence" data-style="midnight">
+        <img loading="lazy" src="img/sequence__midnight.webp?v=1792748310" alt="时序图 × midnight" title="点击放大预览">
+        <figcaption><b>时序图</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="sequence" data-style="dracula">
+        <img loading="lazy" src="img/sequence__dracula.webp?v=1792748310" alt="时序图 × dracula" title="点击放大预览">
+        <figcaption><b>时序图</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="sequence" data-style="neo-chinese">
+        <img loading="lazy" src="img/sequence__neo-chinese.webp?v=1792748315" alt="时序图 × neo-chinese" title="点击放大预览">
+        <figcaption><b>时序图</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="sequence" data-style="terminal">
+        <img loading="lazy" src="img/sequence__terminal.webp?v=1792748315" alt="时序图 × terminal" title="点击放大预览">
+        <figcaption><b>时序图</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>32 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="sequence" data-style="cosmic">
+        <img loading="lazy" src="img/sequence__cosmic.webp?v=1792748315" alt="时序图 × cosmic" title="点击放大预览">
+        <figcaption><b>时序图</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="sequence" data-style="industrial">
+        <img loading="lazy" src="img/sequence__industrial.webp?v=1792748315" alt="时序图 × industrial" title="点击放大预览">
+        <figcaption><b>时序图</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="sequence" data-style="flat">
+        <img loading="lazy" src="img/sequence__flat.webp?v=1792748320" alt="时序图 × flat" title="点击放大预览">
+        <figcaption><b>时序图</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成时序图（sequence），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="sequence" data-style="glass">
-        <img loading="lazy" src="img/sequence__glass.webp?v=1789967528" alt="时序图 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/sequence__glass.webp?v=1792748321" alt="时序图 × glass" title="点击放大预览">
         <figcaption><b>时序图</b><span>glass · 玻璃拟态</span>
           <button class="copy" data-prompt="画成时序图（sequence），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="sequence" data-style="corporate">
-        <img loading="lazy" src="img/sequence__corporate.webp?v=1789967528" alt="时序图 × corporate" title="点击放大预览">
-        <figcaption><b>时序图</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成时序图（sequence），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="sequence" data-style="minimal">
-        <img loading="lazy" src="img/sequence__minimal.webp?v=1789967528" alt="时序图 × minimal" title="点击放大预览">
-        <figcaption><b>时序图</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成时序图（sequence），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="sequence" data-style="retro">
-        <img loading="lazy" src="img/sequence__retro.webp?v=1789967534" alt="时序图 × retro" title="点击放大预览">
-        <figcaption><b>时序图</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成时序图（sequence），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -114,49 +159,94 @@
     <h2>泳道图<code>swimlane</code></h2>
     <div class="grid">
       <figure class="card" data-chart="swimlane" data-style="warm">
-        <img loading="lazy" src="img/swimlane__warm.webp?v=1789967534" alt="泳道图 × warm" title="点击放大预览">
-        <figcaption><b>泳道图</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>34 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="swimlane" data-style="dark">
-        <img loading="lazy" src="img/swimlane__dark.webp?v=1789967534" alt="泳道图 × dark" title="点击放大预览">
-        <figcaption><b>泳道图</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+        <img loading="lazy" src="img/swimlane__warm.webp?v=1792748323" alt="泳道图 × warm" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>34 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="swimlane" data-style="editorial">
-        <img loading="lazy" src="img/swimlane__editorial.webp?v=1789967534" alt="泳道图 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/swimlane__editorial.webp?v=1792748321" alt="泳道图 × editorial" title="点击放大预览">
         <figcaption><b>泳道图</b><span>editorial · 杂志排版</span>
           <button class="copy" data-prompt="画成泳道图（swimlane），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="swimlane" data-style="neon">
-        <img loading="lazy" src="img/swimlane__neon.webp?v=1789967540" alt="泳道图 × neon" title="点击放大预览">
-        <figcaption><b>泳道图</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>31 KB</em></figcaption>
+      <figure class="card" data-chart="swimlane" data-style="macaron">
+        <img loading="lazy" src="img/swimlane__macaron.webp?v=1792748326" alt="泳道图 × macaron" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="swimlane" data-style="brutalist">
+        <img loading="lazy" src="img/swimlane__brutalist.webp?v=1792748328" alt="泳道图 × brutalist" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>34 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="swimlane" data-style="ocean">
+        <img loading="lazy" src="img/swimlane__ocean.webp?v=1792748329" alt="泳道图 × ocean" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>32 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="swimlane" data-style="paper">
-        <img loading="lazy" src="img/swimlane__paper.webp?v=1789967540" alt="泳道图 × paper" title="点击放大预览">
-        <figcaption><b>泳道图</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>31 KB</em></figcaption>
+        <img loading="lazy" src="img/swimlane__paper.webp?v=1792748330" alt="泳道图 × paper" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>31 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="swimlane" data-style="art-nouveau">
+        <img loading="lazy" src="img/swimlane__art-nouveau.webp?v=1792748331" alt="泳道图 × art-nouveau" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>31 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="swimlane" data-style="swiss">
+        <img loading="lazy" src="img/swimlane__swiss.webp?v=1792748332" alt="泳道图 × swiss" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="swimlane" data-style="psychedelic">
+        <img loading="lazy" src="img/swimlane__psychedelic.webp?v=1792748332" alt="泳道图 × psychedelic" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>35 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="swimlane" data-style="cyberpunk">
+        <img loading="lazy" src="img/swimlane__cyberpunk.webp?v=1792748332" alt="泳道图 × cyberpunk" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>35 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="swimlane" data-style="midnight">
+        <img loading="lazy" src="img/swimlane__midnight.webp?v=1792748337" alt="泳道图 × midnight" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="swimlane" data-style="dracula">
+        <img loading="lazy" src="img/swimlane__dracula.webp?v=1792748339" alt="泳道图 × dracula" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="swimlane" data-style="neo-chinese">
+        <img loading="lazy" src="img/swimlane__neo-chinese.webp?v=1792748339" alt="泳道图 × neo-chinese" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>30 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="swimlane" data-style="terminal">
+        <img loading="lazy" src="img/swimlane__terminal.webp?v=1792748339" alt="泳道图 × terminal" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>41 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="swimlane" data-style="cosmic">
+        <img loading="lazy" src="img/swimlane__cosmic.webp?v=1792748341" alt="泳道图 × cosmic" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>34 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="swimlane" data-style="industrial">
+        <img loading="lazy" src="img/swimlane__industrial.webp?v=1792748344" alt="泳道图 × industrial" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>37 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="swimlane" data-style="flat">
+        <img loading="lazy" src="img/swimlane__flat.webp?v=1792748344" alt="泳道图 × flat" title="点击放大预览">
+        <figcaption><b>泳道图</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="swimlane" data-style="glass">
-        <img loading="lazy" src="img/swimlane__glass.webp?v=1789967540" alt="泳道图 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/swimlane__glass.webp?v=1792748346" alt="泳道图 × glass" title="点击放大预览">
         <figcaption><b>泳道图</b><span>glass · 玻璃拟态</span>
-          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>30 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="swimlane" data-style="corporate">
-        <img loading="lazy" src="img/swimlane__corporate.webp?v=1789967540" alt="泳道图 × corporate" title="点击放大预览">
-        <figcaption><b>泳道图</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>31 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="swimlane" data-style="minimal">
-        <img loading="lazy" src="img/swimlane__minimal.webp?v=1789967546" alt="泳道图 × minimal" title="点击放大预览">
-        <figcaption><b>泳道图</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="swimlane" data-style="retro">
-        <img loading="lazy" src="img/swimlane__retro.webp?v=1789967547" alt="泳道图 × retro" title="点击放大预览">
-        <figcaption><b>泳道图</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>33 KB</em></figcaption>
+          <button class="copy" data-prompt="画成泳道图（swimlane），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -164,49 +254,94 @@
     <h2>流程图<code>flowchart</code></h2>
     <div class="grid">
       <figure class="card" data-chart="flowchart" data-style="warm">
-        <img loading="lazy" src="img/flowchart__warm.webp?v=1789967546" alt="流程图 × warm" title="点击放大预览">
-        <figcaption><b>流程图</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成流程图（flowchart），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="flowchart" data-style="dark">
-        <img loading="lazy" src="img/flowchart__dark.webp?v=1789967546" alt="流程图 × dark" title="点击放大预览">
-        <figcaption><b>流程图</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成流程图（flowchart），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+        <img loading="lazy" src="img/flowchart__warm.webp?v=1792748348" alt="流程图 × warm" title="点击放大预览">
+        <figcaption><b>流程图</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="flowchart" data-style="editorial">
-        <img loading="lazy" src="img/flowchart__editorial.webp?v=1789967553" alt="流程图 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/flowchart__editorial.webp?v=1792748350" alt="流程图 × editorial" title="点击放大预览">
         <figcaption><b>流程图</b><span>editorial · 杂志排版</span>
           <button class="copy" data-prompt="画成流程图（flowchart），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="flowchart" data-style="neon">
-        <img loading="lazy" src="img/flowchart__neon.webp?v=1789967553" alt="流程图 × neon" title="点击放大预览">
-        <figcaption><b>流程图</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成流程图（flowchart），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      <figure class="card" data-chart="flowchart" data-style="macaron">
+        <img loading="lazy" src="img/flowchart__macaron.webp?v=1792748350" alt="流程图 × macaron" title="点击放大预览">
+        <figcaption><b>流程图</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="flowchart" data-style="brutalist">
+        <img loading="lazy" src="img/flowchart__brutalist.webp?v=1792748350" alt="流程图 × brutalist" title="点击放大预览">
+        <figcaption><b>流程图</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="flowchart" data-style="ocean">
+        <img loading="lazy" src="img/flowchart__ocean.webp?v=1792748352" alt="流程图 × ocean" title="点击放大预览">
+        <figcaption><b>流程图</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="flowchart" data-style="paper">
-        <img loading="lazy" src="img/flowchart__paper.webp?v=1789967553" alt="流程图 × paper" title="点击放大预览">
-        <figcaption><b>流程图</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成流程图（flowchart），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
+        <img loading="lazy" src="img/flowchart__paper.webp?v=1792748357" alt="流程图 × paper" title="点击放大预览">
+        <figcaption><b>流程图</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>30 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="flowchart" data-style="art-nouveau">
+        <img loading="lazy" src="img/flowchart__art-nouveau.webp?v=1792748358" alt="流程图 × art-nouveau" title="点击放大预览">
+        <figcaption><b>流程图</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="flowchart" data-style="swiss">
+        <img loading="lazy" src="img/flowchart__swiss.webp?v=1792748357" alt="流程图 × swiss" title="点击放大预览">
+        <figcaption><b>流程图</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="flowchart" data-style="psychedelic">
+        <img loading="lazy" src="img/flowchart__psychedelic.webp?v=1792748361" alt="流程图 × psychedelic" title="点击放大预览">
+        <figcaption><b>流程图</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="flowchart" data-style="cyberpunk">
+        <img loading="lazy" src="img/flowchart__cyberpunk.webp?v=1792748361" alt="流程图 × cyberpunk" title="点击放大预览">
+        <figcaption><b>流程图</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>30 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="flowchart" data-style="midnight">
+        <img loading="lazy" src="img/flowchart__midnight.webp?v=1792748361" alt="流程图 × midnight" title="点击放大预览">
+        <figcaption><b>流程图</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="flowchart" data-style="dracula">
+        <img loading="lazy" src="img/flowchart__dracula.webp?v=1792748361" alt="流程图 × dracula" title="点击放大预览">
+        <figcaption><b>流程图</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="flowchart" data-style="neo-chinese">
+        <img loading="lazy" src="img/flowchart__neo-chinese.webp?v=1792748366" alt="流程图 × neo-chinese" title="点击放大预览">
+        <figcaption><b>流程图</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="flowchart" data-style="terminal">
+        <img loading="lazy" src="img/flowchart__terminal.webp?v=1792748368" alt="流程图 × terminal" title="点击放大预览">
+        <figcaption><b>流程图</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>32 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="flowchart" data-style="cosmic">
+        <img loading="lazy" src="img/flowchart__cosmic.webp?v=1792748368" alt="流程图 × cosmic" title="点击放大预览">
+        <figcaption><b>流程图</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="flowchart" data-style="industrial">
+        <img loading="lazy" src="img/flowchart__industrial.webp?v=1792748369" alt="流程图 × industrial" title="点击放大预览">
+        <figcaption><b>流程图</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="flowchart" data-style="flat">
+        <img loading="lazy" src="img/flowchart__flat.webp?v=1792748369" alt="流程图 × flat" title="点击放大预览">
+        <figcaption><b>流程图</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成流程图（flowchart），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="flowchart" data-style="glass">
-        <img loading="lazy" src="img/flowchart__glass.webp?v=1789967553" alt="流程图 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/flowchart__glass.webp?v=1792748373" alt="流程图 × glass" title="点击放大预览">
         <figcaption><b>流程图</b><span>glass · 玻璃拟态</span>
           <button class="copy" data-prompt="画成流程图（flowchart），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="flowchart" data-style="corporate">
-        <img loading="lazy" src="img/flowchart__corporate.webp?v=1789967559" alt="流程图 × corporate" title="点击放大预览">
-        <figcaption><b>流程图</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成流程图（flowchart），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="flowchart" data-style="minimal">
-        <img loading="lazy" src="img/flowchart__minimal.webp?v=1789967559" alt="流程图 × minimal" title="点击放大预览">
-        <figcaption><b>流程图</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成流程图（flowchart），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="flowchart" data-style="retro">
-        <img loading="lazy" src="img/flowchart__retro.webp?v=1789967559" alt="流程图 × retro" title="点击放大预览">
-        <figcaption><b>流程图</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成流程图（flowchart），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -214,49 +349,94 @@
     <h2>对比表<code>comparison</code></h2>
     <div class="grid">
       <figure class="card" data-chart="comparison" data-style="warm">
-        <img loading="lazy" src="img/comparison__warm.webp?v=1789967559" alt="对比表 × warm" title="点击放大预览">
-        <figcaption><b>对比表</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成对比表（comparison），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="comparison" data-style="dark">
-        <img loading="lazy" src="img/comparison__dark.webp?v=1789967565" alt="对比表 × dark" title="点击放大预览">
-        <figcaption><b>对比表</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成对比表（comparison），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+        <img loading="lazy" src="img/comparison__warm.webp?v=1792748374" alt="对比表 × warm" title="点击放大预览">
+        <figcaption><b>对比表</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="comparison" data-style="editorial">
-        <img loading="lazy" src="img/comparison__editorial.webp?v=1789967565" alt="对比表 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/comparison__editorial.webp?v=1792748374" alt="对比表 × editorial" title="点击放大预览">
         <figcaption><b>对比表</b><span>editorial · 杂志排版</span>
           <button class="copy" data-prompt="画成对比表（comparison），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="comparison" data-style="neon">
-        <img loading="lazy" src="img/comparison__neon.webp?v=1789967565" alt="对比表 × neon" title="点击放大预览">
-        <figcaption><b>对比表</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成对比表（comparison），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      <figure class="card" data-chart="comparison" data-style="macaron">
+        <img loading="lazy" src="img/comparison__macaron.webp?v=1792748376" alt="对比表 × macaron" title="点击放大预览">
+        <figcaption><b>对比表</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="comparison" data-style="brutalist">
+        <img loading="lazy" src="img/comparison__brutalist.webp?v=1792748380" alt="对比表 × brutalist" title="点击放大预览">
+        <figcaption><b>对比表</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="comparison" data-style="ocean">
+        <img loading="lazy" src="img/comparison__ocean.webp?v=1792748379" alt="对比表 × ocean" title="点击放大预览">
+        <figcaption><b>对比表</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="comparison" data-style="paper">
-        <img loading="lazy" src="img/comparison__paper.webp?v=1789967565" alt="对比表 × paper" title="点击放大预览">
-        <figcaption><b>对比表</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成对比表（comparison），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+        <img loading="lazy" src="img/comparison__paper.webp?v=1792748381" alt="对比表 × paper" title="点击放大预览">
+        <figcaption><b>对比表</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="comparison" data-style="art-nouveau">
+        <img loading="lazy" src="img/comparison__art-nouveau.webp?v=1792748381" alt="对比表 × art-nouveau" title="点击放大预览">
+        <figcaption><b>对比表</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="comparison" data-style="swiss">
+        <img loading="lazy" src="img/comparison__swiss.webp?v=1792748383" alt="对比表 × swiss" title="点击放大预览">
+        <figcaption><b>对比表</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="comparison" data-style="psychedelic">
+        <img loading="lazy" src="img/comparison__psychedelic.webp?v=1792748383" alt="对比表 × psychedelic" title="点击放大预览">
+        <figcaption><b>对比表</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>30 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="comparison" data-style="cyberpunk">
+        <img loading="lazy" src="img/comparison__cyberpunk.webp?v=1792748384" alt="对比表 × cyberpunk" title="点击放大预览">
+        <figcaption><b>对比表</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="comparison" data-style="midnight">
+        <img loading="lazy" src="img/comparison__midnight.webp?v=1792748385" alt="对比表 × midnight" title="点击放大预览">
+        <figcaption><b>对比表</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="comparison" data-style="dracula">
+        <img loading="lazy" src="img/comparison__dracula.webp?v=1792748389" alt="对比表 × dracula" title="点击放大预览">
+        <figcaption><b>对比表</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="comparison" data-style="neo-chinese">
+        <img loading="lazy" src="img/comparison__neo-chinese.webp?v=1792748389" alt="对比表 × neo-chinese" title="点击放大预览">
+        <figcaption><b>对比表</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="comparison" data-style="terminal">
+        <img loading="lazy" src="img/comparison__terminal.webp?v=1792748390" alt="对比表 × terminal" title="点击放大预览">
+        <figcaption><b>对比表</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>34 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="comparison" data-style="cosmic">
+        <img loading="lazy" src="img/comparison__cosmic.webp?v=1792748393" alt="对比表 × cosmic" title="点击放大预览">
+        <figcaption><b>对比表</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="comparison" data-style="industrial">
+        <img loading="lazy" src="img/comparison__industrial.webp?v=1792748394" alt="对比表 × industrial" title="点击放大预览">
+        <figcaption><b>对比表</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="comparison" data-style="flat">
+        <img loading="lazy" src="img/comparison__flat.webp?v=1792748395" alt="对比表 × flat" title="点击放大预览">
+        <figcaption><b>对比表</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成对比表（comparison），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="comparison" data-style="glass">
-        <img loading="lazy" src="img/comparison__glass.webp?v=1789967571" alt="对比表 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/comparison__glass.webp?v=1792748395" alt="对比表 × glass" title="点击放大预览">
         <figcaption><b>对比表</b><span>glass · 玻璃拟态</span>
           <button class="copy" data-prompt="画成对比表（comparison），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="comparison" data-style="corporate">
-        <img loading="lazy" src="img/comparison__corporate.webp?v=1789967571" alt="对比表 × corporate" title="点击放大预览">
-        <figcaption><b>对比表</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成对比表（comparison），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="comparison" data-style="minimal">
-        <img loading="lazy" src="img/comparison__minimal.webp?v=1789967571" alt="对比表 × minimal" title="点击放大预览">
-        <figcaption><b>对比表</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成对比表（comparison），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="comparison" data-style="retro">
-        <img loading="lazy" src="img/comparison__retro.webp?v=1789967571" alt="对比表 × retro" title="点击放大预览">
-        <figcaption><b>对比表</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成对比表（comparison），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -264,49 +444,94 @@
     <h2>时间线<code>timeline</code></h2>
     <div class="grid">
       <figure class="card" data-chart="timeline" data-style="warm">
-        <img loading="lazy" src="img/timeline__warm.webp?v=1789967578" alt="时间线 × warm" title="点击放大预览">
-        <figcaption><b>时间线</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成时间线（timeline），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="timeline" data-style="dark">
-        <img loading="lazy" src="img/timeline__dark.webp?v=1789967578" alt="时间线 × dark" title="点击放大预览">
-        <figcaption><b>时间线</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成时间线（timeline），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
+        <img loading="lazy" src="img/timeline__warm.webp?v=1792748397" alt="时间线 × warm" title="点击放大预览">
+        <figcaption><b>时间线</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="timeline" data-style="editorial">
-        <img loading="lazy" src="img/timeline__editorial.webp?v=1789967578" alt="时间线 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/timeline__editorial.webp?v=1792748403" alt="时间线 × editorial" title="点击放大预览">
         <figcaption><b>时间线</b><span>editorial · 杂志排版</span>
           <button class="copy" data-prompt="画成时间线（timeline），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="timeline" data-style="neon">
-        <img loading="lazy" src="img/timeline__neon.webp?v=1789967577" alt="时间线 × neon" title="点击放大预览">
-        <figcaption><b>时间线</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成时间线（timeline），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
+      <figure class="card" data-chart="timeline" data-style="macaron">
+        <img loading="lazy" src="img/timeline__macaron.webp?v=1792748403" alt="时间线 × macaron" title="点击放大预览">
+        <figcaption><b>时间线</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="timeline" data-style="brutalist">
+        <img loading="lazy" src="img/timeline__brutalist.webp?v=1792748404" alt="时间线 × brutalist" title="点击放大预览">
+        <figcaption><b>时间线</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="timeline" data-style="ocean">
+        <img loading="lazy" src="img/timeline__ocean.webp?v=1792748404" alt="时间线 × ocean" title="点击放大预览">
+        <figcaption><b>时间线</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="timeline" data-style="paper">
-        <img loading="lazy" src="img/timeline__paper.webp?v=1789967584" alt="时间线 × paper" title="点击放大预览">
-        <figcaption><b>时间线</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成时间线（timeline），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>39 KB</em></figcaption>
+        <img loading="lazy" src="img/timeline__paper.webp?v=1792748409" alt="时间线 × paper" title="点击放大预览">
+        <figcaption><b>时间线</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>39 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="timeline" data-style="art-nouveau">
+        <img loading="lazy" src="img/timeline__art-nouveau.webp?v=1792748410" alt="时间线 × art-nouveau" title="点击放大预览">
+        <figcaption><b>时间线</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="timeline" data-style="swiss">
+        <img loading="lazy" src="img/timeline__swiss.webp?v=1792748410" alt="时间线 × swiss" title="点击放大预览">
+        <figcaption><b>时间线</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>18 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="timeline" data-style="psychedelic">
+        <img loading="lazy" src="img/timeline__psychedelic.webp?v=1792748411" alt="时间线 × psychedelic" title="点击放大预览">
+        <figcaption><b>时间线</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="timeline" data-style="cyberpunk">
+        <img loading="lazy" src="img/timeline__cyberpunk.webp?v=1792748413" alt="时间线 × cyberpunk" title="点击放大预览">
+        <figcaption><b>时间线</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="timeline" data-style="midnight">
+        <img loading="lazy" src="img/timeline__midnight.webp?v=1792748414" alt="时间线 × midnight" title="点击放大预览">
+        <figcaption><b>时间线</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="timeline" data-style="dracula">
+        <img loading="lazy" src="img/timeline__dracula.webp?v=1792748415" alt="时间线 × dracula" title="点击放大预览">
+        <figcaption><b>时间线</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="timeline" data-style="neo-chinese">
+        <img loading="lazy" src="img/timeline__neo-chinese.webp?v=1792748415" alt="时间线 × neo-chinese" title="点击放大预览">
+        <figcaption><b>时间线</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="timeline" data-style="terminal">
+        <img loading="lazy" src="img/timeline__terminal.webp?v=1792748418" alt="时间线 × terminal" title="点击放大预览">
+        <figcaption><b>时间线</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="timeline" data-style="cosmic">
+        <img loading="lazy" src="img/timeline__cosmic.webp?v=1792748420" alt="时间线 × cosmic" title="点击放大预览">
+        <figcaption><b>时间线</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="timeline" data-style="industrial">
+        <img loading="lazy" src="img/timeline__industrial.webp?v=1792748420" alt="时间线 × industrial" title="点击放大预览">
+        <figcaption><b>时间线</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="timeline" data-style="flat">
+        <img loading="lazy" src="img/timeline__flat.webp?v=1792748420" alt="时间线 × flat" title="点击放大预览">
+        <figcaption><b>时间线</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="timeline" data-style="glass">
-        <img loading="lazy" src="img/timeline__glass.webp?v=1789967584" alt="时间线 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/timeline__glass.webp?v=1792748422" alt="时间线 × glass" title="点击放大预览">
         <figcaption><b>时间线</b><span>glass · 玻璃拟态</span>
-          <button class="copy" data-prompt="画成时间线（timeline），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="timeline" data-style="corporate">
-        <img loading="lazy" src="img/timeline__corporate.webp?v=1789967584" alt="时间线 × corporate" title="点击放大预览">
-        <figcaption><b>时间线</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成时间线（timeline），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="timeline" data-style="minimal">
-        <img loading="lazy" src="img/timeline__minimal.webp?v=1789967584" alt="时间线 × minimal" title="点击放大预览">
-        <figcaption><b>时间线</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成时间线（timeline），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="timeline" data-style="retro">
-        <img loading="lazy" src="img/timeline__retro.webp?v=1789967590" alt="时间线 × retro" title="点击放大预览">
-        <figcaption><b>时间线</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成时间线（timeline），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
+          <button class="copy" data-prompt="画成时间线（timeline），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -314,49 +539,94 @@
     <h2>架构拓扑<code>architecture</code></h2>
     <div class="grid">
       <figure class="card" data-chart="architecture" data-style="warm">
-        <img loading="lazy" src="img/architecture__warm.webp?v=1789967590" alt="架构拓扑 × warm" title="点击放大预览">
-        <figcaption><b>架构拓扑</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="architecture" data-style="dark">
-        <img loading="lazy" src="img/architecture__dark.webp?v=1789967590" alt="架构拓扑 × dark" title="点击放大预览">
-        <figcaption><b>架构拓扑</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
+        <img loading="lazy" src="img/architecture__warm.webp?v=1792748423" alt="架构拓扑 × warm" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="architecture" data-style="editorial">
-        <img loading="lazy" src="img/architecture__editorial.webp?v=1789967590" alt="架构拓扑 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/architecture__editorial.webp?v=1792748424" alt="架构拓扑 × editorial" title="点击放大预览">
         <figcaption><b>架构拓扑</b><span>editorial · 杂志排版</span>
-          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="architecture" data-style="neon">
-        <img loading="lazy" src="img/architecture__neon.webp?v=1789967596" alt="架构拓扑 × neon" title="点击放大预览">
-        <figcaption><b>架构拓扑</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      <figure class="card" data-chart="architecture" data-style="macaron">
+        <img loading="lazy" src="img/architecture__macaron.webp?v=1792748425" alt="架构拓扑 × macaron" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="architecture" data-style="brutalist">
+        <img loading="lazy" src="img/architecture__brutalist.webp?v=1792748431" alt="架构拓扑 × brutalist" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="architecture" data-style="ocean">
+        <img loading="lazy" src="img/architecture__ocean.webp?v=1792748431" alt="架构拓扑 × ocean" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="architecture" data-style="paper">
-        <img loading="lazy" src="img/architecture__paper.webp?v=1789967596" alt="架构拓扑 × paper" title="点击放大预览">
-        <figcaption><b>架构拓扑</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>35 KB</em></figcaption>
+        <img loading="lazy" src="img/architecture__paper.webp?v=1792748433" alt="架构拓扑 × paper" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>35 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="architecture" data-style="art-nouveau">
+        <img loading="lazy" src="img/architecture__art-nouveau.webp?v=1792748434" alt="架构拓扑 × art-nouveau" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="architecture" data-style="swiss">
+        <img loading="lazy" src="img/architecture__swiss.webp?v=1792748437" alt="架构拓扑 × swiss" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="architecture" data-style="psychedelic">
+        <img loading="lazy" src="img/architecture__psychedelic.webp?v=1792748438" alt="架构拓扑 × psychedelic" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="architecture" data-style="cyberpunk">
+        <img loading="lazy" src="img/architecture__cyberpunk.webp?v=1792748438" alt="架构拓扑 × cyberpunk" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="architecture" data-style="midnight">
+        <img loading="lazy" src="img/architecture__midnight.webp?v=1792748438" alt="架构拓扑 × midnight" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="architecture" data-style="dracula">
+        <img loading="lazy" src="img/architecture__dracula.webp?v=1792748439" alt="架构拓扑 × dracula" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="architecture" data-style="neo-chinese">
+        <img loading="lazy" src="img/architecture__neo-chinese.webp?v=1792748439" alt="架构拓扑 × neo-chinese" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="architecture" data-style="terminal">
+        <img loading="lazy" src="img/architecture__terminal.webp?v=1792748441" alt="架构拓扑 × terminal" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>30 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="architecture" data-style="cosmic">
+        <img loading="lazy" src="img/architecture__cosmic.webp?v=1792748441" alt="架构拓扑 × cosmic" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="architecture" data-style="industrial">
+        <img loading="lazy" src="img/architecture__industrial.webp?v=1792748444" alt="架构拓扑 × industrial" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="architecture" data-style="flat">
+        <img loading="lazy" src="img/architecture__flat.webp?v=1792748445" alt="架构拓扑 × flat" title="点击放大预览">
+        <figcaption><b>架构拓扑</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="architecture" data-style="glass">
-        <img loading="lazy" src="img/architecture__glass.webp?v=1789967596" alt="架构拓扑 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/architecture__glass.webp?v=1792748445" alt="架构拓扑 × glass" title="点击放大预览">
         <figcaption><b>架构拓扑</b><span>glass · 玻璃拟态</span>
           <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="architecture" data-style="corporate">
-        <img loading="lazy" src="img/architecture__corporate.webp?v=1789967596" alt="架构拓扑 × corporate" title="点击放大预览">
-        <figcaption><b>架构拓扑</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="architecture" data-style="minimal">
-        <img loading="lazy" src="img/architecture__minimal.webp?v=1789967602" alt="架构拓扑 × minimal" title="点击放大预览">
-        <figcaption><b>架构拓扑</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="architecture" data-style="retro">
-        <img loading="lazy" src="img/architecture__retro.webp?v=1789967603" alt="架构拓扑 × retro" title="点击放大预览">
-        <figcaption><b>架构拓扑</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成架构拓扑（architecture），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -364,49 +634,94 @@
     <h2>数据看板<code>dashboard</code></h2>
     <div class="grid">
       <figure class="card" data-chart="dashboard" data-style="warm">
-        <img loading="lazy" src="img/dashboard__warm.webp?v=1789967602" alt="数据看板 × warm" title="点击放大预览">
-        <figcaption><b>数据看板</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="dashboard" data-style="dark">
-        <img loading="lazy" src="img/dashboard__dark.webp?v=1789967602" alt="数据看板 × dark" title="点击放大预览">
-        <figcaption><b>数据看板</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
+        <img loading="lazy" src="img/dashboard__warm.webp?v=1792748446" alt="数据看板 × warm" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="dashboard" data-style="editorial">
-        <img loading="lazy" src="img/dashboard__editorial.webp?v=1789967609" alt="数据看板 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/dashboard__editorial.webp?v=1792748450" alt="数据看板 × editorial" title="点击放大预览">
         <figcaption><b>数据看板</b><span>editorial · 杂志排版</span>
           <button class="copy" data-prompt="画成数据看板（dashboard），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="dashboard" data-style="neon">
-        <img loading="lazy" src="img/dashboard__neon.webp?v=1789967609" alt="数据看板 × neon" title="点击放大预览">
-        <figcaption><b>数据看板</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      <figure class="card" data-chart="dashboard" data-style="macaron">
+        <img loading="lazy" src="img/dashboard__macaron.webp?v=1792748450" alt="数据看板 × macaron" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="dashboard" data-style="brutalist">
+        <img loading="lazy" src="img/dashboard__brutalist.webp?v=1792748451" alt="数据看板 × brutalist" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="dashboard" data-style="ocean">
+        <img loading="lazy" src="img/dashboard__ocean.webp?v=1792748452" alt="数据看板 × ocean" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="dashboard" data-style="paper">
-        <img loading="lazy" src="img/dashboard__paper.webp?v=1789967609" alt="数据看板 × paper" title="点击放大预览">
-        <figcaption><b>数据看板</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>36 KB</em></figcaption>
+        <img loading="lazy" src="img/dashboard__paper.webp?v=1792748457" alt="数据看板 × paper" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>35 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="dashboard" data-style="art-nouveau">
+        <img loading="lazy" src="img/dashboard__art-nouveau.webp?v=1792748457" alt="数据看板 × art-nouveau" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="dashboard" data-style="swiss">
+        <img loading="lazy" src="img/dashboard__swiss.webp?v=1792748458" alt="数据看板 × swiss" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="dashboard" data-style="psychedelic">
+        <img loading="lazy" src="img/dashboard__psychedelic.webp?v=1792748458" alt="数据看板 × psychedelic" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="dashboard" data-style="cyberpunk">
+        <img loading="lazy" src="img/dashboard__cyberpunk.webp?v=1792748461" alt="数据看板 × cyberpunk" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="dashboard" data-style="midnight">
+        <img loading="lazy" src="img/dashboard__midnight.webp?v=1792748462" alt="数据看板 × midnight" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="dashboard" data-style="dracula">
+        <img loading="lazy" src="img/dashboard__dracula.webp?v=1792748462" alt="数据看板 × dracula" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="dashboard" data-style="neo-chinese">
+        <img loading="lazy" src="img/dashboard__neo-chinese.webp?v=1792748463" alt="数据看板 × neo-chinese" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="dashboard" data-style="terminal">
+        <img loading="lazy" src="img/dashboard__terminal.webp?v=1792748467" alt="数据看板 × terminal" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>30 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="dashboard" data-style="cosmic">
+        <img loading="lazy" src="img/dashboard__cosmic.webp?v=1792748468" alt="数据看板 × cosmic" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="dashboard" data-style="industrial">
+        <img loading="lazy" src="img/dashboard__industrial.webp?v=1792748468" alt="数据看板 × industrial" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="dashboard" data-style="flat">
+        <img loading="lazy" src="img/dashboard__flat.webp?v=1792748469" alt="数据看板 × flat" title="点击放大预览">
+        <figcaption><b>数据看板</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="dashboard" data-style="glass">
-        <img loading="lazy" src="img/dashboard__glass.webp?v=1789967609" alt="数据看板 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/dashboard__glass.webp?v=1792748471" alt="数据看板 × glass" title="点击放大预览">
         <figcaption><b>数据看板</b><span>glass · 玻璃拟态</span>
-          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="dashboard" data-style="corporate">
-        <img loading="lazy" src="img/dashboard__corporate.webp?v=1789967615" alt="数据看板 × corporate" title="点击放大预览">
-        <figcaption><b>数据看板</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="dashboard" data-style="minimal">
-        <img loading="lazy" src="img/dashboard__minimal.webp?v=1789967615" alt="数据看板 × minimal" title="点击放大预览">
-        <figcaption><b>数据看板</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="dashboard" data-style="retro">
-        <img loading="lazy" src="img/dashboard__retro.webp?v=1789967615" alt="数据看板 × retro" title="点击放大预览">
-        <figcaption><b>数据看板</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+          <button class="copy" data-prompt="画成数据看板（dashboard），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -414,49 +729,94 @@
     <h2>甘特图<code>gantt</code></h2>
     <div class="grid">
       <figure class="card" data-chart="gantt" data-style="warm">
-        <img loading="lazy" src="img/gantt__warm.webp?v=1789967615" alt="甘特图 × warm" title="点击放大预览">
-        <figcaption><b>甘特图</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成甘特图（gantt），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="gantt" data-style="dark">
-        <img loading="lazy" src="img/gantt__dark.webp?v=1789967621" alt="甘特图 × dark" title="点击放大预览">
-        <figcaption><b>甘特图</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成甘特图（gantt），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
+        <img loading="lazy" src="img/gantt__warm.webp?v=1792748472" alt="甘特图 × warm" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="gantt" data-style="editorial">
-        <img loading="lazy" src="img/gantt__editorial.webp?v=1789967621" alt="甘特图 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/gantt__editorial.webp?v=1792748473" alt="甘特图 × editorial" title="点击放大预览">
         <figcaption><b>甘特图</b><span>editorial · 杂志排版</span>
-          <button class="copy" data-prompt="画成甘特图（gantt），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>18 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="gantt" data-style="neon">
-        <img loading="lazy" src="img/gantt__neon.webp?v=1789967621" alt="甘特图 × neon" title="点击放大预览">
-        <figcaption><b>甘特图</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成甘特图（gantt），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
+      <figure class="card" data-chart="gantt" data-style="macaron">
+        <img loading="lazy" src="img/gantt__macaron.webp?v=1792748474" alt="甘特图 × macaron" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="gantt" data-style="brutalist">
+        <img loading="lazy" src="img/gantt__brutalist.webp?v=1792748477" alt="甘特图 × brutalist" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="gantt" data-style="ocean">
+        <img loading="lazy" src="img/gantt__ocean.webp?v=1792748478" alt="甘特图 × ocean" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="gantt" data-style="paper">
-        <img loading="lazy" src="img/gantt__paper.webp?v=1789967621" alt="甘特图 × paper" title="点击放大预览">
-        <figcaption><b>甘特图</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成甘特图（gantt），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
+        <img loading="lazy" src="img/gantt__paper.webp?v=1792748479" alt="甘特图 × paper" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="gantt" data-style="art-nouveau">
+        <img loading="lazy" src="img/gantt__art-nouveau.webp?v=1792748480" alt="甘特图 × art-nouveau" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="gantt" data-style="swiss">
+        <img loading="lazy" src="img/gantt__swiss.webp?v=1792748482" alt="甘特图 × swiss" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>18 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="gantt" data-style="psychedelic">
+        <img loading="lazy" src="img/gantt__psychedelic.webp?v=1792748483" alt="甘特图 × psychedelic" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="gantt" data-style="cyberpunk">
+        <img loading="lazy" src="img/gantt__cyberpunk.webp?v=1792748484" alt="甘特图 × cyberpunk" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="gantt" data-style="midnight">
+        <img loading="lazy" src="img/gantt__midnight.webp?v=1792748485" alt="甘特图 × midnight" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>18 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="gantt" data-style="dracula">
+        <img loading="lazy" src="img/gantt__dracula.webp?v=1792748489" alt="甘特图 × dracula" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="gantt" data-style="neo-chinese">
+        <img loading="lazy" src="img/gantt__neo-chinese.webp?v=1792748490" alt="甘特图 × neo-chinese" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="gantt" data-style="terminal">
+        <img loading="lazy" src="img/gantt__terminal.webp?v=1792748490" alt="甘特图 × terminal" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="gantt" data-style="cosmic">
+        <img loading="lazy" src="img/gantt__cosmic.webp?v=1792748491" alt="甘特图 × cosmic" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="gantt" data-style="industrial">
+        <img loading="lazy" src="img/gantt__industrial.webp?v=1792748494" alt="甘特图 × industrial" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="gantt" data-style="flat">
+        <img loading="lazy" src="img/gantt__flat.webp?v=1792748495" alt="甘特图 × flat" title="点击放大预览">
+        <figcaption><b>甘特图</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="gantt" data-style="glass">
-        <img loading="lazy" src="img/gantt__glass.webp?v=1789967628" alt="甘特图 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/gantt__glass.webp?v=1792748496" alt="甘特图 × glass" title="点击放大预览">
         <figcaption><b>甘特图</b><span>glass · 玻璃拟态</span>
-          <button class="copy" data-prompt="画成甘特图（gantt），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="gantt" data-style="corporate">
-        <img loading="lazy" src="img/gantt__corporate.webp?v=1789967627" alt="甘特图 × corporate" title="点击放大预览">
-        <figcaption><b>甘特图</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成甘特图（gantt），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="gantt" data-style="minimal">
-        <img loading="lazy" src="img/gantt__minimal.webp?v=1789967627" alt="甘特图 × minimal" title="点击放大预览">
-        <figcaption><b>甘特图</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成甘特图（gantt），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="gantt" data-style="retro">
-        <img loading="lazy" src="img/gantt__retro.webp?v=1789967628" alt="甘特图 × retro" title="点击放大预览">
-        <figcaption><b>甘特图</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成甘特图（gantt），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
+          <button class="copy" data-prompt="画成甘特图（gantt），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -464,49 +824,94 @@
     <h2>组织架构<code>org-chart</code></h2>
     <div class="grid">
       <figure class="card" data-chart="org-chart" data-style="warm">
-        <img loading="lazy" src="img/org-chart__warm.webp?v=1789967633" alt="组织架构 × warm" title="点击放大预览">
-        <figcaption><b>组织架构</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="org-chart" data-style="dark">
-        <img loading="lazy" src="img/org-chart__dark.webp?v=1789967633" alt="组织架构 × dark" title="点击放大预览">
-        <figcaption><b>组织架构</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+        <img loading="lazy" src="img/org-chart__warm.webp?v=1792748500" alt="组织架构 × warm" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="org-chart" data-style="editorial">
-        <img loading="lazy" src="img/org-chart__editorial.webp?v=1789967634" alt="组织架构 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/org-chart__editorial.webp?v=1792748501" alt="组织架构 × editorial" title="点击放大预览">
         <figcaption><b>组织架构</b><span>editorial · 杂志排版</span>
           <button class="copy" data-prompt="画成组织架构（org-chart），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="org-chart" data-style="neon">
-        <img loading="lazy" src="img/org-chart__neon.webp?v=1789967634" alt="组织架构 × neon" title="点击放大预览">
-        <figcaption><b>组织架构</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      <figure class="card" data-chart="org-chart" data-style="macaron">
+        <img loading="lazy" src="img/org-chart__macaron.webp?v=1792748501" alt="组织架构 × macaron" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="org-chart" data-style="brutalist">
+        <img loading="lazy" src="img/org-chart__brutalist.webp?v=1792748502" alt="组织架构 × brutalist" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="org-chart" data-style="ocean">
+        <img loading="lazy" src="img/org-chart__ocean.webp?v=1792748504" alt="组织架构 × ocean" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="org-chart" data-style="paper">
-        <img loading="lazy" src="img/org-chart__paper.webp?v=1789967639" alt="组织架构 × paper" title="点击放大预览">
-        <figcaption><b>组织架构</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>36 KB</em></figcaption>
+        <img loading="lazy" src="img/org-chart__paper.webp?v=1792748506" alt="组织架构 × paper" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>36 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="org-chart" data-style="art-nouveau">
+        <img loading="lazy" src="img/org-chart__art-nouveau.webp?v=1792748506" alt="组织架构 × art-nouveau" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="org-chart" data-style="swiss">
+        <img loading="lazy" src="img/org-chart__swiss.webp?v=1792748506" alt="组织架构 × swiss" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="org-chart" data-style="psychedelic">
+        <img loading="lazy" src="img/org-chart__psychedelic.webp?v=1792748510" alt="组织架构 × psychedelic" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="org-chart" data-style="cyberpunk">
+        <img loading="lazy" src="img/org-chart__cyberpunk.webp?v=1792748511" alt="组织架构 × cyberpunk" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>31 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="org-chart" data-style="midnight">
+        <img loading="lazy" src="img/org-chart__midnight.webp?v=1792748511" alt="组织架构 × midnight" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="org-chart" data-style="dracula">
+        <img loading="lazy" src="img/org-chart__dracula.webp?v=1792748512" alt="组织架构 × dracula" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="org-chart" data-style="neo-chinese">
+        <img loading="lazy" src="img/org-chart__neo-chinese.webp?v=1792748513" alt="组织架构 × neo-chinese" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="org-chart" data-style="terminal">
+        <img loading="lazy" src="img/org-chart__terminal.webp?v=1792748515" alt="组织架构 × terminal" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>32 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="org-chart" data-style="cosmic">
+        <img loading="lazy" src="img/org-chart__cosmic.webp?v=1792748516" alt="组织架构 × cosmic" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>30 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="org-chart" data-style="industrial">
+        <img loading="lazy" src="img/org-chart__industrial.webp?v=1792748517" alt="组织架构 × industrial" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="org-chart" data-style="flat">
+        <img loading="lazy" src="img/org-chart__flat.webp?v=1792748519" alt="组织架构 × flat" title="点击放大预览">
+        <figcaption><b>组织架构</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="org-chart" data-style="glass">
-        <img loading="lazy" src="img/org-chart__glass.webp?v=1789967639" alt="组织架构 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/org-chart__glass.webp?v=1792748521" alt="组织架构 × glass" title="点击放大预览">
         <figcaption><b>组织架构</b><span>glass · 玻璃拟态</span>
           <button class="copy" data-prompt="画成组织架构（org-chart），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="org-chart" data-style="corporate">
-        <img loading="lazy" src="img/org-chart__corporate.webp?v=1789967640" alt="组织架构 × corporate" title="点击放大预览">
-        <figcaption><b>组织架构</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="org-chart" data-style="minimal">
-        <img loading="lazy" src="img/org-chart__minimal.webp?v=1789967639" alt="组织架构 × minimal" title="点击放大预览">
-        <figcaption><b>组织架构</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="org-chart" data-style="retro">
-        <img loading="lazy" src="img/org-chart__retro.webp?v=1789967645" alt="组织架构 × retro" title="点击放大预览">
-        <figcaption><b>组织架构</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成组织架构（org-chart），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -514,49 +919,94 @@
     <h2>漏斗图<code>funnel</code></h2>
     <div class="grid">
       <figure class="card" data-chart="funnel" data-style="warm">
-        <img loading="lazy" src="img/funnel__warm.webp?v=1789967645" alt="漏斗图 × warm" title="点击放大预览">
-        <figcaption><b>漏斗图</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="funnel" data-style="dark">
-        <img loading="lazy" src="img/funnel__dark.webp?v=1789967645" alt="漏斗图 × dark" title="点击放大预览">
-        <figcaption><b>漏斗图</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+        <img loading="lazy" src="img/funnel__warm.webp?v=1792748522" alt="漏斗图 × warm" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="funnel" data-style="editorial">
-        <img loading="lazy" src="img/funnel__editorial.webp?v=1789967645" alt="漏斗图 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/funnel__editorial.webp?v=1792748523" alt="漏斗图 × editorial" title="点击放大预览">
         <figcaption><b>漏斗图</b><span>editorial · 杂志排版</span>
           <button class="copy" data-prompt="画成漏斗图（funnel），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="funnel" data-style="neon">
-        <img loading="lazy" src="img/funnel__neon.webp?v=1789967650" alt="漏斗图 × neon" title="点击放大预览">
-        <figcaption><b>漏斗图</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      <figure class="card" data-chart="funnel" data-style="macaron">
+        <img loading="lazy" src="img/funnel__macaron.webp?v=1792748524" alt="漏斗图 × macaron" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="funnel" data-style="brutalist">
+        <img loading="lazy" src="img/funnel__brutalist.webp?v=1792748527" alt="漏斗图 × brutalist" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="funnel" data-style="ocean">
+        <img loading="lazy" src="img/funnel__ocean.webp?v=1792748528" alt="漏斗图 × ocean" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="funnel" data-style="paper">
-        <img loading="lazy" src="img/funnel__paper.webp?v=1789967650" alt="漏斗图 × paper" title="点击放大预览">
-        <figcaption><b>漏斗图</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>33 KB</em></figcaption>
+        <img loading="lazy" src="img/funnel__paper.webp?v=1792748529" alt="漏斗图 × paper" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>32 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="funnel" data-style="art-nouveau">
+        <img loading="lazy" src="img/funnel__art-nouveau.webp?v=1792748530" alt="漏斗图 × art-nouveau" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="funnel" data-style="swiss">
+        <img loading="lazy" src="img/funnel__swiss.webp?v=1792748532" alt="漏斗图 × swiss" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="funnel" data-style="psychedelic">
+        <img loading="lazy" src="img/funnel__psychedelic.webp?v=1792748534" alt="漏斗图 × psychedelic" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="funnel" data-style="cyberpunk">
+        <img loading="lazy" src="img/funnel__cyberpunk.webp?v=1792748534" alt="漏斗图 × cyberpunk" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="funnel" data-style="midnight">
+        <img loading="lazy" src="img/funnel__midnight.webp?v=1792748535" alt="漏斗图 × midnight" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="funnel" data-style="dracula">
+        <img loading="lazy" src="img/funnel__dracula.webp?v=1792748538" alt="漏斗图 × dracula" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="funnel" data-style="neo-chinese">
+        <img loading="lazy" src="img/funnel__neo-chinese.webp?v=1792748539" alt="漏斗图 × neo-chinese" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="funnel" data-style="terminal">
+        <img loading="lazy" src="img/funnel__terminal.webp?v=1792748540" alt="漏斗图 × terminal" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="funnel" data-style="cosmic">
+        <img loading="lazy" src="img/funnel__cosmic.webp?v=1792748540" alt="漏斗图 × cosmic" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="funnel" data-style="industrial">
+        <img loading="lazy" src="img/funnel__industrial.webp?v=1792748543" alt="漏斗图 × industrial" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="funnel" data-style="flat">
+        <img loading="lazy" src="img/funnel__flat.webp?v=1792748544" alt="漏斗图 × flat" title="点击放大预览">
+        <figcaption><b>漏斗图</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="funnel" data-style="glass">
-        <img loading="lazy" src="img/funnel__glass.webp?v=1789967651" alt="漏斗图 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/funnel__glass.webp?v=1792748545" alt="漏斗图 × glass" title="点击放大预览">
         <figcaption><b>漏斗图</b><span>glass · 玻璃拟态</span>
-          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="funnel" data-style="corporate">
-        <img loading="lazy" src="img/funnel__corporate.webp?v=1789967651" alt="漏斗图 × corporate" title="点击放大预览">
-        <figcaption><b>漏斗图</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="funnel" data-style="minimal">
-        <img loading="lazy" src="img/funnel__minimal.webp?v=1789967656" alt="漏斗图 × minimal" title="点击放大预览">
-        <figcaption><b>漏斗图</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="funnel" data-style="retro">
-        <img loading="lazy" src="img/funnel__retro.webp?v=1789967656" alt="漏斗图 × retro" title="点击放大预览">
-        <figcaption><b>漏斗图</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+          <button class="copy" data-prompt="画成漏斗图（funnel），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -564,49 +1014,94 @@
     <h2>思维导图<code>mind-map</code></h2>
     <div class="grid">
       <figure class="card" data-chart="mind-map" data-style="warm">
-        <img loading="lazy" src="img/mind-map__warm.webp?v=1789967657" alt="思维导图 × warm" title="点击放大预览">
-        <figcaption><b>思维导图</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="mind-map" data-style="dark">
-        <img loading="lazy" src="img/mind-map__dark.webp?v=1789967657" alt="思维导图 × dark" title="点击放大预览">
-        <figcaption><b>思维导图</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
+        <img loading="lazy" src="img/mind-map__warm.webp?v=1792748546" alt="思维导图 × warm" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="mind-map" data-style="editorial">
-        <img loading="lazy" src="img/mind-map__editorial.webp?v=1789967662" alt="思维导图 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/mind-map__editorial.webp?v=1792748549" alt="思维导图 × editorial" title="点击放大预览">
         <figcaption><b>思维导图</b><span>editorial · 杂志排版</span>
           <button class="copy" data-prompt="画成思维导图（mind-map），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="mind-map" data-style="neon">
-        <img loading="lazy" src="img/mind-map__neon.webp?v=1789967662" alt="思维导图 × neon" title="点击放大预览">
-        <figcaption><b>思维导图</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      <figure class="card" data-chart="mind-map" data-style="macaron">
+        <img loading="lazy" src="img/mind-map__macaron.webp?v=1792748550" alt="思维导图 × macaron" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="mind-map" data-style="brutalist">
+        <img loading="lazy" src="img/mind-map__brutalist.webp?v=1792748551" alt="思维导图 × brutalist" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="mind-map" data-style="ocean">
+        <img loading="lazy" src="img/mind-map__ocean.webp?v=1792748552" alt="思维导图 × ocean" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="mind-map" data-style="paper">
-        <img loading="lazy" src="img/mind-map__paper.webp?v=1789967663" alt="思维导图 × paper" title="点击放大预览">
-        <figcaption><b>思维导图</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+        <img loading="lazy" src="img/mind-map__paper.webp?v=1792748554" alt="思维导图 × paper" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="mind-map" data-style="art-nouveau">
+        <img loading="lazy" src="img/mind-map__art-nouveau.webp?v=1792748555" alt="思维导图 × art-nouveau" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="mind-map" data-style="swiss">
+        <img loading="lazy" src="img/mind-map__swiss.webp?v=1792748556" alt="思维导图 × swiss" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="mind-map" data-style="psychedelic">
+        <img loading="lazy" src="img/mind-map__psychedelic.webp?v=1792748557" alt="思维导图 × psychedelic" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="mind-map" data-style="cyberpunk">
+        <img loading="lazy" src="img/mind-map__cyberpunk.webp?v=1792748559" alt="思维导图 × cyberpunk" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="mind-map" data-style="midnight">
+        <img loading="lazy" src="img/mind-map__midnight.webp?v=1792748560" alt="思维导图 × midnight" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="mind-map" data-style="dracula">
+        <img loading="lazy" src="img/mind-map__dracula.webp?v=1792748562" alt="思维导图 × dracula" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="mind-map" data-style="neo-chinese">
+        <img loading="lazy" src="img/mind-map__neo-chinese.webp?v=1792748563" alt="思维导图 × neo-chinese" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="mind-map" data-style="terminal">
+        <img loading="lazy" src="img/mind-map__terminal.webp?v=1792748565" alt="思维导图 × terminal" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>30 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="mind-map" data-style="cosmic">
+        <img loading="lazy" src="img/mind-map__cosmic.webp?v=1792748566" alt="思维导图 × cosmic" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="mind-map" data-style="industrial">
+        <img loading="lazy" src="img/mind-map__industrial.webp?v=1792748567" alt="思维导图 × industrial" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="mind-map" data-style="flat">
+        <img loading="lazy" src="img/mind-map__flat.webp?v=1792748568" alt="思维导图 × flat" title="点击放大预览">
+        <figcaption><b>思维导图</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="mind-map" data-style="glass">
-        <img loading="lazy" src="img/mind-map__glass.webp?v=1789967663" alt="思维导图 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/mind-map__glass.webp?v=1792748570" alt="思维导图 × glass" title="点击放大预览">
         <figcaption><b>思维导图</b><span>glass · 玻璃拟态</span>
           <button class="copy" data-prompt="画成思维导图（mind-map），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="mind-map" data-style="corporate">
-        <img loading="lazy" src="img/mind-map__corporate.webp?v=1789967667" alt="思维导图 × corporate" title="点击放大预览">
-        <figcaption><b>思维导图</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="mind-map" data-style="minimal">
-        <img loading="lazy" src="img/mind-map__minimal.webp?v=1789967667" alt="思维导图 × minimal" title="点击放大预览">
-        <figcaption><b>思维导图</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="mind-map" data-style="retro">
-        <img loading="lazy" src="img/mind-map__retro.webp?v=1789967668" alt="思维导图 × retro" title="点击放大预览">
-        <figcaption><b>思维导图</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成思维导图（mind-map），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -614,49 +1109,94 @@
     <h2>矩阵图<code>matrix</code></h2>
     <div class="grid">
       <figure class="card" data-chart="matrix" data-style="warm">
-        <img loading="lazy" src="img/matrix__warm.webp?v=1789967669" alt="矩阵图 × warm" title="点击放大预览">
-        <figcaption><b>矩阵图</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="matrix" data-style="dark">
-        <img loading="lazy" src="img/matrix__dark.webp?v=1789967673" alt="矩阵图 × dark" title="点击放大预览">
-        <figcaption><b>矩阵图</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+        <img loading="lazy" src="img/matrix__warm.webp?v=1792748571" alt="矩阵图 × warm" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>29 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="matrix" data-style="editorial">
-        <img loading="lazy" src="img/matrix__editorial.webp?v=1789967673" alt="矩阵图 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/matrix__editorial.webp?v=1792748573" alt="矩阵图 × editorial" title="点击放大预览">
         <figcaption><b>矩阵图</b><span>editorial · 杂志排版</span>
           <button class="copy" data-prompt="画成矩阵图（matrix），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="matrix" data-style="neon">
-        <img loading="lazy" src="img/matrix__neon.webp?v=1789967675" alt="矩阵图 × neon" title="点击放大预览">
-        <figcaption><b>矩阵图</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      <figure class="card" data-chart="matrix" data-style="macaron">
+        <img loading="lazy" src="img/matrix__macaron.webp?v=1792748574" alt="矩阵图 × macaron" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="matrix" data-style="brutalist">
+        <img loading="lazy" src="img/matrix__brutalist.webp?v=1792748576" alt="矩阵图 × brutalist" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="matrix" data-style="ocean">
+        <img loading="lazy" src="img/matrix__ocean.webp?v=1792748577" alt="矩阵图 × ocean" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>28 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="matrix" data-style="paper">
-        <img loading="lazy" src="img/matrix__paper.webp?v=1789967675" alt="矩阵图 × paper" title="点击放大预览">
-        <figcaption><b>矩阵图</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>36 KB</em></figcaption>
+        <img loading="lazy" src="img/matrix__paper.webp?v=1792748578" alt="矩阵图 × paper" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>36 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="matrix" data-style="art-nouveau">
+        <img loading="lazy" src="img/matrix__art-nouveau.webp?v=1792748579" alt="矩阵图 × art-nouveau" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="matrix" data-style="swiss">
+        <img loading="lazy" src="img/matrix__swiss.webp?v=1792748581" alt="矩阵图 × swiss" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="matrix" data-style="psychedelic">
+        <img loading="lazy" src="img/matrix__psychedelic.webp?v=1792748582" alt="矩阵图 × psychedelic" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>30 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="matrix" data-style="cyberpunk">
+        <img loading="lazy" src="img/matrix__cyberpunk.webp?v=1792748584" alt="矩阵图 × cyberpunk" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>31 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="matrix" data-style="midnight">
+        <img loading="lazy" src="img/matrix__midnight.webp?v=1792748585" alt="矩阵图 × midnight" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="matrix" data-style="dracula">
+        <img loading="lazy" src="img/matrix__dracula.webp?v=1792748590" alt="矩阵图 × dracula" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="matrix" data-style="neo-chinese">
+        <img loading="lazy" src="img/matrix__neo-chinese.webp?v=1792748591" alt="矩阵图 × neo-chinese" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="matrix" data-style="terminal">
+        <img loading="lazy" src="img/matrix__terminal.webp?v=1792748590" alt="矩阵图 × terminal" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>36 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="matrix" data-style="cosmic">
+        <img loading="lazy" src="img/matrix__cosmic.webp?v=1792748591" alt="矩阵图 × cosmic" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>30 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="matrix" data-style="industrial">
+        <img loading="lazy" src="img/matrix__industrial.webp?v=1792748593" alt="矩阵图 × industrial" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>31 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="matrix" data-style="flat">
+        <img loading="lazy" src="img/matrix__flat.webp?v=1792748594" alt="矩阵图 × flat" title="点击放大预览">
+        <figcaption><b>矩阵图</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>24 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="matrix" data-style="glass">
-        <img loading="lazy" src="img/matrix__glass.webp?v=1789967679" alt="矩阵图 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/matrix__glass.webp?v=1792748595" alt="矩阵图 × glass" title="点击放大预览">
         <figcaption><b>矩阵图</b><span>glass · 玻璃拟态</span>
           <button class="copy" data-prompt="画成矩阵图（matrix），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="matrix" data-style="corporate">
-        <img loading="lazy" src="img/matrix__corporate.webp?v=1789967678" alt="矩阵图 × corporate" title="点击放大预览">
-        <figcaption><b>矩阵图</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>27 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="matrix" data-style="minimal">
-        <img loading="lazy" src="img/matrix__minimal.webp?v=1789967680" alt="矩阵图 × minimal" title="点击放大预览">
-        <figcaption><b>矩阵图</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="matrix" data-style="retro">
-        <img loading="lazy" src="img/matrix__retro.webp?v=1789967680" alt="矩阵图 × retro" title="点击放大预览">
-        <figcaption><b>矩阵图</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成矩阵图（matrix），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -664,49 +1204,94 @@
     <h2>看板<code>kanban</code></h2>
     <div class="grid">
       <figure class="card" data-chart="kanban" data-style="warm">
-        <img loading="lazy" src="img/kanban__warm.webp?v=1789967684" alt="看板 × warm" title="点击放大预览">
-        <figcaption><b>看板</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成看板（kanban），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="kanban" data-style="dark">
-        <img loading="lazy" src="img/kanban__dark.webp?v=1789967684" alt="看板 × dark" title="点击放大预览">
-        <figcaption><b>看板</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成看板（kanban），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
+        <img loading="lazy" src="img/kanban__warm.webp?v=1792748597" alt="看板 × warm" title="点击放大预览">
+        <figcaption><b>看板</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="kanban" data-style="editorial">
-        <img loading="lazy" src="img/kanban__editorial.webp?v=1789967686" alt="看板 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/kanban__editorial.webp?v=1792748598" alt="看板 × editorial" title="点击放大预览">
         <figcaption><b>看板</b><span>editorial · 杂志排版</span>
           <button class="copy" data-prompt="画成看板（kanban），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>18 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="kanban" data-style="neon">
-        <img loading="lazy" src="img/kanban__neon.webp?v=1789967686" alt="看板 × neon" title="点击放大预览">
-        <figcaption><b>看板</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成看板（kanban），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
+      <figure class="card" data-chart="kanban" data-style="macaron">
+        <img loading="lazy" src="img/kanban__macaron.webp?v=1792748599" alt="看板 × macaron" title="点击放大预览">
+        <figcaption><b>看板</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="kanban" data-style="brutalist">
+        <img loading="lazy" src="img/kanban__brutalist.webp?v=1792748600" alt="看板 × brutalist" title="点击放大预览">
+        <figcaption><b>看板</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="kanban" data-style="ocean">
+        <img loading="lazy" src="img/kanban__ocean.webp?v=1792748602" alt="看板 × ocean" title="点击放大预览">
+        <figcaption><b>看板</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="kanban" data-style="paper">
-        <img loading="lazy" src="img/kanban__paper.webp?v=1789967690" alt="看板 × paper" title="点击放大预览">
-        <figcaption><b>看板</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成看板（kanban），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>18 KB</em></figcaption>
+        <img loading="lazy" src="img/kanban__paper.webp?v=1792748603" alt="看板 × paper" title="点击放大预览">
+        <figcaption><b>看板</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>18 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="kanban" data-style="art-nouveau">
+        <img loading="lazy" src="img/kanban__art-nouveau.webp?v=1792748604" alt="看板 × art-nouveau" title="点击放大预览">
+        <figcaption><b>看板</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="kanban" data-style="swiss">
+        <img loading="lazy" src="img/kanban__swiss.webp?v=1792748606" alt="看板 × swiss" title="点击放大预览">
+        <figcaption><b>看板</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="kanban" data-style="psychedelic">
+        <img loading="lazy" src="img/kanban__psychedelic.webp?v=1792748607" alt="看板 × psychedelic" title="点击放大预览">
+        <figcaption><b>看板</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="kanban" data-style="cyberpunk">
+        <img loading="lazy" src="img/kanban__cyberpunk.webp?v=1792748609" alt="看板 × cyberpunk" title="点击放大预览">
+        <figcaption><b>看板</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="kanban" data-style="midnight">
+        <img loading="lazy" src="img/kanban__midnight.webp?v=1792748610" alt="看板 × midnight" title="点击放大预览">
+        <figcaption><b>看板</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="kanban" data-style="dracula">
+        <img loading="lazy" src="img/kanban__dracula.webp?v=1792748611" alt="看板 × dracula" title="点击放大预览">
+        <figcaption><b>看板</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>18 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="kanban" data-style="neo-chinese">
+        <img loading="lazy" src="img/kanban__neo-chinese.webp?v=1792748612" alt="看板 × neo-chinese" title="点击放大预览">
+        <figcaption><b>看板</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="kanban" data-style="terminal">
+        <img loading="lazy" src="img/kanban__terminal.webp?v=1792748614" alt="看板 × terminal" title="点击放大预览">
+        <figcaption><b>看板</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>26 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="kanban" data-style="cosmic">
+        <img loading="lazy" src="img/kanban__cosmic.webp?v=1792748616" alt="看板 × cosmic" title="点击放大预览">
+        <figcaption><b>看板</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="kanban" data-style="industrial">
+        <img loading="lazy" src="img/kanban__industrial.webp?v=1792748617" alt="看板 × industrial" title="点击放大预览">
+        <figcaption><b>看板</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="kanban" data-style="flat">
+        <img loading="lazy" src="img/kanban__flat.webp?v=1792748618" alt="看板 × flat" title="点击放大预览">
+        <figcaption><b>看板</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>18 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="kanban" data-style="glass">
-        <img loading="lazy" src="img/kanban__glass.webp?v=1789967690" alt="看板 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/kanban__glass.webp?v=1792748620" alt="看板 × glass" title="点击放大预览">
         <figcaption><b>看板</b><span>glass · 玻璃拟态</span>
-          <button class="copy" data-prompt="画成看板（kanban），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="kanban" data-style="corporate">
-        <img loading="lazy" src="img/kanban__corporate.webp?v=1789967691" alt="看板 × corporate" title="点击放大预览">
-        <figcaption><b>看板</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成看板（kanban），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="kanban" data-style="minimal">
-        <img loading="lazy" src="img/kanban__minimal.webp?v=1789967691" alt="看板 × minimal" title="点击放大预览">
-        <figcaption><b>看板</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成看板（kanban），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="kanban" data-style="retro">
-        <img loading="lazy" src="img/kanban__retro.webp?v=1789967696" alt="看板 × retro" title="点击放大预览">
-        <figcaption><b>看板</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成看板（kanban），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>23 KB</em></figcaption>
+          <button class="copy" data-prompt="画成看板（kanban），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -714,49 +1299,94 @@
     <h2>清单卡<code>checklist</code></h2>
     <div class="grid">
       <figure class="card" data-chart="checklist" data-style="warm">
-        <img loading="lazy" src="img/checklist__warm.webp?v=1789967696" alt="清单卡 × warm" title="点击放大预览">
-        <figcaption><b>清单卡</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成清单卡（checklist），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="checklist" data-style="dark">
-        <img loading="lazy" src="img/checklist__dark.webp?v=1789967697" alt="清单卡 × dark" title="点击放大预览">
-        <figcaption><b>清单卡</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成清单卡（checklist），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>13 KB</em></figcaption>
+        <img loading="lazy" src="img/checklist__warm.webp?v=1792748621" alt="清单卡 × warm" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="checklist" data-style="editorial">
-        <img loading="lazy" src="img/checklist__editorial.webp?v=1789967697" alt="清单卡 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/checklist__editorial.webp?v=1792748622" alt="清单卡 × editorial" title="点击放大预览">
         <figcaption><b>清单卡</b><span>editorial · 杂志排版</span>
           <button class="copy" data-prompt="画成清单卡（checklist），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>15 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="checklist" data-style="neon">
-        <img loading="lazy" src="img/checklist__neon.webp?v=1789967701" alt="清单卡 × neon" title="点击放大预览">
-        <figcaption><b>清单卡</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成清单卡（checklist），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>15 KB</em></figcaption>
+      <figure class="card" data-chart="checklist" data-style="macaron">
+        <img loading="lazy" src="img/checklist__macaron.webp?v=1792748623" alt="清单卡 × macaron" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>14 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="checklist" data-style="brutalist">
+        <img loading="lazy" src="img/checklist__brutalist.webp?v=1792748625" alt="清单卡 × brutalist" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="checklist" data-style="ocean">
+        <img loading="lazy" src="img/checklist__ocean.webp?v=1792748626" alt="清单卡 × ocean" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="checklist" data-style="paper">
-        <img loading="lazy" src="img/checklist__paper.webp?v=1789967702" alt="清单卡 × paper" title="点击放大预览">
-        <figcaption><b>清单卡</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成清单卡（checklist），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+        <img loading="lazy" src="img/checklist__paper.webp?v=1792748627" alt="清单卡 × paper" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="checklist" data-style="art-nouveau">
+        <img loading="lazy" src="img/checklist__art-nouveau.webp?v=1792748629" alt="清单卡 × art-nouveau" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="checklist" data-style="swiss">
+        <img loading="lazy" src="img/checklist__swiss.webp?v=1792748631" alt="清单卡 × swiss" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>14 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="checklist" data-style="psychedelic">
+        <img loading="lazy" src="img/checklist__psychedelic.webp?v=1792748632" alt="清单卡 × psychedelic" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>18 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="checklist" data-style="cyberpunk">
+        <img loading="lazy" src="img/checklist__cyberpunk.webp?v=1792748633" alt="清单卡 × cyberpunk" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>21 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="checklist" data-style="midnight">
+        <img loading="lazy" src="img/checklist__midnight.webp?v=1792748635" alt="清单卡 × midnight" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>15 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="checklist" data-style="dracula">
+        <img loading="lazy" src="img/checklist__dracula.webp?v=1792748637" alt="清单卡 × dracula" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>14 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="checklist" data-style="neo-chinese">
+        <img loading="lazy" src="img/checklist__neo-chinese.webp?v=1792748637" alt="清单卡 × neo-chinese" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>15 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="checklist" data-style="terminal">
+        <img loading="lazy" src="img/checklist__terminal.webp?v=1792748639" alt="清单卡 × terminal" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="checklist" data-style="cosmic">
+        <img loading="lazy" src="img/checklist__cosmic.webp?v=1792748640" alt="清单卡 × cosmic" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="checklist" data-style="industrial">
+        <img loading="lazy" src="img/checklist__industrial.webp?v=1792748642" alt="清单卡 × industrial" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="checklist" data-style="flat">
+        <img loading="lazy" src="img/checklist__flat.webp?v=1792748643" alt="清单卡 × flat" title="点击放大预览">
+        <figcaption><b>清单卡</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成清单卡（checklist），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>14 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="checklist" data-style="glass">
-        <img loading="lazy" src="img/checklist__glass.webp?v=1789967703" alt="清单卡 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/checklist__glass.webp?v=1792748644" alt="清单卡 × glass" title="点击放大预览">
         <figcaption><b>清单卡</b><span>glass · 玻璃拟态</span>
           <button class="copy" data-prompt="画成清单卡（checklist），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="checklist" data-style="corporate">
-        <img loading="lazy" src="img/checklist__corporate.webp?v=1789967703" alt="清单卡 × corporate" title="点击放大预览">
-        <figcaption><b>清单卡</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成清单卡（checklist），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>15 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="checklist" data-style="minimal">
-        <img loading="lazy" src="img/checklist__minimal.webp?v=1789967707" alt="清单卡 × minimal" title="点击放大预览">
-        <figcaption><b>清单卡</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成清单卡（checklist），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>13 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="checklist" data-style="retro">
-        <img loading="lazy" src="img/checklist__retro.webp?v=1789967707" alt="清单卡 × retro" title="点击放大预览">
-        <figcaption><b>清单卡</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成清单卡（checklist），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
       </figure>
     </div>
   </section>
@@ -764,49 +1394,94 @@
     <h2>金句卡<code>quote-card</code></h2>
     <div class="grid">
       <figure class="card" data-chart="quote-card" data-style="warm">
-        <img loading="lazy" src="img/quote-card__warm.webp?v=1789967709" alt="金句卡 × warm" title="点击放大预览">
-        <figcaption><b>金句卡</b><span>warm · 暖色报告</span>
-          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 warm（暖色报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="quote-card" data-style="dark">
-        <img loading="lazy" src="img/quote-card__dark.webp?v=1789967710" alt="金句卡 × dark" title="点击放大预览">
-        <figcaption><b>金句卡</b><span>dark · 深色科技</span>
-          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 dark（深色科技）：&lt;把内容写在这里&gt;">复制 prompt</button><em>14 KB</em></figcaption>
+        <img loading="lazy" src="img/quote-card__warm.webp?v=1792748645" alt="金句卡 × warm" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>warm · 暖橙报告</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 warm（暖橙报告）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="quote-card" data-style="editorial">
-        <img loading="lazy" src="img/quote-card__editorial.webp?v=1789967713" alt="金句卡 × editorial" title="点击放大预览">
+        <img loading="lazy" src="img/quote-card__editorial.webp?v=1792748648" alt="金句卡 × editorial" title="点击放大预览">
         <figcaption><b>金句卡</b><span>editorial · 杂志排版</span>
-          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 editorial（杂志排版）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
       </figure>
-      <figure class="card" data-chart="quote-card" data-style="neon">
-        <img loading="lazy" src="img/quote-card__neon.webp?v=1789967713" alt="金句卡 × neon" title="点击放大预览">
-        <figcaption><b>金句卡</b><span>neon · 赛博霓虹</span>
-          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 neon（赛博霓虹）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
+      <figure class="card" data-chart="quote-card" data-style="macaron">
+        <img loading="lazy" src="img/quote-card__macaron.webp?v=1792748648" alt="金句卡 × macaron" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>macaron · 马卡龙甜品</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 macaron（马卡龙甜品）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="quote-card" data-style="brutalist">
+        <img loading="lazy" src="img/quote-card__brutalist.webp?v=1792748649" alt="金句卡 × brutalist" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>brutalist · 新粗野主义</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 brutalist（新粗野主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="quote-card" data-style="ocean">
+        <img loading="lazy" src="img/quote-card__ocean.webp?v=1792748651" alt="金句卡 × ocean" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>ocean · 海洋微风</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 ocean（海洋微风）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="quote-card" data-style="paper">
-        <img loading="lazy" src="img/quote-card__paper.webp?v=1789967714" alt="金句卡 × paper" title="点击放大预览">
-        <figcaption><b>金句卡</b><span>paper · 手绘纸质</span>
-          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 paper（手绘纸质）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+        <img loading="lazy" src="img/quote-card__paper.webp?v=1792748654" alt="金句卡 × paper" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>paper · 手绘涂鸦</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 paper（手绘涂鸦）：&lt;把内容写在这里&gt;">复制 prompt</button><em>22 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="quote-card" data-style="art-nouveau">
+        <img loading="lazy" src="img/quote-card__art-nouveau.webp?v=1792748654" alt="金句卡 × art-nouveau" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>art-nouveau · 新艺术运动</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 art-nouveau（新艺术运动）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="quote-card" data-style="swiss">
+        <img loading="lazy" src="img/quote-card__swiss.webp?v=1792748655" alt="金句卡 × swiss" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>swiss · 瑞士国际主义</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 swiss（瑞士国际主义）：&lt;把内容写在这里&gt;">复制 prompt</button><em>14 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="quote-card" data-style="psychedelic">
+        <img loading="lazy" src="img/quote-card__psychedelic.webp?v=1792748656" alt="金句卡 × psychedelic" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>psychedelic · 迷幻风格</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 psychedelic（迷幻风格）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="quote-card" data-style="cyberpunk">
+        <img loading="lazy" src="img/quote-card__cyberpunk.webp?v=1792748658" alt="金句卡 × cyberpunk" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>cyberpunk · 赛博朋克</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 cyberpunk（赛博朋克）：&lt;把内容写在这里&gt;">复制 prompt</button><em>20 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="quote-card" data-style="midnight">
+        <img loading="lazy" src="img/quote-card__midnight.webp?v=1792748659" alt="金句卡 × midnight" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>midnight · 午夜蓝调</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 midnight（午夜蓝调）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="quote-card" data-style="dracula">
+        <img loading="lazy" src="img/quote-card__dracula.webp?v=1792748661" alt="金句卡 × dracula" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>dracula · 德古拉暗紫</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 dracula（德古拉暗紫）：&lt;把内容写在这里&gt;">复制 prompt</button><em>14 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="quote-card" data-style="neo-chinese">
+        <img loading="lazy" src="img/quote-card__neo-chinese.webp?v=1792748662" alt="金句卡 × neo-chinese" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>neo-chinese · 新中式</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 neo-chinese（新中式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="quote-card" data-style="terminal">
+        <img loading="lazy" src="img/quote-card__terminal.webp?v=1792748666" alt="金句卡 × terminal" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>terminal · 终端黑客</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 terminal（终端黑客）：&lt;把内容写在这里&gt;">复制 prompt</button><em>25 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="quote-card" data-style="cosmic">
+        <img loading="lazy" src="img/quote-card__cosmic.webp?v=1792748669" alt="金句卡 × cosmic" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>cosmic · 深空星云</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 cosmic（深空星云）：&lt;把内容写在这里&gt;">复制 prompt</button><em>19 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="quote-card" data-style="industrial">
+        <img loading="lazy" src="img/quote-card__industrial.webp?v=1792748667" alt="金句卡 × industrial" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>industrial · 工业金属</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 industrial（工业金属）：&lt;把内容写在这里&gt;">复制 prompt</button><em>15 KB</em></figcaption>
+      </figure>
+      <figure class="card" data-chart="quote-card" data-style="flat">
+        <img loading="lazy" src="img/quote-card__flat.webp?v=1792748669" alt="金句卡 × flat" title="点击放大预览">
+        <figcaption><b>金句卡</b><span>flat · 扁平设计</span>
+          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 flat（扁平设计）：&lt;把内容写在这里&gt;">复制 prompt</button><em>15 KB</em></figcaption>
       </figure>
       <figure class="card" data-chart="quote-card" data-style="glass">
-        <img loading="lazy" src="img/quote-card__glass.webp?v=1789967714" alt="金句卡 × glass" title="点击放大预览">
+        <img loading="lazy" src="img/quote-card__glass.webp?v=1792748672" alt="金句卡 × glass" title="点击放大预览">
         <figcaption><b>金句卡</b><span>glass · 玻璃拟态</span>
           <button class="copy" data-prompt="画成金句卡（quote-card），主题用 glass（玻璃拟态）：&lt;把内容写在这里&gt;">复制 prompt</button><em>17 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="quote-card" data-style="corporate">
-        <img loading="lazy" src="img/quote-card__corporate.webp?v=1789967718" alt="金句卡 × corporate" title="点击放大预览">
-        <figcaption><b>金句卡</b><span>corporate · 商务正式</span>
-          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 corporate（商务正式）：&lt;把内容写在这里&gt;">复制 prompt</button><em>18 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="quote-card" data-style="minimal">
-        <img loading="lazy" src="img/quote-card__minimal.webp?v=1789967719" alt="金句卡 × minimal" title="点击放大预览">
-        <figcaption><b>金句卡</b><span>minimal · 极简黑白</span>
-          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 minimal（极简黑白）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
-      </figure>
-      <figure class="card" data-chart="quote-card" data-style="retro">
-        <img loading="lazy" src="img/quote-card__retro.webp?v=1789967720" alt="金句卡 × retro" title="点击放大预览">
-        <figcaption><b>金句卡</b><span>retro · 复古像素</span>
-          <button class="copy" data-prompt="画成金句卡（quote-card），主题用 retro（复古像素）：&lt;把内容写在这里&gt;">复制 prompt</button><em>16 KB</em></figcaption>
       </figure>
     </div>
   </section>

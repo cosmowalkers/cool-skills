@@ -75,7 +75,7 @@ def main():
     ap.add_argument("--only", nargs="*", default=None, help="只处理指定形式")
     ap.add_argument("--dpr", type=int, default=2)
     ap.add_argument("--format", default="png", choices=["png", "webp"])
-    ap.add_argument("--padding", type=int, default=28)
+    ap.add_argument("--padding", type=int, default=32)
     args = ap.parse_args()
 
     if args.mode == "embed":
