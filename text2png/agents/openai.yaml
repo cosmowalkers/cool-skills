@@ -1,0 +1,4 @@
+interface:
+  display_name: "信息图生成"
+  short_description: "文字转结构化信息图，15 种图表 × 18 种风格，含 demo 预览"
+  default_prompt: "用 $text2png 画一个流程图，可选 warm / midnight 等 18 种风格和 15 种图表类型"

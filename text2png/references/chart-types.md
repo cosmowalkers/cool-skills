@@ -29,20 +29,20 @@ Content signals → recommended chart type + default style.
 | Content Signals (Keywords) | Chart Type | Default Style |
 |---------------------------|------------|---------------|
 | 步骤、操作、流程、工作流、pipeline、CI/CD、部署 | flowchart | warm |
-| 对比、PK、vs、优劣、比较、选型、方案对比 | comparison | minimal |
+| 对比、PK、vs、优劣、比较、选型、方案对比 | comparison | swiss |
 | 时间、历史、里程碑、路线图、迭代、版本、时间线 | timeline | editorial |
-| 系统、服务、架构、组件、拓扑、微服务、网关 | architecture | dark |
+| 系统、服务、架构、组件、拓扑、微服务、网关 | architecture | midnight |
 | 数字、指标、统计、报表、KPI、监控、数据 | dashboard | glass |
 | 计划、排期、进度、甘特、任务、sprint、周期 | gantt | warm |
-| 团队、汇报、层级、组织、部门、架构(人员) | org-chart | minimal |
-| 转化、漏斗、筛选、销售、留存、用户旅程 | funnel | neon |
+| 团队、汇报、层级、组织、部门、架构(人员) | org-chart | swiss |
+| 转化、漏斗、筛选、销售、留存、用户旅程 | funnel | dracula |
 | 思维导图、脑图、发散、分支、关联、拆解、知识整理 | mind-map | paper |
-| 矩阵、象限、四格、SWOT、优先级、二维分类 | matrix | minimal |
+| 矩阵、象限、四格、SWOT、优先级、二维分类 | matrix | swiss |
 | 看板、状态、待办、进行中、已完成、backlog | kanban | glass |
 | 清单、checklist、确认项、打勾、核查、review | checklist | warm |
 | 金句、引用、名言、一句话、quote、摘录、读书笔记 | quote-card | editorial |
-| 时序、时序图、调用链、请求响应、接口交互、回调、谁先谁后 | sequence | dark |
-| 泳道、跨角色、跨部门、责任分工、交接、谁负责 | swimlane | corporate |
+| 时序、时序图、调用链、请求响应、接口交互、回调、谁先谁后 | sequence | midnight |
+| 泳道、跨角色、跨部门、责任分工、交接、谁负责 | swimlane | ocean |
 
 **Fallback**: When no signals match, default to `flowchart` + `warm`.
 
@@ -98,20 +98,20 @@ All styles work with all chart types, but some combinations are particularly eff
 | Chart Type | Best Styles | Avoid |
 |------------|-------------|-------|
 | flowchart | warm, paper, editorial | - |
-| comparison | minimal, warm, glass, corporate | neon (too busy for comparison) |
+| comparison | swiss, warm, glass, ocean | psychedelic (too busy for comparison) |
 | timeline | editorial, warm, paper | - |
-| architecture | dark, glass, minimal, corporate | paper (too casual) |
-| dashboard | glass, dark, neon, corporate | paper |
-| gantt | warm, minimal, editorial, corporate | neon |
-| org-chart | minimal, warm, glass, corporate | neon |
-| funnel | neon, glass, dark | paper, minimal (too flat) |
-| mind-map | paper, warm, glass | corporate (too rigid) |
-| matrix | minimal, corporate, warm | neon, paper |
-| kanban | glass, warm, dark, corporate | paper |
-| checklist | warm, minimal, corporate | neon |
-| quote-card | editorial, paper, glass, neon | corporate (too dry for quotes) |
-| sequence | dark, glass, minimal, corporate | paper (dashed lifelines get noisy) |
-| swimlane | corporate, glass, warm, minimal | neon (lane grid gets busy) |
+| architecture | midnight, glass, swiss, ocean | paper (too casual) |
+| dashboard | glass, midnight, dracula, ocean | paper |
+| gantt | warm, swiss, editorial, ocean | psychedelic |
+| org-chart | swiss, warm, glass, ocean | psychedelic |
+| funnel | dracula, glass, cyberpunk | paper, swiss (too flat) |
+| mind-map | paper, warm, macaron | industrial (too rigid) |
+| matrix | swiss, ocean, warm | psychedelic, paper |
+| kanban | glass, warm, midnight, ocean | paper |
+| checklist | warm, swiss, ocean | psychedelic |
+| quote-card | editorial, paper, glass, neo-chinese | industrial (too dry for quotes) |
+| sequence | midnight, glass, swiss, terminal | paper (dashed lifelines get noisy) |
+| swimlane | ocean, glass, warm, swiss | psychedelic (lane grid gets busy) |
 
 These are recommendations, not restrictions. User preference always takes priority.
 

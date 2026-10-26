@@ -2,7 +2,7 @@
 """text2png 全矩阵构建：生成 HTML → 用 scripts/screenshot.ts 截图 → 汇总画廊页。
 
 用法（在仓库根或任意位置执行均可）：
-  python3 tools/build-gallery.py all   --out /tmp/t2h-gallery      # 15 形式 × 9 主题 2x PNG + 画廊
+  python3 tools/build-gallery.py all   --out /tmp/t2h-gallery      # 15 形式 × 18 主题 2x PNG + 画廊
   python3 tools/build-gallery.py light                             # 1x webp 轻量版 → <skill>/demo（随 skill 分发）
   python3 tools/build-gallery.py embed --out ~/Downloads/t2h-gallery.html --src /tmp/t2h-gallery
 

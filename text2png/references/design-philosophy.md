@@ -15,7 +15,7 @@ Why these three? Because the output is a fixed-size image. Loose spacing that lo
 **When to break this rule**: Only when **content semantics** require it — NOT because of style preference. For example:
 - A timeline naturally alternates left/right → acceptable asymmetry, but still compact and full
 - A single metric needs emphasis → can be larger, but surrounding area must still be filled
-- Style (editorial, neon, etc.) does NOT override this principle — styles control colors, fonts, and effects, not layout structure
+- Style (editorial, cyberpunk, etc.) does NOT override this principle — styles control colors, fonts, and effects, not layout structure
 
 ## Visual Identity
 
@@ -125,9 +125,9 @@ This applies to all chart types that use connectors: architecture, flowchart, or
 
 **Backgrounds**: Add subtle texture, gradient, or pattern rather than flat solid colors. Why: a flat #ffffff background makes the chart look like a wireframe or draft. Even a tiny amount of texture (paper grain, radial gradient) signals "this is a finished design."
 - warm: slight paper-like grain
-- dark: subtle radial gradient from center
+- midnight: subtle radial gradient from center
 - editorial: off-white with faint geometric pattern
-- neon: deep gradient mesh
+- cyberpunk: deep gradient mesh
 - paper: visible paper texture
 - glass: layered gradient with blur
 

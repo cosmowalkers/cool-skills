@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""text2png 形式 × 主题矩阵生成器：15 chart × 9 style = 135 个 HTML。"""
+"""text2png 形式 × 主题矩阵生成器：15 chart × 18 style = 270 个 HTML。"""
 import pathlib
 import shutil
 import sys

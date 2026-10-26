@@ -1,6 +1,8 @@
 ---
 name: text2png
-description: 将文字描述转化为有设计感的 HTML 可视化图表并自动截图输出 PNG，支持 15 种图表类型（流程、时序、泳道、对比、时间线、架构、数据看板、甘特图、组织、漏斗、思维导图、矩阵、看板、清单、金句）和 18 种视觉风格。当用户想把任何结构化信息变成图表或可视化图片时使用，触发看语义意图而非关键词："画个图/做个图/出张图/可视化一下"或直接点名图表类型（流程图、时序图、泳道图、对比表、数据看板、思维导图等）均适用。注意：本技能只产出结构化图表/信息图，不处理照片、插画、艺术创作等创意位图。
+description: 将文字描述转化为有设计感的 HTML 可视化图表并自动截图输出 PNG，支持 15 种图表类型（流程、时序、泳道、对比、时间线、架构、数据看板、甘特图、组织、漏斗、思维导图、矩阵、看板、清单、金句）和 18 种视觉风格。两大触发场景看语义意图：① 生成图表——"画个图/做个图/出张图/可视化一下"或直接点名图表类型（流程图、时序图、泳道图、对比表、数据看板、思维导图等）；② 浏览预览——仅当表述明确指向本技能的 demo/风格目录时才触发，如"查看画图demo/打开text2png的demo/看看图表demo/demo里有什么风格/有哪些图表类型"；脱离上下文的泛化说法（单独的"查看demo/打开demo/看看效果/预览"等，未提及画图、图表、text2png、风格）不触发本技能，防止误触。注意：本技能只产出结构化图表/信息图，不处理照片、插画、艺术创作等创意位图。
+metadata:
+  short-description: 文字转结构化信息图并导出 PNG，含 demo 预览挑选
 ---
 
 # text2png — 文字描述 → HTML 图表 → PNG 截图
@@ -33,7 +35,7 @@ Style × Chart 可自由组合。风格只改配色/字体/质感，不改布局
 |-----|------|
 | `--html <path>` | 输入 HTML（必填） |
 | `--out <path>` | 输出图片（必填） |
-| `--bg <color>` | 留白区背景色（默认 `#ffffff`，按 style 的 bg 传） |
+| `--bg <color>` | 留白区背景色（可选：缺省自动读 HTML 的 `:root{--bg}`，读不到回退 `#ffffff`） |
 | `--width <px>` | 视口宽度（默认 860；横向流程图可用 960） |
 | `--padding <px>` | 四周留白（默认 32） |
 | `--dpr <1-4>` | 截图倍率（默认 4） |
@@ -111,14 +113,14 @@ If user content is clear enough and no style/path preference given, use inferred
 
 Split the two decisions — they have different owners:
 
-- **Form is inferred by you.** The user describes content, not chart types; most people cannot name `swimlane` or `sequence`. Infer the form from their content, state your choice in one short line ("我按时序图 + dark 主题画，因为…"), and only ask back when two forms are genuinely plausible.
+- **Form is inferred by you.** The user describes content, not chart types; most people cannot name `swimlane` or `sequence`. Infer the form from their content, state your choice in one short line ("我按时序图 + midnight 主题画，因为…"), and only ask back when two forms are genuinely plausible.
 - **Style is the user's taste.** When the request doesn't imply one, don't silently lock in the first style you thought of. Either propose 2-3 candidate combos, or show the catalogue (below) and let them pick.
 
 ### Showing the catalogue (the bundled demo)
 
-`demo/index.html` is the full 15 forms × 9 styles matrix (135 previews, filterable by form or style, click any image to zoom). Open it when the user asks what styles/forms exist, wants to pick a look, or when you're unsure about their taste:
+`demo/index.html` is the full 15 forms × 18 styles matrix (270 previews, filterable by form or style, click any image to zoom). Open it when the user asks what styles/forms exist, wants to pick a look, or when you're unsure about their taste:
 
- **Auto-open rule:** When the user says anything like `查看demo`、`打开demo`、`看看demo`、`demo什么样`、`有什么风格`、`有哪些形式` — **directly execute** `open "${SKILL_DIR}/demo/index.html"` (or `xdg-open` on Linux) without asking for confirmation. This is the user's explicit intent; do not treat it as "uncertain about style" and second-guess.
+ **Auto-open rule:** Only when the user's request explicitly points at this skill's demo or style catalogue — e.g. `查看画图demo`、`打开text2png的demo`、`看看图表demo`、`demo里有什么风格`、`有哪些图表类型`，or the session context is already clearly about text2png chart generation — **directly execute** `open "${SKILL_DIR}/demo/index.html"` (or `xdg-open` on Linux) without asking for confirmation. A generic `查看demo`/`打开demo`/`看看效果` with no drawing/chart/text2png/style context is NOT a trigger: it most likely refers to something else in the user's project — don't open this demo for it.
 
 ```bash
 open "${SKILL_DIR}/demo/index.html"        # macOS
@@ -128,11 +130,11 @@ xdg-open "${SKILL_DIR}/demo/index.html"    # Linux
 Rules that keep this helpful instead of annoying:
 
 1. **On demand, not by default.** Don't launch a browser for every request — only when they ask, or when you're genuinely uncertain about the style.
-1. **用户说「查看/打开demo」时自动打开。** 这是显式请求，不等待二次确认——直接执行 `open` 命令，然后告诉用户 demo 已打开。
-2. **Always pair it with text.** Say in one line what you opened, and list the 18 styles with a 3-5 word trait each (e.g. `warm` 暖色报告 / `dark` 深色科技 / `editorial` 杂志排版). Remote shells and headless environments have no browser — the flow must still work.
-3. **Prefer 2-3 candidates over the full menu.** The 270-grid answers "what exists", not "what should I use". Recommend first, expand only if they want to browse.
-4. **Anchor the style.** Once a style is chosen (by the user or by your recommendation), keep it for the rest of the session/document so a set of charts looks consistent — switch only when asked.
-5. **Never block on it.** If they don't care about style, pick the recommended one for that form (see the auto-selection matrix) and move on.
+2. **用户明确指向画图 demo 时自动打开。** 只有带指向性的表述（「查看画图demo」「打开text2png的demo」「看看图表demo/风格」，或当前会话上下文明确在做 text2png 图表）才算显式请求——直接执行 `open` 命令，然后告诉用户 demo 已打开。无上下文的泛化「查看demo/打开demo」不适用本条，不要据此打开 demo，以免误触。
+3. **Always pair it with text.** Say in one line what you opened, and list the 18 styles with a 3-5 word trait each (e.g. `warm` 暖色报告 / `midnight` 午夜蓝调 / `editorial` 杂志排版). Remote shells and headless environments have no browser — the flow must still work.
+4. **Prefer 2-3 candidates over the full menu.** The 270-grid answers "what exists", not "what should I use". Recommend first, expand only if they want to browse.
+5. **Anchor the style.** Once a style is chosen (by the user or by your recommendation), keep it for the rest of the session/document so a set of charts looks consistent — switch only when asked.
+6. **Never block on it.** If they don't care about style, pick the recommended one for that form (see the auto-selection matrix) and move on.
 
 **Each card also has a 「复制 prompt」 button** (no server involved — it only copies text) that yields a ready-to-paste line such as `画成时序图（sequence），主题用 warm（暖色报告）：<把内容写在这里>`. When you open the demo, tell the user they can browse, hit that button on whatever they like, and paste it back with their content.
 
@@ -142,9 +144,9 @@ Based on confirmed style + chart type + structured content, generate complete HT
 
 **Design process**:
 1. Read `references/design-philosophy.md` for aesthetic principles
-2. Read `references/styles/<style>.md` for style-specific CSS variables and components
+2. Read `references/style-tokens.md` for the chosen style's bg / fonts / CSS vars / 专属 CSS（由 `tools/_content.py` 的 STYLES 自动生成，风格定义唯一真源）
 3. Read `references/charts/<chart-type>.md` for layout rules and HTML structure
-4. Generate HTML with all CSS inlined
+4. Generate HTML with all CSS inlined；`:root` 必须定义 `--bg`（取 style-tokens 的 bg 值，截图脚本靠它自动匹配留白底色）
 
 **First Principle — Compact, Symmetric, Full**:
 - **Compact**: Use minimum spacing that maintains readability. When 8px works, don't use 12px.
@@ -164,7 +166,7 @@ Based on confirmed style + chart type + structured content, generate complete HT
 
 **Output filename**: `<content-keyword>-<timestamp>.html`, saved to user-specified directory.
 
-**Reference**: `references/design-philosophy.md`, `references/styles/*.md`, `references/charts/*.md`
+**Reference**: `references/design-philosophy.md`, `references/style-tokens.md`, `references/charts/*.md`
 
 ### Step 4: Screenshot
 
@@ -178,7 +180,6 @@ HTML 生成后，运行截图脚本（首次检查依赖是否已安装）：
 bun "${SKILL_DIR}/scripts/screenshot.ts" \
   --html <html_path> \
   --out <output_dir>/<filename>.png \
-  --bg "<bg_color>" \
   --width 860 \
   --padding 32 \
   --dpr 4 \
@@ -197,19 +198,8 @@ bun "${SKILL_DIR}/scripts/screenshot.ts" \
 
 **默认 padding**：32px 四周均匀留白。
 
-**Background color by style**:
+**Background color**：不需要手动传 `--bg` —— 脚本自动读取 HTML `:root{--bg}` 作为留白底色（生成 HTML 时务必写入该变量，值见 `references/style-tokens.md` 的 bg 列）。仅当需要覆盖自动值时才传 `--bg <color>`。
 
-| Style | bg_color | Width |
-|-------|----------|-------|
-| warm | `#faf6ee` | 860 |
-| dark | `#0d1117` | 860 |
-| minimal | `#ffffff` | 860 |
-| editorial | `#f8f5f0` | 860 |
-| neon | `#0a0015` | 860 |
-| paper | `#f5f0e6` | 860 |
-| glass | `#e8eaf0` | 860 |
-| corporate | `#f4f6f9` | 860 |
-| retro | `#1a1c2e` | 860 |
 
 For horizontal flowcharts (≤ 7 steps, short descriptions), use `--width 960`.
 
@@ -227,20 +217,20 @@ Done!
 | Content Signals | Chart Type | Style |
 |-----------------|------------|-------|
 | 步骤、操作、流程、工作流 | flowchart | warm |
-| 对比、PK、vs、优劣 | comparison | minimal |
+| 对比、PK、vs、优劣 | comparison | swiss |
 | 时间、历史、里程碑、路线图 | timeline | editorial |
-| 系统、服务、架构、组件 | architecture | dark |
+| 系统、服务、架构、组件 | architecture | midnight |
 | 数字、指标、统计、报表 | dashboard | glass |
 | 计划、排期、进度、甘特 | gantt | warm |
-| 团队、汇报、层级、组织 | org-chart | minimal |
-| 转化、漏斗、筛选、销售 | funnel | neon |
+| 团队、汇报、层级、组织 | org-chart | swiss |
+| 转化、漏斗、筛选、销售 | funnel | dracula |
 | 思维导图、脑图、发散、分支 | mind-map | paper |
-| 矩阵、象限、SWOT、优先级 | matrix | minimal |
+| 矩阵、象限、SWOT、优先级 | matrix | swiss |
 | 看板、状态、待办、进行中 | kanban | glass |
 | 清单、checklist、打勾、核查 | checklist | warm |
 | 金句、引用、名言、摘录 | quote-card | editorial |
-| 时序、调用链、请求响应、接口交互、回调 | sequence | dark |
-| 泳道、跨角色、责任分工、交接、谁负责 | swimlane | corporate |
+| 时序、调用链、请求响应、接口交互、回调 | sequence | midnight |
+| 泳道、跨角色、责任分工、交接、谁负责 | swimlane | ocean |
 
 When unable to determine chart type, default to **flowchart**.
 When unable to determine style, default to **warm**.
@@ -251,52 +241,17 @@ When unable to determine style, default to **warm**.
 
 ## Style Overview
 
-| Style | Tone | Key Visual |
-|-------|------|------------|
-| **warm** | 暖橙报告 | 牛皮纸纹理，焦糖棕，手工感 |
-| **editorial** | 杂志排版 | 冷白底，红黑高对比，衬线体 |
-| **macaron** | 马卡龙甜品 | 粉彩圆润，圆角泡泡卡片 |
-| **brutalist** | 新粗野主义 | 粗黑边框，撞色阴影，不修边幅 |
-| **ocean** | 海洋微风 | 淡蓝渐变，珊瑚橘点缀 |
-| **paper** | 手绘涂鸦 | 冷蓝灰纸，歪斜卡片，手写字体 |
-| **art-nouveau** | 新艺术运动 | 鼠尾草绿，曲线边框，穆夏风 |
-| **swiss** | 瑞士国际 | 极简格栅，纯黑白，Helvetica 感 |
-| **psychedelic** | 迷幻风格 | 渐变彩虹标题，波状旋转背景 |
-| **flat** | 扁平设计 | 纯色块，无阴影，顶部色条 |
-| **glass** | 玻璃拟态 | 亮色底，毛玻璃卡片，backdrop-blur |
-| **cyberpunk** | 赛博朋克 | 深紫黑底，霓虹扫描线，青色 glow |
-| **midnight** | 午夜蓝调 | 蓝黑底，金色点缀，优雅暗色 |
-| **dracula** | 德古拉暗紫 | 暗紫底，荧光粉绿，Fira Code |
-| **neo-chinese** | 新中式 | 黛蓝底，朱砂红 + 赤金，国潮 |
-| **terminal** | 终端黑客 | 纯黑底，CRT 绿字，琥珀强调 |
-| **cosmic** | 深空星云 | 太空黑，星云紫蓝渐变 |
-| **industrial** | 工业金属 | 铁灰黑，橙色警示，钢板纹理 |
+18 套风格的色调与视觉要点见上文 Step 1 的风格菜单（正文只保留那一份）；每套风格的 bg / 字体 / CSS vars / 专属 CSS 见 `references/style-tokens.md`。
 
 **All styles share the same layout principle**: compact, symmetric, full. Style only controls visual appearance (colors, fonts, textures, effects).
 
-**Reference**: `references/styles/*.md`
+**Reference**: `references/style-tokens.md`
 
 ---
 
 ## Chart Types Overview
 
-| Type | Use Case | Key Layout |
-|------|----------|------------|
-| **flowchart** | 步骤、操作流程 | 横版(≤7步)/竖版，步骤卡+箭头 |
-| **comparison** | 方案对比 | 双列并排，配色区分 |
-| **timeline** | 里程碑、历史 | 竖轴，左右交错 |
-| **architecture** | 系统组件 | 分层布局，节点+连线 |
-| **dashboard** | 指标汇总 | 大数字卡横排+详情区 |
-| **gantt** | 项目排期 | 横轴时间+横向条形 |
-| **org-chart** | 团队结构 | 树形层级，上下连线 |
-| **funnel** | 转化漏斗 | 梯形递减，百分比标注 |
-| **mind-map** | 知识整理、发散 | 中心节点+放射分支，左右展开 |
-| **matrix** | 优先级/SWOT | 2×2 网格+轴标签+象限卡片 |
-| **kanban** | 任务看板 | 多列横排，状态分组+任务卡 |
-| **checklist** | 清单确认 | 勾选列表+进度条+分组 |
-| **quote-card** | 金句分享 | 大号引文居中+来源标注 |
-| **sequence** | 调用链、请求响应 | 参与者+生命线+消息箭头 |
-| **swimlane** | 跨角色流程 | 泳道×阶段网格+任务卡 |
+15 种图表类型的适用场景、关键布局、选择决策树与风格兼容表，统一维护在 `references/chart-types.md`（Step 2 必读），此处不重复。
 
 **Reference**: `references/charts/*.md`
 
@@ -329,9 +284,10 @@ If found, load before Step 1. Extension content overrides defaults.
 Detailed templates and guidelines in `references/` directory:
 - `design-philosophy.md` — Aesthetic principles and design rules
 - `chart-types.md` — Chart type selection framework
-- `styles/` — Detailed style definitions (CSS variables, components, effects)
+- `style-tokens.md` — 18 套风格的 token 速查（bg / fonts / CSS vars / 专属 CSS），由 `tools/build-style-tokens.py` 从 `tools/_content.py` 自动生成
 - `charts/` — Detailed chart type layouts (HTML structure, CSS patterns)
 
 Preview & tooling:
-- `demo/index.html` — 15 forms × 9 styles full-matrix preview (filterable, click to zoom); open on demand, not for every request
+- `demo/index.html` — 15 forms × 18 styles full-matrix preview (270 张, filterable, click to zoom); open on demand, not for every request
 - `tools/build-gallery.py` — regenerate the demo / any matrix (`all` / `light` / `embed` / `--only`)
+- `tools/build-style-tokens.py` — 修改 `_content.py` 的 STYLES 后重新生成 `references/style-tokens.md`

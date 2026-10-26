@@ -53,7 +53,7 @@ def build(out_dir, embed=False, img_ext="png"):
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<title>text2png：15 形式 × 9 主题 = {len(charts) * len(styles)}</title>
+<title>text2png：15 形式 × 18 主题 = {len(charts) * len(styles)}</title>
 <style>
   :root {{ --line:#e5e7eb; --muted:#6b7280; }}
   * {{ box-sizing:border-box; }}

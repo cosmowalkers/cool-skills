@@ -11,14 +11,14 @@
     {
       "id": 2,
       "prompt": "我在做技术选型，需要对比一下 PostgreSQL 和 MySQL，主要看性能、扩展性、JSON 支持、生态、学习成本这几个维度",
-      "expected_output": "A comparison chart with two columns (PostgreSQL vs MySQL), 5 comparison dimensions, minimal or warm style. Should include a recommendation.",
+      "expected_output": "A comparison chart with two columns (PostgreSQL vs MySQL), 5 comparison dimensions, swiss or warm style. Should include a recommendation.",
       "files": [],
       "assertions": []
     },
     {
       "id": 3,
       "prompt": "我们微服务架构是这样的：前端 → API Gateway → 三个服务（用户服务、订单服务、支付服务）→ 都连同一个 Redis 缓存和各自的 PostgreSQL 数据库，画个架构图看看",
-      "expected_output": "An architecture diagram with layered layout showing frontend, API gateway, 3 services, Redis cache, and 3 PostgreSQL databases. Dark style recommended.",
+      "expected_output": "An architecture diagram with layered layout showing frontend, API gateway, 3 services, Redis cache, and 3 PostgreSQL databases. Midnight style recommended.",
       "files": [],
       "assertions": []
     },
@@ -32,7 +32,7 @@
     {
       "id": 5,
       "prompt": "做个优先级矩阵，横轴是成本高低，纵轴是收益高低，帮我分类一下这些需求：搜索优化、国际化、暗色模式、性能监控、重构登录模块、新增支付方式",
-      "expected_output": "A 2x2 matrix chart with axis labels (cost/benefit), 4 quadrants with categorized items distributed among them. Minimal style. Each quadrant has a title with emoji and colored border.",
+      "expected_output": "A 2x2 matrix chart with axis labels (cost/benefit), 4 quadrants with categorized items distributed among them. Swiss style. Each quadrant has a title with emoji and colored border.",
       "files": [],
       "assertions": []
     },
