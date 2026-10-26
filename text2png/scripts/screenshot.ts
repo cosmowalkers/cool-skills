@@ -9,7 +9,7 @@ import { execSync } from "node:child_process";
 type CliArgs = {
   html: string | null;
   out: string | null;
-  bg: string;
+  bg: string | null;
   width: number;
   padding: number;
   dpr: number;
@@ -24,7 +24,8 @@ function printUsage(): void {
 Options:
   --html <path>       Input HTML file path (required)
   --out <path>        Output image file path (required)
-  --bg <color>        Background color for padding area (default: #ffffff)
+  --bg <color>        Background color for padding area
+                      (default: auto-read from the HTML's :root{--bg} CSS variable, fallback #ffffff)
   --width <px>        Viewport width in pixels (default: 860)
   --padding <px>      Padding around content (default: 32)
   --dpr <1-4>         Device pixel ratio (default: 4)
@@ -36,7 +37,7 @@ function parseArgs(argv: string[]): CliArgs {
   const out: CliArgs = {
     html: null,
     out: null,
-    bg: "#ffffff",
+    bg: null,
     width: 860,
     padding: 32,
     dpr: 4,
@@ -49,7 +50,7 @@ function parseArgs(argv: string[]): CliArgs {
     if (a === "--help" || a === "-h") { out.help = true; continue; }
     if (a === "--html") { out.html = argv[++i] || null; continue; }
     if (a === "--out") { out.out = argv[++i] || null; continue; }
-    if (a === "--bg") { out.bg = argv[++i] || "#ffffff"; continue; }
+    if (a === "--bg") { out.bg = argv[++i] || null; continue; }
     if (a === "--width") { out.width = parseInt(argv[++i] || "860", 10); continue; }
     if (a === "--padding") { out.padding = parseInt(argv[++i] || "32", 10); continue; }
     if (a === "--dpr") { out.dpr = Math.min(4, Math.max(1, parseInt(argv[++i] || "4", 10))); continue; }
@@ -181,9 +182,20 @@ async function screenshot(args: CliArgs): Promise<void> {
     ]);
     await waitForStableSize(page);
 
-    await page.evaluate((bg: string) => {
-      document.documentElement.style.backgroundColor = bg;
-    }, args.bg);
+    // 留白区背景色：显式 --bg 优先；否则自动读 HTML 的 :root{--bg}，再退到 body 背景色
+    const bg =
+      args.bg ??
+      (await page.evaluate(() => {
+        const fromVar = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
+        if (fromVar) return fromVar;
+        const bodyBg = getComputedStyle(document.body).backgroundColor;
+        return bodyBg && bodyBg !== "rgba(0, 0, 0, 0)" ? bodyBg : "#ffffff";
+      }));
+    console.error(`[info] padding bg: ${bg}${args.bg ? "" : " (auto)"}`);
+
+    await page.evaluate((c: string) => {
+      document.documentElement.style.backgroundColor = c;
+    }, bg);
 
     // Phase 2: 测量 → 调视口高度 → 复测；最多 3 轮
     let clip = { x: 0, y: 0, width: generousW, height: 400 };
